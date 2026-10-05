@@ -1,0 +1,130 @@
+[
+  {
+    "id": "antennas",
+    "slug": "antennas",
+    "name": "Антенны",
+    "parentId": null,
+    "description": "",
+    "sortIndex": 1
+  },
+  {
+    "id": "antennas-log-periodic",
+    "slug": "log-periodic",
+    "name": "Логопериодические",
+    "parentId": "antennas",
+    "description": "",
+    "sortIndex": 2
+  },
+  {
+    "id": "antennas-corner",
+    "slug": "corner",
+    "name": "Уголковые",
+    "parentId": "antennas",
+    "description": "",
+    "sortIndex": 3
+  },
+  {
+    "id": "antennas-yagi",
+    "slug": "yagi",
+    "name": "Волновой канал",
+    "parentId": "antennas",
+    "description": "",
+    "sortIndex": 4
+  },
+  {
+    "id": "antennas-horn",
+    "slug": "horn",
+    "name": "Рупорные",
+    "parentId": "antennas",
+    "description": "",
+    "sortIndex": 5
+  },
+  {
+    "id": "antennas-micro-horn",
+    "slug": "micro-horn",
+    "name": "Микро-рупорные",
+    "parentId": "antennas",
+    "description": "",
+    "sortIndex": 6
+  },
+  {
+    "id": "antennas-mini",
+    "slug": "mini",
+    "name": "Мини-антенны",
+    "parentId": "antennas",
+    "description": "",
+    "sortIndex": 7
+  },
+  {
+    "id": "covers",
+    "slug": "covers",
+    "name": "Чехлы для антенн",
+    "parentId": null,
+    "description": "",
+    "sortIndex": 8
+  },
+  {
+    "id": "masts",
+    "slug": "masts",
+    "name": "Карбоновые мачты",
+    "parentId": null,
+    "description": "",
+    "sortIndex": 9
+  },
+  {
+    "id": "lna",
+    "slug": "lna",
+    "name": "МШУ — малошумящие усилители",
+    "parentId": null,
+    "description": "",
+    "sortIndex": 10
+  },
+  {
+    "id": "rf-filters",
+    "slug": "rf-filters",
+    "name": "Радиочастотные фильтры",
+    "parentId": null,
+    "description": "",
+    "sortIndex": 11
+  },
+  {
+    "id": "rf-filters-bandpass",
+    "slug": "bandpass",
+    "name": "Полосовые",
+    "parentId": "rf-filters",
+    "description": "",
+    "sortIndex": 12
+  },
+  {
+    "id": "rf-filters-channel",
+    "slug": "channel",
+    "name": "Канальные",
+    "parentId": "rf-filters",
+    "description": "",
+    "sortIndex": 13
+  },
+  {
+    "id": "rf-filters-cavity",
+    "slug": "cavity",
+    "name": "На объёмных резонаторах",
+    "parentId": "rf-filters",
+    "description": "",
+    "sortIndex": 14
+  },
+  {
+    "id": "cables",
+    "slug": "cables",
+    "name": "Кабельные сборки",
+    "parentId": null,
+    "description": "",
+    "sortIndex": 15
+  },
+  {
+    "id": "attenuators",
+    "slug": "attenuators",
+    "name": "Аттенюаторы",
+    "parentId": null,
+    "description": "",
+    "sortIndex": 16
+  }
+]

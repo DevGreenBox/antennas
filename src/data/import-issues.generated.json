@@ -1,0 +1,971 @@
+[
+  {
+    "id": "sheet-conflict-s1-B4",
+    "severity": "conflict",
+    "code": "sheet-conflict",
+    "title": "Тип1: лист 1 и лист 2 расходятся",
+    "details": "Витрина показывает строку листа 1 (1!B4). Строка листа 2 (2!C4) сохранена для сопоставления, отдельная карточка не создана. Расходятся: цена (13 000 ₽ / 12 000 ₽); КУ (12 дБи / 10 дБ); разъём (N-female / не указано); конструкция (логопериодическая / не указано). Назначение листов не подтверждено — победитель не выбран.",
+    "sourceIds": [
+      "s1-B4",
+      "s2-C4"
+    ],
+    "productIds": [
+      "antenna-tip1"
+    ],
+    "fields": [
+      {
+        "field": "rawText",
+        "label": "Исходный текст",
+        "sheet1": "Тип1 логопериодическая (700-1100 МГц, КУ=12 дБи, N-мама)",
+        "sheet2": "Тип1 (700-1100 МГц, КУ=10 дБ)",
+        "differs": true
+      },
+      {
+        "field": "price",
+        "label": "Цена",
+        "sheet1": "13 000 ₽",
+        "sheet2": "12 000 ₽",
+        "differs": true
+      },
+      {
+        "field": "frequency",
+        "label": "Частота",
+        "sheet1": "700–1100 МГц",
+        "sheet2": "700–1100 МГц",
+        "differs": false
+      },
+      {
+        "field": "gain",
+        "label": "КУ",
+        "sheet1": "12 дБи",
+        "sheet2": "10 дБ",
+        "differs": true
+      },
+      {
+        "field": "connector",
+        "label": "Разъём",
+        "sheet1": "N-female",
+        "sheet2": null,
+        "differs": true
+      },
+      {
+        "field": "antenna_design",
+        "label": "Конструкция",
+        "sheet1": "логопериодическая",
+        "sheet2": null,
+        "differs": true
+      }
+    ]
+  },
+  {
+    "id": "sheet-conflict-s1-B5",
+    "severity": "conflict",
+    "code": "sheet-conflict",
+    "title": "Тип2: лист 1 и лист 2 расходятся",
+    "details": "Витрина показывает строку листа 1 (1!B5). Строка листа 2 (2!C5) сохранена для сопоставления, отдельная карточка не создана. Расходятся: цена (16 000 ₽ / 15 000 ₽); КУ (12 дБи / 10 дБ); разъём (N-female / не указано); конструкция (логопериодическая / не указано). Назначение листов не подтверждено — победитель не выбран.",
+    "sourceIds": [
+      "s1-B5",
+      "s2-C5"
+    ],
+    "productIds": [
+      "antenna-tip2"
+    ],
+    "fields": [
+      {
+        "field": "rawText",
+        "label": "Исходный текст",
+        "sheet1": "Тип2 логопериодическая (360-980 МГц, КУ=12 дБи, N-мама)",
+        "sheet2": "Тип2 (360-980 МГц, КУ=10 дБ)",
+        "differs": true
+      },
+      {
+        "field": "price",
+        "label": "Цена",
+        "sheet1": "16 000 ₽",
+        "sheet2": "15 000 ₽",
+        "differs": true
+      },
+      {
+        "field": "frequency",
+        "label": "Частота",
+        "sheet1": "360–980 МГц",
+        "sheet2": "360–980 МГц",
+        "differs": false
+      },
+      {
+        "field": "gain",
+        "label": "КУ",
+        "sheet1": "12 дБи",
+        "sheet2": "10 дБ",
+        "differs": true
+      },
+      {
+        "field": "connector",
+        "label": "Разъём",
+        "sheet1": "N-female",
+        "sheet2": null,
+        "differs": true
+      },
+      {
+        "field": "antenna_design",
+        "label": "Конструкция",
+        "sheet1": "логопериодическая",
+        "sheet2": null,
+        "differs": true
+      }
+    ]
+  },
+  {
+    "id": "sheet-conflict-s1-B6",
+    "severity": "conflict",
+    "code": "sheet-conflict",
+    "title": "Тип3: лист 1 и лист 2 расходятся",
+    "details": "Витрина показывает строку листа 1 (1!B6). Строка листа 2 (2!C6) сохранена для сопоставления, отдельная карточка не создана. Расходятся: цена (16 000 ₽ / 15 000 ₽); КУ (13 дБи / 11 дБ); разъём (N-female / не указано); конструкция (логопериодическая / не указано). Назначение листов не подтверждено — победитель не выбран.",
+    "sourceIds": [
+      "s1-B6",
+      "s2-C6"
+    ],
+    "productIds": [
+      "antenna-tip3"
+    ],
+    "fields": [
+      {
+        "field": "rawText",
+        "label": "Исходный текст",
+        "sheet1": "Тип3 логопериодическая (255-375 МГц, КУ=13 дБи, N-мама)",
+        "sheet2": "Тип3 (255-375 МГц, КУ=11 дБ)",
+        "differs": true
+      },
+      {
+        "field": "price",
+        "label": "Цена",
+        "sheet1": "16 000 ₽",
+        "sheet2": "15 000 ₽",
+        "differs": true
+      },
+      {
+        "field": "frequency",
+        "label": "Частота",
+        "sheet1": "255–375 МГц",
+        "sheet2": "255–375 МГц",
+        "differs": false
+      },
+      {
+        "field": "gain",
+        "label": "КУ",
+        "sheet1": "13 дБи",
+        "sheet2": "11 дБ",
+        "differs": true
+      },
+      {
+        "field": "connector",
+        "label": "Разъём",
+        "sheet1": "N-female",
+        "sheet2": null,
+        "differs": true
+      },
+      {
+        "field": "antenna_design",
+        "label": "Конструкция",
+        "sheet1": "логопериодическая",
+        "sheet2": null,
+        "differs": true
+      }
+    ]
+  },
+  {
+    "id": "sheet-conflict-s1-B20",
+    "severity": "conflict",
+    "code": "sheet-conflict",
+    "title": "Чехол для Тип2: лист 1 и лист 2 расходятся",
+    "details": "Витрина показывает строку листа 1 (1!B20). Строка листа 2 (2!C9) сохранена для сопоставления, отдельная карточка не создана. Расходятся: цена (8 500 ₽ / 8 000 ₽). Назначение листов не подтверждено — победитель не выбран.",
+    "sourceIds": [
+      "s1-B20",
+      "s2-C9"
+    ],
+    "productIds": [
+      "cover-tip2"
+    ],
+    "fields": [
+      {
+        "field": "rawText",
+        "label": "Исходный текст",
+        "sheet1": "Чехол для тип2",
+        "sheet2": "Чехол для тип2",
+        "differs": false
+      },
+      {
+        "field": "price",
+        "label": "Цена",
+        "sheet1": "8 500 ₽",
+        "sheet2": "8 000 ₽",
+        "differs": true
+      },
+      {
+        "field": "frequency",
+        "label": "Частота",
+        "sheet1": null,
+        "sheet2": null,
+        "differs": false
+      },
+      {
+        "field": "gain",
+        "label": "КУ",
+        "sheet1": null,
+        "sheet2": null,
+        "differs": false
+      },
+      {
+        "field": "connector",
+        "label": "Разъём",
+        "sheet1": null,
+        "sheet2": null,
+        "differs": false
+      },
+      {
+        "field": "compatible_model",
+        "label": "Совместимая модель",
+        "sheet1": "Тип2",
+        "sheet2": "Тип2",
+        "differs": false
+      }
+    ]
+  },
+  {
+    "id": "sheet-conflict-s1-B21",
+    "severity": "conflict",
+    "code": "sheet-conflict",
+    "title": "Чехол для Тип3: лист 1 и лист 2 расходятся",
+    "details": "Витрина показывает строку листа 1 (1!B21). Строка листа 2 (2!C10) сохранена для сопоставления, отдельная карточка не создана. Расходятся: цена (11 000 ₽ / 10 500 ₽). Назначение листов не подтверждено — победитель не выбран.",
+    "sourceIds": [
+      "s1-B21",
+      "s2-C10"
+    ],
+    "productIds": [
+      "cover-tip3"
+    ],
+    "fields": [
+      {
+        "field": "rawText",
+        "label": "Исходный текст",
+        "sheet1": "Чехол для тип3",
+        "sheet2": "Чехол для тип3",
+        "differs": false
+      },
+      {
+        "field": "price",
+        "label": "Цена",
+        "sheet1": "11 000 ₽",
+        "sheet2": "10 500 ₽",
+        "differs": true
+      },
+      {
+        "field": "frequency",
+        "label": "Частота",
+        "sheet1": null,
+        "sheet2": null,
+        "differs": false
+      },
+      {
+        "field": "gain",
+        "label": "КУ",
+        "sheet1": null,
+        "sheet2": null,
+        "differs": false
+      },
+      {
+        "field": "connector",
+        "label": "Разъём",
+        "sheet1": null,
+        "sheet2": null,
+        "differs": false
+      },
+      {
+        "field": "compatible_model",
+        "label": "Совместимая модель",
+        "sheet1": "Тип3",
+        "sheet2": "Тип3",
+        "differs": false
+      }
+    ]
+  },
+  {
+    "id": "sheet-conflict-s1-B25",
+    "severity": "conflict",
+    "code": "sheet-conflict",
+    "title": "M1: лист 1 и лист 2 расходятся",
+    "details": "Витрина показывает строку листа 1 (1!B25). Строка листа 2 (2!C13) сохранена для сопоставления, отдельная карточка не создана. Расходятся: цена (3 000 ₽ / 5 000 ₽); КУ (7–9 дБи / 8–10 дБ). Назначение листов не подтверждено — победитель не выбран.",
+    "sourceIds": [
+      "s1-B25",
+      "s2-C13"
+    ],
+    "productIds": [
+      "mini-antenna-m1"
+    ],
+    "fields": [
+      {
+        "field": "rawText",
+        "label": "Исходный текст",
+        "sheet1": "M1 (1100-1600 МГц, КУ=7-9 дБи)",
+        "sheet2": "M1 (1100-1600 МГц, КУ=8-10 дБ)",
+        "differs": true
+      },
+      {
+        "field": "price",
+        "label": "Цена",
+        "sheet1": "3 000 ₽",
+        "sheet2": "5 000 ₽",
+        "differs": true
+      },
+      {
+        "field": "frequency",
+        "label": "Частота",
+        "sheet1": "1100–1600 МГц",
+        "sheet2": "1100–1600 МГц",
+        "differs": false
+      },
+      {
+        "field": "gain",
+        "label": "КУ",
+        "sheet1": "7–9 дБи",
+        "sheet2": "8–10 дБ",
+        "differs": true
+      },
+      {
+        "field": "connector",
+        "label": "Разъём",
+        "sheet1": null,
+        "sheet2": null,
+        "differs": false
+      }
+    ]
+  },
+  {
+    "id": "sheet-conflict-s1-B26",
+    "severity": "conflict",
+    "code": "sheet-conflict",
+    "title": "M2: лист 1 и лист 2 расходятся",
+    "details": "Витрина показывает строку листа 1 (1!B26). Строка листа 2 (2!C14) сохранена для сопоставления, отдельная карточка не создана. Расходятся: цена (3 000 ₽ / 5 000 ₽); КУ (9–11 дБи / 8–10 дБ). Назначение листов не подтверждено — победитель не выбран.",
+    "sourceIds": [
+      "s1-B26",
+      "s2-C14"
+    ],
+    "productIds": [
+      "mini-antenna-m2"
+    ],
+    "fields": [
+      {
+        "field": "rawText",
+        "label": "Исходный текст",
+        "sheet1": "M2 (1600-2200 МГц, КУ=9-11 дБи)",
+        "sheet2": "M2 (1600-2200 МГц, КУ=8-10 дБ)",
+        "differs": true
+      },
+      {
+        "field": "price",
+        "label": "Цена",
+        "sheet1": "3 000 ₽",
+        "sheet2": "5 000 ₽",
+        "differs": true
+      },
+      {
+        "field": "frequency",
+        "label": "Частота",
+        "sheet1": "1600–2200 МГц",
+        "sheet2": "1600–2200 МГц",
+        "differs": false
+      },
+      {
+        "field": "gain",
+        "label": "КУ",
+        "sheet1": "9–11 дБи",
+        "sheet2": "8–10 дБ",
+        "differs": true
+      },
+      {
+        "field": "connector",
+        "label": "Разъём",
+        "sheet1": null,
+        "sheet2": null,
+        "differs": false
+      }
+    ]
+  },
+  {
+    "id": "sheet-conflict-s1-B27",
+    "severity": "conflict",
+    "code": "sheet-conflict",
+    "title": "M3: лист 1 и лист 2 расходятся",
+    "details": "Витрина показывает строку листа 1 (1!B27). Строка листа 2 (2!C15) сохранена для сопоставления, отдельная карточка не создана. Расходятся: цена (3 000 ₽ / 5 000 ₽); КУ (10–12 дБи / 8–10 дБ). Назначение листов не подтверждено — победитель не выбран.",
+    "sourceIds": [
+      "s1-B27",
+      "s2-C15"
+    ],
+    "productIds": [
+      "mini-antenna-m3"
+    ],
+    "fields": [
+      {
+        "field": "rawText",
+        "label": "Исходный текст",
+        "sheet1": "M3 (2200-2900 МГц, КУ=10-12 дБи)",
+        "sheet2": "M3 (2200-2900 МГц, КУ=8-10 дБ)",
+        "differs": true
+      },
+      {
+        "field": "price",
+        "label": "Цена",
+        "sheet1": "3 000 ₽",
+        "sheet2": "5 000 ₽",
+        "differs": true
+      },
+      {
+        "field": "frequency",
+        "label": "Частота",
+        "sheet1": "2200–2900 МГц",
+        "sheet2": "2200–2900 МГц",
+        "differs": false
+      },
+      {
+        "field": "gain",
+        "label": "КУ",
+        "sheet1": "10–12 дБи",
+        "sheet2": "8–10 дБ",
+        "differs": true
+      },
+      {
+        "field": "connector",
+        "label": "Разъём",
+        "sheet1": null,
+        "sheet2": null,
+        "differs": false
+      }
+    ]
+  },
+  {
+    "id": "sheet-conflict-s1-B28",
+    "severity": "conflict",
+    "code": "sheet-conflict",
+    "title": "M4: лист 1 и лист 2 расходятся",
+    "details": "Витрина показывает строку листа 1 (1!B28). Строка листа 2 (2!C16) сохранена для сопоставления, отдельная карточка не создана. Расходятся: КУ (10–12 дБи / 8–10 дБ). Назначение листов не подтверждено — победитель не выбран.",
+    "sourceIds": [
+      "s1-B28",
+      "s2-C16"
+    ],
+    "productIds": [
+      "mini-antenna-m4"
+    ],
+    "fields": [
+      {
+        "field": "rawText",
+        "label": "Исходный текст",
+        "sheet1": "M4 (2200-6000 МГц, КУ=10-12 дБи)",
+        "sheet2": "M4 (2200-6000 МГц, КУ=8-10 дБ)",
+        "differs": true
+      },
+      {
+        "field": "price",
+        "label": "Цена",
+        "sheet1": "5 000 ₽",
+        "sheet2": "5 000 ₽",
+        "differs": false
+      },
+      {
+        "field": "frequency",
+        "label": "Частота",
+        "sheet1": "2200–6000 МГц",
+        "sheet2": "2200–6000 МГц",
+        "differs": false
+      },
+      {
+        "field": "gain",
+        "label": "КУ",
+        "sheet1": "10–12 дБи",
+        "sheet2": "8–10 дБ",
+        "differs": true
+      },
+      {
+        "field": "connector",
+        "label": "Разъём",
+        "sheet1": null,
+        "sheet2": null,
+        "differs": false
+      }
+    ]
+  },
+  {
+    "id": "sheet-conflict-s1-B29",
+    "severity": "conflict",
+    "code": "sheet-conflict",
+    "title": "M5: лист 1 и лист 2 расходятся",
+    "details": "Витрина показывает строку листа 1 (1!B29). Строка листа 2 (2!C17) сохранена для сопоставления, отдельная карточка не создана. Расходятся: цена (3 000 ₽ / 5 000 ₽); КУ (10–12 дБи / 8–10 дБ). Назначение листов не подтверждено — победитель не выбран.",
+    "sourceIds": [
+      "s1-B29",
+      "s2-C17"
+    ],
+    "productIds": [
+      "mini-antenna-m5"
+    ],
+    "fields": [
+      {
+        "field": "rawText",
+        "label": "Исходный текст",
+        "sheet1": "M5 (5000-6000 МГц, КУ=10-12 дБи)",
+        "sheet2": "M5 (5000-6000 МГц, КУ=8-10 дБ)",
+        "differs": true
+      },
+      {
+        "field": "price",
+        "label": "Цена",
+        "sheet1": "3 000 ₽",
+        "sheet2": "5 000 ₽",
+        "differs": true
+      },
+      {
+        "field": "frequency",
+        "label": "Частота",
+        "sheet1": "5000–6000 МГц",
+        "sheet2": "5000–6000 МГц",
+        "differs": false
+      },
+      {
+        "field": "gain",
+        "label": "КУ",
+        "sheet1": "10–12 дБи",
+        "sheet2": "8–10 дБ",
+        "differs": true
+      },
+      {
+        "field": "connector",
+        "label": "Разъём",
+        "sheet1": null,
+        "sheet2": null,
+        "differs": false
+      }
+    ]
+  },
+  {
+    "id": "duplicate-row-s1-E44",
+    "severity": "review",
+    "code": "duplicate-row",
+    "title": "Повтор строки: 1!E49 = 1!E44",
+    "details": "«6100-6500 МГц» с ценой 17800 буквально повторяет 1!E44. Вторая карточка не создана: у товара два происхождения. Отличия вариантов не выдумываются — нужен ответ заказчика.",
+    "sourceIds": [
+      "s1-E44",
+      "s1-E49"
+    ],
+    "productIds": [
+      "bandpass-filter-6100-6500"
+    ]
+  },
+  {
+    "id": "duplicate-row-s1-E46",
+    "severity": "review",
+    "code": "duplicate-row",
+    "title": "Повтор строки: 1!E50 = 1!E46",
+    "details": "«6500-6900 МГц» с ценой 17800 буквально повторяет 1!E46. Вторая карточка не создана: у товара два происхождения. Отличия вариантов не выдумываются — нужен ответ заказчика.",
+    "sourceIds": [
+      "s1-E46",
+      "s1-E50"
+    ],
+    "productIds": [
+      "bandpass-filter-6500-6900"
+    ]
+  },
+  {
+    "id": "duplicate-row-s1-E47",
+    "severity": "review",
+    "code": "duplicate-row",
+    "title": "Повтор строки: 1!E51 = 1!E47",
+    "details": "«6400-7100 МГц» с ценой 17800 буквально повторяет 1!E47. Вторая карточка не создана: у товара два происхождения. Отличия вариантов не выдумываются — нужен ответ заказчика.",
+    "sourceIds": [
+      "s1-E47",
+      "s1-E51"
+    ],
+    "productIds": [
+      "bandpass-filter-6400-7100"
+    ]
+  },
+  {
+    "id": "duplicate-row-s1-E48",
+    "severity": "review",
+    "code": "duplicate-row",
+    "title": "Повтор строки: 1!E52 = 1!E48",
+    "details": "«6900-7300 МГц» с ценой 17800 буквально повторяет 1!E48. Вторая карточка не создана: у товара два происхождения. Отличия вариантов не выдумываются — нужен ответ заказчика.",
+    "sourceIds": [
+      "s1-E48",
+      "s1-E52"
+    ],
+    "productIds": [
+      "bandpass-filter-6900-7300"
+    ]
+  },
+  {
+    "id": "disputed-unit-s1-B43",
+    "severity": "review",
+    "code": "disputed-unit",
+    "title": "Спорная единица частоты: «6000-8000 ГГц»",
+    "details": "В 1!B43, 1!B44, 1!B45 частота записана в ГГц. Значение сохранено как есть, не пересчитано в МГц и не участвует в числовом фильтре частоты до подтверждения единицы заказчиком.",
+    "sourceIds": [
+      "s1-B43",
+      "s1-B44",
+      "s1-B45"
+    ],
+    "productIds": [
+      "lna-6000-8000-10db",
+      "lna-6000-8000-20db",
+      "lna-6000-8000-20db-ip67-xt60"
+    ]
+  },
+  {
+    "id": "inferred-unit-s1-B10",
+    "severity": "review",
+    "code": "inferred-unit",
+    "title": "Единица частоты не указана — принята МГц (группа «Антенны:»)",
+    "details": "В 1!B10, 1!B11, 1!B12, 1!B13, 1!B15, 1!B16, 1!B17 частота записана без единицы. МГц принята по контексту группы, статус характеристики — inferred (не подтверждено). В названии единица не показывается.",
+    "sourceIds": [
+      "s1-B10",
+      "s1-B11",
+      "s1-B12",
+      "s1-B13",
+      "s1-B15",
+      "s1-B16",
+      "s1-B17"
+    ],
+    "productIds": [
+      "antenna-tip7",
+      "antenna-tip8",
+      "antenna-tip9",
+      "antenna-tip10",
+      "antenna-tip12",
+      "antenna-tip13",
+      "antenna-tip14"
+    ]
+  },
+  {
+    "id": "inferred-unit-s1-E4",
+    "severity": "review",
+    "code": "inferred-unit",
+    "title": "Единица частоты не указана — принята МГц (группа «Фильтры полосовые:»)",
+    "details": "В 1!E4 частота записана без единицы. МГц принята по контексту группы, статус характеристики — inferred (не подтверждено). В названии единица не показывается.",
+    "sourceIds": [
+      "s1-E4"
+    ],
+    "productIds": [
+      "bandpass-filter-136-174-n-female"
+    ]
+  },
+  {
+    "id": "inferred-unit-s1-H4",
+    "severity": "review",
+    "code": "inferred-unit",
+    "title": "Единица частоты не указана — принята МГц (группа «Фильтры канальные:»)",
+    "details": "В 1!H4, 1!H5, 1!H6, 1!H8, 1!H9, 1!H10, 1!H12, 1!H13, 1!H14, 1!H16, 1!H17, 1!H18, 1!H20, 1!H21, 1!H22 частота записана без единицы. МГц принята по контексту группы, статус характеристики — inferred (не подтверждено). В названии единица не показывается.",
+    "sourceIds": [
+      "s1-H4",
+      "s1-H5",
+      "s1-H6",
+      "s1-H8",
+      "s1-H9",
+      "s1-H10",
+      "s1-H12",
+      "s1-H13",
+      "s1-H14",
+      "s1-H16",
+      "s1-H17",
+      "s1-H18",
+      "s1-H20",
+      "s1-H21",
+      "s1-H22"
+    ],
+    "productIds": [
+      "channel-filter-3205-3235",
+      "channel-filter-3225-3255",
+      "channel-filter-3245-3275",
+      "channel-filter-3515-3545",
+      "channel-filter-3535-3565",
+      "channel-filter-3555-3585",
+      "channel-filter-3810-3830",
+      "channel-filter-3950-3970",
+      "channel-filter-4070-4090",
+      "channel-filter-4960-5000",
+      "channel-filter-4990-5030",
+      "channel-filter-5020-5050",
+      "channel-filter-5300-5340",
+      "channel-filter-5320-5360",
+      "channel-filter-5350-5390"
+    ]
+  },
+  {
+    "id": "ambiguous-connector-s1-B11",
+    "severity": "review",
+    "code": "ambiguous-connector",
+    "title": "Неоднозначный разъём: Тип8 «N/sma-мама»",
+    "details": "Разъём сохранён текстом со статусом needs-review. Два разъёма или два SKU не созданы; в фильтре разъёмов позиция не участвует до уточнения.",
+    "sourceIds": [
+      "s1-B11"
+    ],
+    "productIds": [
+      "antenna-tip8"
+    ]
+  },
+  {
+    "id": "group-note-scope-s1-E57",
+    "severity": "review",
+    "code": "group-note-scope",
+    "title": "Примечание 1!E57 не применено: область действия неясна",
+    "details": "«на фильтрах стоят разъёмы sma male - sma female» — область действия по ТЗ неясна (§4 п.12). Примечание стоит в группе «Фильтры полосовые:» листа 1, но противоречит разъёмам, явно указанным в 1!E4–1!E9 этой группы. Потенциально в области также: «Фильтры канальные:» листа 1 — 1!H4–1!H22 (15); «Фильтры на объёмных резонаторах:» листа 2 — 2!C23–2!C29 (7). Ни к одному товару не применено — в характеристики и фильтр разъёмов не попадает; у 43 товаров группы без явных разъёмов сохранено заметкой (scopeConfirmed: false).",
+    "sourceIds": [
+      "s1-E57"
+    ],
+    "productIds": [
+      "bandpass-filter-970-1080",
+      "bandpass-filter-1060-1360",
+      "bandpass-filter-1320-1480",
+      "bandpass-filter-1360-1700",
+      "bandpass-filter-1600-2100",
+      "bandpass-filter-1700-1900",
+      "bandpass-filter-1800-2100",
+      "bandpass-filter-1900-2200",
+      "bandpass-filter-2200-2500",
+      "bandpass-filter-2500-2700",
+      "bandpass-filter-2100-2700",
+      "bandpass-filter-2700-2900",
+      "bandpass-filter-2900-3100",
+      "bandpass-filter-3100-3300",
+      "bandpass-filter-3100-3500",
+      "bandpass-filter-3300-3500",
+      "bandpass-filter-3500-3700",
+      "bandpass-filter-3300-3700",
+      "bandpass-filter-3600-3800",
+      "bandpass-filter-3700-3900",
+      "bandpass-filter-3700-4100",
+      "bandpass-filter-3900-4100",
+      "bandpass-filter-4100-4300",
+      "bandpass-filter-4100-4500",
+      "bandpass-filter-4300-4500",
+      "bandpass-filter-4500-4900",
+      "bandpass-filter-4900-5200",
+      "bandpass-filter-4900-5500",
+      "bandpass-filter-5200-5500",
+      "bandpass-filter-5200-5800",
+      "bandpass-filter-5500-5800",
+      "bandpass-filter-5500-6100",
+      "bandpass-filter-5700-5900",
+      "bandpass-filter-5800-6100",
+      "bandpass-filter-6100-6500",
+      "bandpass-filter-6300-6500",
+      "bandpass-filter-6500-6900",
+      "bandpass-filter-6400-7100",
+      "bandpass-filter-6900-7300",
+      "bandpass-filter-7100-7500",
+      "bandpass-filter-7300-7700",
+      "bandpass-filter-7500-7900",
+      "bandpass-filter-7700-8100"
+    ]
+  },
+  {
+    "id": "cable-variants-s1-B49",
+    "severity": "review",
+    "code": "cable-variants",
+    "title": "Несколько типов кабеля в одной строке: «RG-316 / RG-142»",
+    "details": "Сохранено списком со статусом needs-review. Один товар с выбором кабеля или отдельные товары — решение после уточнения у заказчика (ТЗ §4 п.13).",
+    "sourceIds": [
+      "s1-B49"
+    ],
+    "productIds": [
+      "cable-15cm-sma-m-straight-sma-m-straight-rg316-rg142"
+    ]
+  },
+  {
+    "id": "unknown-unit-s2-C23",
+    "severity": "review",
+    "code": "unknown-unit",
+    "title": "«0.4 затухание» — единица не указана",
+    "details": "В 2!C23, 2!C24, 2!C25, 2!C26, 2!C27, 2!C28, 2!C29 затухание записано без единицы: сохранено числом без единицы (needs-review) и не участвует в фильтрации. Ослабление с единицей дБ — подтверждено.",
+    "sourceIds": [
+      "s2-C23",
+      "s2-C24",
+      "s2-C25",
+      "s2-C26",
+      "s2-C27",
+      "s2-C28",
+      "s2-C29"
+    ],
+    "productIds": [
+      "cavity-filter-1060-1360",
+      "cavity-filter-1360-1700",
+      "cavity-filter-2100-2700",
+      "cavity-filter-3300-3700",
+      "cavity-filter-3600-4400",
+      "cavity-filter-4900-5200",
+      "cavity-filter-5200-5500"
+    ]
+  },
+  {
+    "id": "unclear-note-s1-B57",
+    "severity": "review",
+    "code": "unclear-note",
+    "title": "Пометка «под рупор !»: смысл не ясен",
+    "details": "Пометка в 1!B57 сохранена заметкой товара и в название не включена. Смысл уточняется у заказчика.",
+    "sourceIds": [
+      "s1-B57"
+    ],
+    "productIds": [
+      "cable-1m-sma-m-straight-n-m-rg142"
+    ]
+  },
+  {
+    "id": "unclear-note-s1-E5",
+    "severity": "review",
+    "code": "unclear-note",
+    "title": "Пометка «на управу»: смысл не ясен",
+    "details": "Пометка в 1!E5, 1!E6, 1!E7, 1!E8, 1!E9 сохранена заметкой товара и в название не включена. Смысл уточняется у заказчика.",
+    "sourceIds": [
+      "s1-E5",
+      "s1-E6",
+      "s1-E7",
+      "s1-E8",
+      "s1-E9"
+    ],
+    "productIds": [
+      "bandpass-filter-170-340-n-female",
+      "bandpass-filter-280-600-n-female",
+      "bandpass-filter-400-600-n-female",
+      "bandpass-filter-600-1100-n-female",
+      "bandpass-filter-2100-2700-n-female"
+    ]
+  },
+  {
+    "id": "unclassified-s1-B18",
+    "severity": "review",
+    "code": "unclassified",
+    "title": "Конструкция не указана: Антенна «египетская сила»",
+    "details": "Конструкция антенны в строке не указана и по догадке не назначается (ТЗ §5): товар лежит в разделе «Антенны» без подкатегории, характеристики antenna_design нет.",
+    "sourceIds": [
+      "s1-B18"
+    ],
+    "productIds": [
+      "antenna-egipetskaya-sila"
+    ]
+  },
+  {
+    "id": "group-note-scope-s1-B46",
+    "severity": "info",
+    "code": "group-note-scope",
+    "title": "Примечание 1!B46 применено только к своей группе — область на товар вне группы уточнить",
+    "details": "«на МШУ стоят оба sma-female» применено к группе «МШУ:» листа 1 (1!B38–1!B45, 8 товаров) с происхождением group-note. На «МШУ:» листа 2 — 2!C20 (1) не распространено: разъёмы у этого товара не заполнены. Относится ли примечание и к нему — в прайсе не указано, уточнить у заказчика.",
+    "sourceIds": [
+      "s1-B46",
+      "s2-C20"
+    ],
+    "productIds": [
+      "lna-50-6000-20db"
+    ]
+  },
+  {
+    "id": "price-on-request-s1-B18",
+    "severity": "info",
+    "code": "price-on-request",
+    "title": "Цена «по запросу»: Антенна «египетская сила»",
+    "details": "Отдельный тип цены: price = null, не 0. Позиция добавляется в заявку, сумму согласует менеджер; в сортировке по цене — в конце.",
+    "sourceIds": [
+      "s1-B18"
+    ],
+    "productIds": [
+      "antenna-egipetskaya-sila"
+    ]
+  },
+  {
+    "id": "same-range-different-items-s1-E9",
+    "severity": "info",
+    "code": "same-range-different-items",
+    "title": "Одинаковый диапазон 2100–2700 МГц у разных фильтров",
+    "details": "Совпадение частоты не означает одинаковый товар — позиции не объединены: Фильтр полосовой 2100–2700 МГц, N-female — N-female (1!E9, 24 000 ₽); Фильтр полосовой 2100–2700 МГц (1!E20, 17 800 ₽); Фильтр на объёмных резонаторах 2100–2700 МГц (2!C25, 15 000 ₽).",
+    "sourceIds": [
+      "s1-E9",
+      "s1-E20",
+      "s2-C25"
+    ],
+    "productIds": [
+      "bandpass-filter-2100-2700-n-female",
+      "bandpass-filter-2100-2700",
+      "cavity-filter-2100-2700"
+    ]
+  },
+  {
+    "id": "same-range-different-items-s1-E11",
+    "severity": "info",
+    "code": "same-range-different-items",
+    "title": "Одинаковый диапазон 1060–1360 МГц у разных фильтров",
+    "details": "Совпадение частоты не означает одинаковый товар — позиции не объединены: Фильтр полосовой 1060–1360 МГц (1!E11, 18 500 ₽); Фильтр на объёмных резонаторах 1060–1360 МГц (2!C23, 15 000 ₽).",
+    "sourceIds": [
+      "s1-E11",
+      "s2-C23"
+    ],
+    "productIds": [
+      "bandpass-filter-1060-1360",
+      "cavity-filter-1060-1360"
+    ]
+  },
+  {
+    "id": "same-range-different-items-s1-E13",
+    "severity": "info",
+    "code": "same-range-different-items",
+    "title": "Одинаковый диапазон 1360–1700 МГц у разных фильтров",
+    "details": "Совпадение частоты не означает одинаковый товар — позиции не объединены: Фильтр полосовой 1360–1700 МГц (1!E13, 18 500 ₽); Фильтр на объёмных резонаторах 1360–1700 МГц (2!C24, 15 000 ₽).",
+    "sourceIds": [
+      "s1-E13",
+      "s2-C24"
+    ],
+    "productIds": [
+      "bandpass-filter-1360-1700",
+      "cavity-filter-1360-1700"
+    ]
+  },
+  {
+    "id": "same-range-different-items-s1-E27",
+    "severity": "info",
+    "code": "same-range-different-items",
+    "title": "Одинаковый диапазон 3300–3700 МГц у разных фильтров",
+    "details": "Совпадение частоты не означает одинаковый товар — позиции не объединены: Фильтр полосовой 3300–3700 МГц (1!E27, 17 800 ₽); Фильтр на объёмных резонаторах 3300–3700 МГц (2!C26, 15 000 ₽).",
+    "sourceIds": [
+      "s1-E27",
+      "s2-C26"
+    ],
+    "productIds": [
+      "bandpass-filter-3300-3700",
+      "cavity-filter-3300-3700"
+    ]
+  },
+  {
+    "id": "same-range-different-items-s1-E36",
+    "severity": "info",
+    "code": "same-range-different-items",
+    "title": "Одинаковый диапазон 4900–5200 МГц у разных фильтров",
+    "details": "Совпадение частоты не означает одинаковый товар — позиции не объединены: Фильтр полосовой 4900–5200 МГц (1!E36, 17 800 ₽); Фильтр на объёмных резонаторах 4900–5200 МГц (2!C28, 15 000 ₽).",
+    "sourceIds": [
+      "s1-E36",
+      "s2-C28"
+    ],
+    "productIds": [
+      "bandpass-filter-4900-5200",
+      "cavity-filter-4900-5200"
+    ]
+  },
+  {
+    "id": "same-range-different-items-s1-E38",
+    "severity": "info",
+    "code": "same-range-different-items",
+    "title": "Одинаковый диапазон 5200–5500 МГц у разных фильтров",
+    "details": "Совпадение частоты не означает одинаковый товар — позиции не объединены: Фильтр полосовой 5200–5500 МГц (1!E38, 17 800 ₽); Фильтр на объёмных резонаторах 5200–5500 МГц (2!C29, 15 000 ₽).",
+    "sourceIds": [
+      "s1-E38",
+      "s2-C29"
+    ],
+    "productIds": [
+      "bandpass-filter-5200-5500",
+      "cavity-filter-5200-5500"
+    ]
+  }
+]

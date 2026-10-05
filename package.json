@@ -1,0 +1,40 @@
+{
+  "name": "antennas-catalog",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "import:catalog": "node scripts/import-catalog.mjs",
+    "logo": "node scripts/build-logo.mjs",
+    "test:unit": "node --test --disable-warning=MODULE_TYPELESS_PACKAGE_JSON 'scripts/tests/*.test.mjs'",
+    "test:e2e": "playwright test",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"e2e/**/*.ts\" \"scripts/**/*.mjs\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"e2e/**/*.ts\" \"scripts/**/*.mjs\"",
+    "logo:verify": "node scripts/verify-logo.mjs"
+  },
+  "dependencies": {
+    "next": "^16.3.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "server-only": "^0.0.1",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@playwright/test": "^1.62.1",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22.15.3",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "eslint": "^9.26.0",
+    "eslint-config-next": "^16.3.1",
+    "prettier": "^3.9.6",
+    "sharp": "^0.35.3",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.8.3"
+  }
+}

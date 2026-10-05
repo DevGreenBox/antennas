@@ -1,0 +1,41 @@
+{
+  "sourceHash": "678dad6bdb3aa7c56612004189ab88699e7299650f9bbbe2895db87d904653a8",
+  "sourceFile": "source/Catalog_v11_for_Claude.md",
+  "counts": {
+    "rowsRead": 146,
+    "productRows": {
+      "total": 132,
+      "bySheet": {
+        "1": 113,
+        "2": 19
+      },
+      "byBlock": {
+        "B/C": 44,
+        "E/F": 54,
+        "H/I": 15,
+        "C/D": 19
+      }
+    },
+    "headersExcluded": 12,
+    "notes": 2,
+    "productsCreated": 118,
+    "mergedDuplicates": 4,
+    "conflictsAttached": 10,
+    "issuesBySeverity": {
+      "conflict": 10,
+      "review": 15,
+      "info": 8
+    },
+    "productsWithReviewIssues": 94,
+    "sourceRowsWithIssues": 78
+  },
+  "overrides": {
+    "hash": "ec7e27fa3eb3b330c8e9dd6b4179a3f1f9064129ab75bab0138c17951749f1c5",
+    "hiddenProductIds": [],
+    "renamedProductIds": [],
+    "imagesProductIds": [],
+    "recommendationsApplied": 0,
+    "recommendationsApproved": 0,
+    "warnings": []
+  }
+}

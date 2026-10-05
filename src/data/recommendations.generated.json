@@ -1,0 +1,66 @@
+[
+  {
+    "productId": "antenna-tip1",
+    "recommendedId": "cover-tip1",
+    "position": 1,
+    "note": "Из названия в прайсе: «Чехол для тип1»",
+    "basis": "source-name",
+    "status": "draft"
+  },
+  {
+    "productId": "antenna-tip2",
+    "recommendedId": "cover-tip2",
+    "position": 1,
+    "note": "Из названия в прайсе: «Чехол для тип2»",
+    "basis": "source-name",
+    "status": "draft"
+  },
+  {
+    "productId": "antenna-tip3",
+    "recommendedId": "cover-tip3",
+    "position": 1,
+    "note": "Из названия в прайсе: «Чехол для тип3»",
+    "basis": "source-name",
+    "status": "draft"
+  },
+  {
+    "productId": "antenna-tip7",
+    "recommendedId": "cover-tip7",
+    "position": 1,
+    "note": "Из названия в прайсе: «Чехол для тип7»",
+    "basis": "source-name",
+    "status": "draft"
+  },
+  {
+    "productId": "cover-tip2",
+    "recommendedId": "antenna-tip2",
+    "position": 1,
+    "note": "Из названия в прайсе: «Чехол для тип2»",
+    "basis": "source-name",
+    "status": "draft"
+  },
+  {
+    "productId": "cover-tip3",
+    "recommendedId": "antenna-tip3",
+    "position": 1,
+    "note": "Из названия в прайсе: «Чехол для тип3»",
+    "basis": "source-name",
+    "status": "draft"
+  },
+  {
+    "productId": "cover-tip7",
+    "recommendedId": "antenna-tip7",
+    "position": 1,
+    "note": "Из названия в прайсе: «Чехол для тип7»",
+    "basis": "source-name",
+    "status": "draft"
+  },
+  {
+    "productId": "cover-tip1",
+    "recommendedId": "antenna-tip1",
+    "position": 1,
+    "note": "Из названия в прайсе: «Чехол для тип1»",
+    "basis": "source-name",
+    "status": "draft"
+  }
+]

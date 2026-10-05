@@ -1,0 +1,892 @@
+{
+  "generatedBy": "scripts/measure-logo.mjs",
+  "source": "source/derived/logo-original-4600.png",
+  "image": {
+    "width": 4600,
+    "height": 4600
+  },
+  "conventions": "px растра 4600×4600, ось y вниз; азимут — градусы по часовой от «вверх»; радиусы aboutCircleCenter — средние расстояния точек кромки от центра круга",
+  "alphaThreshold": 128,
+  "color": {
+    "opaquePixels": 2646427,
+    "dominant": "#FA9506",
+    "top": [
+      {
+        "hex": "#FA9506",
+        "pixels": 2638118,
+        "sharePct": 99.686
+      },
+      {
+        "hex": "#FA9505",
+        "pixels": 1489,
+        "sharePct": 0.0563
+      },
+      {
+        "hex": "#FB9505",
+        "pixels": 1156,
+        "sharePct": 0.0437
+      },
+      {
+        "hex": "#F99507",
+        "pixels": 593,
+        "sharePct": 0.0224
+      },
+      {
+        "hex": "#FB9504",
+        "pixels": 494,
+        "sharePct": 0.0187
+      },
+      {
+        "hex": "#FA9507",
+        "pixels": 416,
+        "sharePct": 0.0157
+      }
+    ],
+    "method": "гистограмма RGB по пикселям с альфой 255"
+  },
+  "components": {
+    "kept": 7,
+    "noise": {
+      "count": 27,
+      "totalArea": 27
+    }
+  },
+  "circle": {
+    "cx": 2294.3241,
+    "cy": 2335.2119,
+    "r": 349.0658,
+    "rms": 0.236,
+    "maxAbs": 1.7298,
+    "n": 2862,
+    "kasa": {
+      "cx": 2294.324,
+      "cy": 2335.212,
+      "r": 349.0658
+    },
+    "area": 382861
+  },
+  "arcs": [
+    {
+      "id": "top-inner",
+      "group": "top",
+      "area": 302756,
+      "bbox": [
+        1721,
+        1411,
+        2896,
+        1801
+      ],
+      "phiCentroid": 1.055,
+      "inner": {
+        "cx": 2278.2824,
+        "cy": 2804.19,
+        "r": 1108.3916,
+        "rms": 0.5982,
+        "maxAbs": 1.8898,
+        "n": 1352,
+        "offset": {
+          "dx": -16.0417,
+          "dy": 468.9781,
+          "dist": 469.2524,
+          "pctOfOwnR": 42.3363,
+          "pctOfR0": 134.4309
+        },
+        "aboutCircleCenter": {
+          "r": 660.8349,
+          "rms": 19.279,
+          "maxAbs": 46.48
+        }
+      },
+      "outer": {
+        "cx": 2278.1826,
+        "cy": 2807.203,
+        "r": 1394.8102,
+        "rms": 0.5887,
+        "maxAbs": 1.9941,
+        "n": 1800,
+        "offset": {
+          "dx": -16.1414,
+          "dy": 471.991,
+          "dist": 472.2669,
+          "pctOfOwnR": 33.8589,
+          "pctOfR0": 135.2945
+        },
+        "aboutCircleCenter": {
+          "r": 944.1745,
+          "rms": 19.2634,
+          "maxAbs": 44.2357
+        }
+      },
+      "thicknessOwnFits": 286.4186,
+      "thicknessAboutCircleCenter": 283.3396,
+      "caps": [
+        {
+          "side": "против часовой",
+          "line": {
+            "px": 1788.4782,
+            "py": 1658.4371,
+            "ux": -0.4691,
+            "uy": -0.8831,
+            "rms": 0.4646,
+            "n": 411
+          },
+          "azInnerEdge": 321.5147,
+          "azOuterEdge": 324.5212,
+          "azMid": 322.7551,
+          "deviationFromRadialDeg": 8.7981,
+          "offsetFromCenterPx": -129.235
+        },
+        {
+          "side": "по часовой",
+          "line": {
+            "px": 2820.885,
+            "py": 1680.5373,
+            "ux": 0.5244,
+            "uy": -0.8515,
+            "rms": 0.336,
+            "n": 405
+          },
+          "azInnerEdge": 40.2429,
+          "azOuterEdge": 37.7549,
+          "azMid": 39.149,
+          "deviationFromRadialDeg": -7.1828,
+          "offsetFromCenterPx": 105.0498
+        }
+      ],
+      "spanMidDeg": 76.3938,
+      "spanInnerEdgeDeg": 78.7281,
+      "spanOuterEdgeDeg": 73.2337,
+      "midAzimuthDeg": 0.9521,
+      "ring": "inner"
+    },
+    {
+      "id": "top-outer",
+      "group": "top",
+      "area": 457827,
+      "bbox": [
+        1469,
+        870,
+        3176,
+        1341
+      ],
+      "phiCentroid": 0.6029,
+      "inner": {
+        "cx": 2282.5068,
+        "cy": 2714.976,
+        "r": 1564.2786,
+        "rms": 0.4998,
+        "maxAbs": 2.3125,
+        "n": 2148,
+        "offset": {
+          "dx": -11.8172,
+          "dy": 379.7641,
+          "dist": 379.9479,
+          "pctOfOwnR": 24.289,
+          "pctOfR0": 108.8471
+        },
+        "aboutCircleCenter": {
+          "r": 1202.3346,
+          "rms": 16.0613,
+          "maxAbs": 36.799
+        }
+      },
+      "outer": {
+        "cx": 2279.8727,
+        "cy": 2729.6653,
+        "r": 1859.498,
+        "rms": 0.4556,
+        "maxAbs": 2.0711,
+        "n": 2470,
+        "offset": {
+          "dx": -14.4513,
+          "dy": 394.4534,
+          "dist": 394.718,
+          "pctOfOwnR": 21.2271,
+          "pctOfR0": 113.0784
+        },
+        "aboutCircleCenter": {
+          "r": 1483.182,
+          "rms": 16.402,
+          "maxAbs": 37.8237
+        }
+      },
+      "thicknessOwnFits": 295.2193,
+      "thicknessAboutCircleCenter": 280.8474,
+      "caps": [
+        {
+          "side": "против часовой",
+          "line": {
+            "px": 1535.1279,
+            "py": 1181.8243,
+            "ux": -0.471,
+            "uy": -0.8821,
+            "rms": 0.313,
+            "n": 397
+          },
+          "azInnerEdge": 326.0471,
+          "azOuterEdge": 327.1352,
+          "azMid": 326.4964,
+          "deviationFromRadialDeg": 5.2564,
+          "offsetFromCenterPx": -126.5021
+        },
+        {
+          "side": "по часовой",
+          "line": {
+            "px": 3103.1898,
+            "py": 1220.689,
+            "ux": 0.5241,
+            "uy": -0.8517,
+            "rms": 0.2276,
+            "n": 379
+          },
+          "azInnerEdge": 36.4662,
+          "azOuterEdge": 35.5662,
+          "azMid": 36.0821,
+          "deviationFromRadialDeg": -4.3624,
+          "offsetFromCenterPx": 104.7501
+        }
+      ],
+      "spanMidDeg": 69.5858,
+      "spanInnerEdgeDeg": 70.4191,
+      "spanOuterEdgeDeg": 68.4309,
+      "midAzimuthDeg": 1.2892,
+      "ring": "outer"
+    },
+    {
+      "id": "lowerRight-inner",
+      "group": "lowerRight",
+      "area": 302084,
+      "bbox": [
+        2542,
+        2242,
+        3294,
+        3255
+      ],
+      "phiCentroid": 121.3819,
+      "inner": {
+        "cx": 1913.1294,
+        "cy": 2092.3991,
+        "r": 1107.5321,
+        "rms": 0.4586,
+        "maxAbs": 1.9041,
+        "n": 1271,
+        "offset": {
+          "dx": -381.1947,
+          "dy": -242.8129,
+          "dist": 451.9596,
+          "pctOfOwnR": 40.8078,
+          "pctOfR0": 129.4769
+        },
+        "aboutCircleCenter": {
+          "r": 675.791,
+          "rms": 18.1565,
+          "maxAbs": 44.9992
+        }
+      },
+      "outer": {
+        "cx": 1909.0821,
+        "cy": 2091.0323,
+        "r": 1394.2018,
+        "rms": 0.4457,
+        "maxAbs": 2.7064,
+        "n": 1654,
+        "offset": {
+          "dx": -385.242,
+          "dy": -244.1796,
+          "dist": 456.1086,
+          "pctOfOwnR": 32.7147,
+          "pctOfR0": 130.6655
+        },
+        "aboutCircleCenter": {
+          "r": 958.3073,
+          "rms": 18.1164,
+          "maxAbs": 44.1566
+        }
+      },
+      "thicknessOwnFits": 286.6697,
+      "thicknessAboutCircleCenter": 282.5163,
+      "caps": [
+        {
+          "side": "против часовой",
+          "line": {
+            "px": 3147.9092,
+            "py": 2247.9776,
+            "ux": 0.9992,
+            "uy": 0.0389,
+            "rms": 0.4385,
+            "n": 424
+          },
+          "azInnerEdge": 82.6326,
+          "azOuterEdge": 85.3352,
+          "azMid": 83.7573,
+          "deviationFromRadialDeg": 8.0664,
+          "offsetFromCenterPx": -120.3993
+        },
+        {
+          "side": "по часовой",
+          "line": {
+            "px": 2608.8579,
+            "py": 3132.1331,
+            "ux": 0.4697,
+            "uy": 0.8828,
+            "rms": 0.3776,
+            "n": 387
+          },
+          "azInnerEdge": 159.7689,
+          "azOuterEdge": 157.5506,
+          "azMid": 158.7776,
+          "deviationFromRadialDeg": -6.4764,
+          "offsetFromCenterPx": 96.6357
+        }
+      ],
+      "spanMidDeg": 75.0204,
+      "spanInnerEdgeDeg": 77.1362,
+      "spanOuterEdgeDeg": 72.2154,
+      "midAzimuthDeg": 121.2675,
+      "ring": "inner"
+    },
+    {
+      "id": "lowerRight-outer",
+      "group": "lowerRight",
+      "area": 458108,
+      "bbox": [
+        2796,
+        2264,
+        3829,
+        3728
+      ],
+      "phiCentroid": 121.5331,
+      "inner": {
+        "cx": 1986.4639,
+        "cy": 2140.8274,
+        "r": 1564.4153,
+        "rms": 0.4559,
+        "maxAbs": 2.1418,
+        "n": 2070,
+        "offset": {
+          "dx": -307.8602,
+          "dy": -194.3845,
+          "dist": 364.0923,
+          "pctOfOwnR": 23.2734,
+          "pctOfR0": 104.3048
+        },
+        "aboutCircleCenter": {
+          "r": 1217.0286,
+          "rms": 15.0654,
+          "maxAbs": 36.1094
+        }
+      },
+      "outer": {
+        "cx": 1976.4221,
+        "cy": 2132.1481,
+        "r": 1858.0203,
+        "rms": 0.4679,
+        "maxAbs": 2.7976,
+        "n": 2483,
+        "offset": {
+          "dx": -317.902,
+          "dy": -203.0638,
+          "dist": 377.2222,
+          "pctOfOwnR": 20.3024,
+          "pctOfR0": 108.0662
+        },
+        "aboutCircleCenter": {
+          "r": 1497.857,
+          "rms": 15.4158,
+          "maxAbs": 37.2433
+        }
+      },
+      "thicknessOwnFits": 293.6051,
+      "thicknessAboutCircleCenter": 280.8284,
+      "caps": [
+        {
+          "side": "против часовой",
+          "line": {
+            "px": 3688.428,
+            "py": 2270.1012,
+            "ux": 0.9992,
+            "uy": 0.0399,
+            "rms": 0.3637,
+            "n": 410
+          },
+          "azInnerEdge": 86.7624,
+          "azOuterEdge": 87.7797,
+          "azMid": 87.186,
+          "deviationFromRadialDeg": 4.9628,
+          "offsetFromCenterPx": -120.7348
+        },
+        {
+          "side": "по часовой",
+          "line": {
+            "px": 2861.5491,
+            "py": 3604.6034,
+            "ux": 0.471,
+            "uy": 0.8821,
+            "rms": 0.3173,
+            "n": 377
+          },
+          "azInnerEdge": 156.3764,
+          "azOuterEdge": 155.5547,
+          "azMid": 156.0203,
+          "deviationFromRadialDeg": -4.02,
+          "offsetFromCenterPx": 97.4718
+        }
+      ],
+      "spanMidDeg": 68.8342,
+      "spanInnerEdgeDeg": 69.6141,
+      "spanOuterEdgeDeg": 67.775,
+      "midAzimuthDeg": 121.6031,
+      "ring": "outer"
+    },
+    {
+      "id": "lowerLeft-inner",
+      "group": "lowerLeft",
+      "area": 303448,
+      "bbox": [
+        1306,
+        2239,
+        2040,
+        3259
+      ],
+      "phiCentroid": 238.7587,
+      "inner": {
+        "cx": 2692.2914,
+        "cy": 2120.8613,
+        "r": 1106.3613,
+        "rms": 0.6773,
+        "maxAbs": 2.1164,
+        "n": 1408,
+        "offset": {
+          "dx": 397.9673,
+          "dy": -214.3507,
+          "dist": 452.0224,
+          "pctOfOwnR": 40.8567,
+          "pctOfR0": 129.4949
+        },
+        "aboutCircleCenter": {
+          "r": 675.0605,
+          "rms": 18.7673,
+          "maxAbs": 49.2843
+        }
+      },
+      "outer": {
+        "cx": 2694.339,
+        "cy": 2120.2102,
+        "r": 1392.4071,
+        "rms": 0.6593,
+        "maxAbs": 2.2305,
+        "n": 1866,
+        "offset": {
+          "dx": 400.0149,
+          "dy": -215.0017,
+          "dist": 454.134,
+          "pctOfOwnR": 32.615,
+          "pctOfR0": 130.0998
+        },
+        "aboutCircleCenter": {
+          "r": 958.9171,
+          "rms": 18.8044,
+          "maxAbs": 47.722
+        }
+      },
+      "thicknessOwnFits": 286.0458,
+      "thicknessAboutCircleCenter": 283.8566,
+      "caps": [
+        {
+          "side": "против часовой",
+          "line": {
+            "px": 1968.7007,
+            "py": 3137.4539,
+            "ux": -0.509,
+            "uy": 0.8607,
+            "rms": 0.3858,
+            "n": 401
+          },
+          "azInnerEdge": 200.4324,
+          "azOuterEdge": 203.2977,
+          "azMid": 201.5793,
+          "deviationFromRadialDeg": 8.5084,
+          "offsetFromCenterPx": -128.1007
+        },
+        {
+          "side": "по часовой",
+          "line": {
+            "px": 1455.4875,
+            "py": 2241.0286,
+            "ux": -1,
+            "uy": -0.0042,
+            "rms": 0.5483,
+            "n": 408
+          },
+          "azInnerEdge": 277.5976,
+          "azOuterEdge": 275.4856,
+          "azMid": 276.6118,
+          "deviationFromRadialDeg": -6.1658,
+          "offsetFromCenterPx": 90.6623
+        }
+      ],
+      "spanMidDeg": 75.0325,
+      "spanInnerEdgeDeg": 77.1652,
+      "spanOuterEdgeDeg": 72.188,
+      "midAzimuthDeg": 239.0955,
+      "ring": "inner"
+    },
+    {
+      "id": "lowerLeft-outer",
+      "group": "lowerLeft",
+      "area": 457979,
+      "bbox": [
+        772,
+        2238,
+        1767,
+        3721
+      ],
+      "phiCentroid": 238.8632,
+      "inner": {
+        "cx": 2615.4452,
+        "cy": 2162.8579,
+        "r": 1564.0998,
+        "rms": 0.474,
+        "maxAbs": 1.602,
+        "n": 2097,
+        "offset": {
+          "dx": 321.1212,
+          "dy": -172.3541,
+          "dist": 364.4513,
+          "pctOfOwnR": 23.301,
+          "pctOfR0": 104.4076
+        },
+        "aboutCircleCenter": {
+          "r": 1216.9235,
+          "rms": 15.6937,
+          "maxAbs": 40.5153
+        }
+      },
+      "outer": {
+        "cx": 2628.5561,
+        "cy": 2158.1718,
+        "r": 1858.3652,
+        "rms": 0.4677,
+        "maxAbs": 1.9993,
+        "n": 2472,
+        "offset": {
+          "dx": 334.232,
+          "dy": -177.0402,
+          "dist": 378.2252,
+          "pctOfOwnR": 20.3526,
+          "pctOfR0": 108.3536
+        },
+        "aboutCircleCenter": {
+          "r": 1497.6683,
+          "rms": 16.0616,
+          "maxAbs": 41.9408
+        }
+      },
+      "thicknessOwnFits": 294.2655,
+      "thicknessAboutCircleCenter": 280.7447,
+      "caps": [
+        {
+          "side": "против часовой",
+          "line": {
+            "px": 1695.0699,
+            "py": 3599.0708,
+            "ux": -0.509,
+            "uy": 0.8607,
+            "rms": 0.2354,
+            "n": 380
+          },
+          "azInnerEdge": 204.7786,
+          "azOuterEdge": 205.8484,
+          "azMid": 205.2076,
+          "deviationFromRadialDeg": 5.2325,
+          "offsetFromCenterPx": -127.5612
+        },
+        {
+          "side": "по часовой",
+          "line": {
+            "px": 903.3624,
+            "py": 2239.4575,
+            "ux": -1,
+            "uy": -0.0045,
+            "rms": 0.3358,
+            "n": 390
+          },
+          "azInnerEdge": 274.3811,
+          "azOuterEdge": 273.6211,
+          "azMid": 274.0384,
+          "deviationFromRadialDeg": -3.6812,
+          "offsetFromCenterPx": 89.5191
+        }
+      ],
+      "spanMidDeg": 68.8308,
+      "spanInnerEdgeDeg": 69.6025,
+      "spanOuterEdgeDeg": 67.7727,
+      "midAzimuthDeg": 239.623,
+      "ring": "outer"
+    }
+  ],
+  "groups": [
+    {
+      "key": "top",
+      "name": "верх",
+      "midAzimuthDeg": 1.1206,
+      "deviationDeg": 1.1206
+    },
+    {
+      "key": "lowerRight",
+      "name": "низ-право",
+      "midAzimuthDeg": 121.4353,
+      "deviationDeg": 1.4353
+    },
+    {
+      "key": "lowerLeft",
+      "name": "низ-лево",
+      "midAzimuthDeg": 239.3593,
+      "deviationDeg": -0.6407
+    }
+  ],
+  "rotationDeg": 0.6384,
+  "gapsBetweenGroups": [
+    {
+      "ring": "inner",
+      "gapsDeg": [
+        {
+          "from": "top",
+          "to": "lowerRight",
+          "deg": 44.6083
+        },
+        {
+          "from": "lowerRight",
+          "to": "lowerLeft",
+          "deg": 42.8016
+        },
+        {
+          "from": "lowerLeft",
+          "to": "top",
+          "deg": 46.1434
+        }
+      ]
+    },
+    {
+      "ring": "outer",
+      "gapsDeg": [
+        {
+          "from": "top",
+          "to": "lowerRight",
+          "deg": 51.1039
+        },
+        {
+          "from": "lowerRight",
+          "to": "lowerLeft",
+          "deg": 49.1873
+        },
+        {
+          "from": "lowerLeft",
+          "to": "top",
+          "deg": 52.4579
+        }
+      ]
+    }
+  ],
+  "concentricFits": {
+    "note": "общий центр для 12 кромок дуг (arcsOnly) и для 12 кромок + круг (withCircle); рост СКО относительно индивидуальных подгонок = цена принудительной концентричности",
+    "arcsOnly": {
+      "cx": 2297.5597,
+      "cy": 2341.5714,
+      "radii": [
+        {
+          "edge": "top-inner-inner",
+          "r": 666.6622,
+          "rms": 19.0429,
+          "maxAbs": 47.659
+        },
+        {
+          "edge": "top-inner-outer",
+          "r": 950.0506,
+          "rms": 19.0201,
+          "maxAbs": 45.4238
+        },
+        {
+          "edge": "top-outer-inner",
+          "r": 1208.292,
+          "rms": 15.8425,
+          "maxAbs": 37.9293
+        },
+        {
+          "edge": "top-outer-outer",
+          "r": 1489.129,
+          "rms": 16.209,
+          "maxAbs": 38.9775
+        },
+        {
+          "edge": "lowerRight-inner-inner",
+          "r": 670.1535,
+          "rms": 18.7407,
+          "maxAbs": 48.2116
+        },
+        {
+          "edge": "lowerRight-inner-outer",
+          "r": 952.5907,
+          "rms": 18.6123,
+          "maxAbs": 47.1422
+        },
+        {
+          "edge": "lowerRight-outer-inner",
+          "r": 1211.2952,
+          "rms": 15.5065,
+          "maxAbs": 38.9464
+        },
+        {
+          "edge": "lowerRight-outer-outer",
+          "r": 1492.102,
+          "rms": 15.8755,
+          "maxAbs": 39.9989
+        },
+        {
+          "edge": "lowerLeft-inner-inner",
+          "r": 674.5203,
+          "rms": 18.2247,
+          "maxAbs": 45.0606
+        },
+        {
+          "edge": "lowerLeft-inner-outer",
+          "r": 958.4537,
+          "rms": 18.2798,
+          "maxAbs": 43.7094
+        },
+        {
+          "edge": "lowerLeft-outer-inner",
+          "r": 1216.4221,
+          "rms": 15.2512,
+          "maxAbs": 36.6451
+        },
+        {
+          "edge": "lowerLeft-outer-outer",
+          "r": 1497.1759,
+          "rms": 15.5609,
+          "maxAbs": 38.1542
+        }
+      ],
+      "rms": 16.9702
+    },
+    "withCircle": {
+      "cx": 2295.982,
+      "cy": 2338.3059,
+      "radii": [
+        {
+          "edge": "circle",
+          "r": 349.0691,
+          "rms": 2.4976,
+          "maxAbs": 4.134
+        },
+        {
+          "edge": "top-inner-inner",
+          "r": 663.6658,
+          "rms": 19.1575,
+          "maxAbs": 47.1088
+        },
+        {
+          "edge": "top-inner-outer",
+          "r": 947.0299,
+          "rms": 19.1382,
+          "maxAbs": 44.8649
+        },
+        {
+          "edge": "top-outer-inner",
+          "r": 1205.2311,
+          "rms": 15.9471,
+          "maxAbs": 37.397
+        },
+        {
+          "edge": "top-outer-outer",
+          "r": 1486.073,
+          "rms": 16.3011,
+          "maxAbs": 38.4325
+        },
+        {
+          "edge": "lowerRight-inner-inner",
+          "r": 672.979,
+          "rms": 18.4305,
+          "maxAbs": 46.5404
+        },
+        {
+          "edge": "lowerRight-inner-outer",
+          "r": 955.4575,
+          "rms": 18.3488,
+          "maxAbs": 45.5888
+        },
+        {
+          "edge": "lowerRight-outer-inner",
+          "r": 1214.1705,
+          "rms": 15.2701,
+          "maxAbs": 37.4705
+        },
+        {
+          "edge": "lowerRight-outer-outer",
+          "r": 1494.9886,
+          "rms": 15.6301,
+          "maxAbs": 38.5654
+        },
+        {
+          "edge": "lowerLeft-inner-inner",
+          "r": 674.8557,
+          "rms": 18.4521,
+          "maxAbs": 47.1968
+        },
+        {
+          "edge": "lowerLeft-inner-outer",
+          "r": 958.753,
+          "rms": 18.5029,
+          "maxAbs": 45.7389
+        },
+        {
+          "edge": "lowerLeft-outer-inner",
+          "r": 1216.7423,
+          "rms": 15.4279,
+          "maxAbs": 38.6022
+        },
+        {
+          "edge": "lowerLeft-outer-outer",
+          "r": 1497.4926,
+          "rms": 15.7712,
+          "maxAbs": 40.069
+        }
+      ],
+      "rms": 16.0506
+    }
+  },
+  "summary": {
+    "centerOffsetPx": {
+      "min": 364.0923,
+      "max": 472.2669,
+      "mean": 417.8667
+    },
+    "averages": {
+      "r0": 349.0658,
+      "r1i": 670.5621,
+      "r1o": 953.7996,
+      "r2i": 1212.0956,
+      "r2o": 1492.9024,
+      "ownFits": {
+        "r1i": 1107.4283,
+        "r1o": 1393.8064,
+        "r2i": 1564.2646,
+        "r2o": 1858.6278,
+        "t1": 286.378,
+        "t2": 294.3633
+      },
+      "span1MidDeg": 75.4822,
+      "span2MidDeg": 69.0836,
+      "span1InnerEdgeDeg": 77.6765,
+      "span1OuterEdgeDeg": 72.5457,
+      "span2InnerEdgeDeg": 69.8786,
+      "span2OuterEdgeDeg": 67.9929,
+      "capDeviationFromRadialAbsDeg": 6.0595,
+      "capOffsetFromCenterAbsPx": 111.3852,
+      "t1": 283.2375,
+      "t2": 280.8069,
+      "gap01": 321.4964,
+      "gap12": 258.2959
+    }
+  }
+}
