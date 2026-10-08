@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import { INFERRED_FOOTNOTE, StatusValue } from '@/components/product/SpecLine';
+import { INFERRED_FOOTNOTE, StatusValue, TechText } from '@/components/product/SpecLine';
 import { Badge } from '@/components/ui/Badge';
 import { Price } from '@/components/ui/Price';
 import { formatPrice } from '@/lib/catalog';
@@ -98,11 +98,16 @@ function NameCell({ row }: { row: ItemRow }) {
   return (
     <div className="min-w-0">
       {row.href ? (
-        <Link href={row.href} className="text-body font-medium text-ink hover:underline">
-          {row.name}
+        <Link
+          href={row.href}
+          className="text-body font-semibold text-ink decoration-1 underline-offset-[0.2em] hover:underline"
+        >
+          <TechText text={row.name} />
         </Link>
       ) : (
-        <span className="text-body font-medium text-ink">{row.name}</span>
+        <span className="text-body font-semibold text-ink">
+          <TechText text={row.name} />
+        </span>
       )}
       <p className="mt-0.5 font-mono text-caption text-ink-muted">{row.code}</p>
       {row.spec.length > 0 ? (
@@ -145,8 +150,9 @@ function TotalCell({ row }: { row: ItemRow }) {
   );
 }
 
+/** Шапка таблицы — подписи как `spec-label` (DESIGN § R.3), без заливки; строки — линии 1 px. */
 const TH =
-  'py-2.5 px-3 text-left font-medium text-ink-muted whitespace-nowrap border-b border-line';
+  'pb-2 px-3 text-left text-caption font-normal text-ink-muted whitespace-nowrap border-b border-line';
 
 export function OrderItemsTable({
   order,
@@ -179,17 +185,17 @@ export function OrderItemsTable({
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.key} className="border-b border-line-subtle">
-              <td className="py-3 pr-3 pl-0 align-top">
+            <tr key={row.key} className="border-b border-line-subtle last:border-line">
+              <td className="py-3.5 pr-3 pl-0 align-top">
                 <NameCell row={row} />
               </td>
-              <td className="px-3 py-3 text-right align-top">
+              <td className="px-3 py-3.5 text-right align-top">
                 <UnitPriceCell row={row} />
               </td>
-              <td className="px-3 py-3 text-right align-top whitespace-nowrap tabular-nums">
+              <td className="px-3 py-3.5 text-right align-top whitespace-nowrap tabular-nums">
                 {formatPieces(row.quantity)}
               </td>
-              <td className="py-3 pr-0 pl-3 text-right align-top whitespace-nowrap">
+              <td className="py-3.5 pr-0 pl-3 text-right align-top whitespace-nowrap">
                 <TotalCell row={row} />
               </td>
             </tr>
@@ -197,14 +203,23 @@ export function OrderItemsTable({
         </tbody>
       </table>
 
-      <ul className="border-t border-line-subtle md:hidden">
+      <ul className="divide-y divide-line-subtle border-y border-line md:hidden">
         {rows.map((row) => (
-          <li key={row.key} className="flex flex-col gap-2 border-b border-line-subtle py-4">
+          <li key={row.key} className="flex flex-col gap-2 py-4">
             <NameCell row={row} />
             <div className="flex items-start justify-between gap-3 text-small">
               <div>
-                <UnitPriceCell row={row} />
-                <span className="text-ink-secondary"> × {formatPieces(row.quantity)}</span>
+                <p className="flex flex-wrap items-center gap-x-1.5">
+                  {row.unitPrice === null ? (
+                    <Badge tone="neutral">По запросу</Badge>
+                  ) : (
+                    <Price amount={row.unitPrice} size="sm" />
+                  )}
+                  <span className="text-ink-secondary">× {formatPieces(row.quantity)}</span>
+                </p>
+                {row.snapshotNote ? (
+                  <p className="mt-0.5 text-caption text-ink-muted">{row.snapshotNote}</p>
+                ) : null}
               </div>
               <TotalCell row={row} />
             </div>

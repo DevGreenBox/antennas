@@ -3,9 +3,9 @@
 import { useSearchParams } from 'next/navigation';
 
 import { ProcessSteps } from '@/components/home/ProcessSteps';
+import { StatusBadge } from '@/components/ui/Badge';
 import { ButtonLink } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { Icon } from '@/components/ui/Icon';
 import { DemoNotice } from '@/components/ui/Notice';
 import { Skeleton, SkeletonGroup } from '@/components/ui/Skeleton';
 import { site } from '@/config/site';
@@ -26,6 +26,10 @@ import { usePersistHydrated } from '@/lib/store/storage';
  *
  * «Открыть заказ»: сессия на тот же email — сразу в заказ, иначе вход по коду с подставленным
  * email и возвратом в заказ.
+ *
+ * Подача (DESIGN § R.1): без значка у заголовка — состояние передают h1 и бейдж статуса у номера.
+ * Порядок: что произошло → следующее действие («Открыть заказ») → что было бы отправлено в рабочей
+ * версии (демо-пометка, одна на странице) → «Что дальше» — шаги процесса во всю ширину.
  */
 export function SuccessView() {
   const params = useSearchParams();
@@ -76,54 +80,24 @@ export function SuccessView() {
   const { telegram } = site.contacts;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-12 lg:gap-16">
       <div className="max-w-narrow">
-        <div className="flex items-center gap-3">
-          <Icon name="circle-check" size={32} className="shrink-0 text-success" />
-          <h1>Заявка отправлена</h1>
+        <h1>Заявка отправлена</h1>
+        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
+          <p className="text-body text-ink-secondary">
+            Номер заказа{' '}
+            <span className="font-mono text-title font-semibold whitespace-nowrap text-ink">
+              {order.number}
+            </span>
+          </p>
+          <StatusBadge status={order.status} />
         </div>
-        <p className="mt-4 text-body text-ink-secondary">
-          Номер заказа{' '}
-          <span className="font-mono text-title font-semibold whitespace-nowrap text-ink">
-            {order.number}
-          </span>
-        </p>
-        <p className="mt-2 text-body text-ink">
+        <p className="mt-3 text-body text-ink">
           Менеджер свяжется с вами по email {buyer.email}
           {buyer.phone ? ` или по телефону ${formatPhone(buyer.phone)}` : ''}.
         </p>
-      </div>
 
-      <DemoNotice className="max-w-narrow">
-        <p>
-          Демо: заявка сохранена только в этом браузере, менеджер её не получил. Для настоящего
-          заказа напишите в Telegram{' '}
-          <a href={telegram.url} target="_blank" rel="noopener noreferrer" className="text-link">
-            {telegram.handle}
-            <span className="sr-only"> (откроется в новой вкладке)</span>
-          </a>
-          .
-        </p>
-        {telegramNote ? (
-          <p className="mt-2 text-ink-secondary">
-            Уведомление менеджеру в Telegram (демо, реальная отправка не выполняется): «
-            {telegramNote}».
-          </p>
-        ) : null}
-        <p className="mt-1 text-ink-secondary">
-          Письмо покупателю «Заявка {order.number} получена» — демо, не отправлено.
-        </p>
-      </DemoNotice>
-
-      <section aria-labelledby="success-steps" className="mt-2 max-w-page">
-        <h2 id="success-steps" className="sr-only">
-          Что дальше
-        </h2>
-        <ProcessSteps orientation="horizontal" current={2} headingLevel="h3" />
-      </section>
-
-      <div className="mt-2 flex max-w-narrow flex-col gap-3">
-        <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <ButtonLink href={openHref} variant="primary" size="lg" fullWidth="mobile">
             Открыть заказ
           </ButtonLink>
@@ -132,12 +106,40 @@ export function SuccessView() {
           </ButtonLink>
         </div>
         {signedIn ? null : (
-          <p className="text-small text-ink-secondary">
+          <p className="mt-3 text-small text-ink-secondary">
             Заказ и его статус — в личном кабинете. Пароль не нужен: войдите по одноразовому коду,
             который придёт на {buyer.email}.
           </p>
         )}
+
+        <DemoNotice className="mt-8">
+          <p>
+            Заявка сохранена только в этом браузере, менеджер её не получил. Для настоящего заказа
+            напишите в Telegram{' '}
+            <a href={telegram.url} target="_blank" rel="noopener noreferrer" className="text-link">
+              {telegram.handle}
+              <span className="sr-only"> (откроется в новой вкладке)</span>
+            </a>
+            .
+          </p>
+          {telegramNote ? (
+            <p className="mt-2 text-ink-secondary">
+              Уведомление менеджеру в Telegram (демо, реальная отправка не выполняется): «
+              {telegramNote}».
+            </p>
+          ) : null}
+          <p className="mt-1 text-ink-secondary">
+            Письмо покупателю «Заявка {order.number} получена» — демо, не отправлено.
+          </p>
+        </DemoNotice>
       </div>
+
+      <section aria-labelledby="success-steps">
+        <h2 id="success-steps" className="mb-2">
+          Что дальше
+        </h2>
+        <ProcessSteps current={2} headingLevel="h3" />
+      </section>
     </div>
   );
 }

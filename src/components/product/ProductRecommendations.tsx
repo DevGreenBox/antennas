@@ -19,7 +19,8 @@ import { INFERRED_FOOTNOTE, specLineHasInferred } from './SpecLine';
  *
  * В карточках есть значение «*» (единица принята по контексту, §4.10) — под блоком сноска.
  */
-const GRID = 'grid gap-4 sm:grid-cols-2 xl:grid-cols-4';
+/** Сетка как у плитки каталога: одна карточка не растягивается на всю ширину. */
+const GRID = 'grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4';
 
 function CardList({
   products,
@@ -32,7 +33,7 @@ function CardList({
     <ul className={GRID}>
       {products.map((product) => (
         <li key={product.id} className="flex flex-col gap-2">
-          <ProductCard product={product} variant="compact" className="flex-1" />
+          <ProductCard product={product} className="flex-1" />
           {notes[product.id] ? (
             <p className="text-caption text-ink-muted">{notes[product.id]}</p>
           ) : null}
@@ -60,7 +61,10 @@ export function ProductRecommendations({
       className={className}
       data-testid="recommendations"
     >
-      <h2 id="recommendations-title" className="mb-4 lg:mb-6">
+      <h2
+        id="recommendations-title"
+        className="mb-6 text-title font-medium lg:mb-8 lg:text-heading"
+      >
         К этому товару подойдёт
       </h2>
       {approved.length > 0 ? <CardList products={approved} notes={notes} /> : null}

@@ -142,7 +142,8 @@ export function OptionsFacetGroup({
         <Button
           variant="link"
           size="sm"
-          className="mt-1"
+          // В Drawer — строка 44 px, как у опций (цель нажатия, § R.9).
+          className={cn('mt-1', comfortable && 'min-h-11')}
           aria-expanded={expanded}
           aria-controls={listId}
           onClick={() => setExpanded((value) => !value)}
@@ -411,7 +412,9 @@ export function FrequencyFacetGroup({
       : undefined;
 
   return (
-    <FacetGroup legend={facet.label}>
+    // Единица — в заголовке группы, как у диапазонов («КУ, дБи», «Цена, ₽»): «параметр, единица →
+    // значения» читается одинаково по всей панели. Сравнение движка — всегда в МГц (§4.3).
+    <FacetGroup legend={`${facet.label}, МГц`}>
       <label htmlFor={inputId} className="sr-only">
         Частота или диапазон, МГц
       </label>

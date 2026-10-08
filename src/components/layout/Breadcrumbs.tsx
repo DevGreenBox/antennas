@@ -7,7 +7,8 @@ import { breadcrumbListJsonLd } from '@/lib/seo';
 
 /**
  * Навигационная цепочка (DESIGN §5.9.15). Последний пункт — текущая страница (без href).
- * На < md — только ссылка на родителя «‹ Родитель». JSON-LD BreadcrumbList — всегда полностью.
+ * На < md — только ссылка на родителя «‹ Родитель» (цель нажатия 44 px). JSON-LD
+ * BreadcrumbList — всегда полностью.
  *
  *   <Breadcrumbs items={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: '/catalog' },
  *     { label: category.name }]} />
@@ -33,7 +34,11 @@ export function Breadcrumbs({
   return (
     <>
       <nav aria-label="Навигационная цепочка" className={cn('mb-4', className)}>
-        <ol className="hidden flex-wrap items-center gap-x-2 gap-y-1 text-small text-ink-secondary md:flex">
+        {/*
+          На md–lg (сенсорные планшеты) ссылки — 44 px в высоту (§ R.9), а лишние 24 px убраны
+          отрицательными полями списка: строка цепочки стоит на прежнем месте.
+        */}
+        <ol className="hidden flex-wrap items-center gap-x-2 text-small text-ink-secondary md:-my-3 md:flex lg:my-0 lg:gap-y-1">
           {items.map((item, index) => {
             const last = index === items.length - 1;
             return (
@@ -46,7 +51,10 @@ export function Breadcrumbs({
                     {item.label}
                   </span>
                 ) : (
-                  <Link href={item.href} className="hover:text-ink hover:underline">
+                  <Link
+                    href={item.href}
+                    className="inline-flex min-h-11 items-center hover:text-ink hover:underline lg:min-h-0"
+                  >
                     {item.label}
                   </Link>
                 )}
@@ -62,7 +70,9 @@ export function Breadcrumbs({
         {parent?.href ? (
           <Link
             href={parent.href}
-            className="inline-flex min-h-6 items-center gap-1 text-small text-ink-secondary hover:text-ink hover:underline md:hidden"
+            // Цель нажатия 44 px (§ R.9) при прежнем шаге строки 24 px: лишняя высота — в
+            // отрицательных полях.
+            className="-my-2.5 inline-flex min-h-11 items-center gap-1 text-small text-ink-secondary hover:text-ink hover:underline md:hidden"
           >
             <Icon name="chevron-left" size={16} />
             {parent.label}

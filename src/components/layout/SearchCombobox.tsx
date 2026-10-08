@@ -72,12 +72,13 @@ type IndexStatus = 'idle' | 'loading' | 'ready' | 'error';
 
 /**
  * Плейсхолдеры от длинного к короткому; показывается первый, что помещается в поле целиком:
- * полный по DESIGN §5.9.36 — на широком поле; короткий — ниже xl, на мобильных, до гидратации и
- * без JS (вместо обрезанного «…— напр» / «…— на»).
+ * полный (DESIGN § R.5) — на широком поле; короткий — на узком, до гидратации и без JS
+ * (вместо обрезанного «…разъём или к»).
  */
 const PLACEHOLDERS = [
-  'Модель, частота или разъём — например, Тип1',
+  'Модель, частота, разъём или код',
   'Модель, частота или разъём',
+  'Поиск по каталогу',
 ] as const;
 /** Серверная и первая клиентская отрисовка — короткий. */
 const PLACEHOLDER_INITIAL = 1;
@@ -442,7 +443,8 @@ export function SearchCombobox({ initialQuery = '', className }: SearchComboboxP
           className:
             // Справа кнопки «Очистить» (только с текстом) и «Найти»: пока поле пустое, место
             // под «Очистить» отдаётся плейсхолдеру (pr-11 = «Найти» 32 px + отступы).
-            'pr-20 placeholder-shown:pr-11 [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none',
+            // ≥ lg — 44 px: поиск — главный инструмент шапки, заметнее соседних кнопок.
+            'pr-20 placeholder-shown:pr-11 lg:h-11 [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none',
         })}
       />
       <div className="absolute top-1/2 right-1 flex -translate-y-1/2 items-center">

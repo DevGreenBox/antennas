@@ -24,7 +24,8 @@ export type NoticeTone = 'info' | 'success' | 'warning' | 'danger' | 'brand' | '
 const TONE: Record<NoticeTone, { surface: string; icon: IconName; iconColor: string }> = {
   info: { surface: 'bg-info-subtle', icon: 'info', iconColor: 'text-info' },
   success: { surface: 'bg-success-subtle', icon: 'circle-check', iconColor: 'text-success' },
-  warning: { surface: 'bg-warning-subtle', icon: 'triangle-alert', iconColor: 'text-warning' },
+  // «Требует подтверждения» — спокойная нейтральная подложка; цвет несёт только знак.
+  warning: { surface: 'bg-surface-muted', icon: 'circle-alert', iconColor: 'text-warning' },
   danger: { surface: 'bg-danger-subtle', icon: 'circle-alert', iconColor: 'text-danger' },
   brand: { surface: 'bg-brand-subtle', icon: 'info', iconColor: 'text-brand-text' },
   neutral: { surface: 'bg-surface-muted', icon: 'info', iconColor: 'text-ink-muted' },
@@ -56,9 +57,9 @@ export function Notice({
     <div
       id={id}
       role={live ? (tone === 'danger' ? 'alert' : 'status') : undefined}
-      className={cn('flex gap-3 rounded-md p-4', style.surface, className)}
+      className={cn('flex gap-3 rounded-md px-4 py-3', style.surface, className)}
     >
-      <Icon name={style.icon} size={20} className={cn('mt-0.5', style.iconColor)} />
+      <Icon name={style.icon} size={18} className={cn('mt-px shrink-0', style.iconColor)} />
       <div className="min-w-0 flex-1">
         {title ? <p className="text-small font-semibold text-ink">{title}</p> : null}
         {children ? (

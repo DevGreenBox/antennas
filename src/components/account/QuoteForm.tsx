@@ -41,6 +41,10 @@ import type { DemoOrder } from '@/types/order';
  *
  * Итоги — в `role="status"`, но обновляются с задержкой: иначе скринридер зачитывал бы их на
  * каждый введённый символ.
+ *
+ * Подача (DESIGN § R.1): форма стоит внутри демо-панели, поэтому своих рамок и подложек у неё нет
+ * (карточка в карточке) — итоги отделены линией. Поля и кнопки — 40 px на десктопе и 44–48 px на
+ * < lg (цели нажатия); количество — QuantitySelector `md` той же высоты, что поле цены.
  */
 
 interface FormLine extends Omit<QuoteDraftLine, 'unitPrice'> {
@@ -50,11 +54,12 @@ interface FormLine extends Omit<QuoteDraftLine, 'unitPrice'> {
 }
 
 /**
- * Сетка строки позиций — когда форма не уже 40rem (≈ 640 px). Колонка количества фиксирована
- * (ширина QuantitySelector sm): у заголовков и строк разные сетки, и с `auto` колонки заголовка
- * съезжали относительно полей.
+ * Сетка строки позиций — когда форма не уже 44rem (≈ 700 px; уже — название сжималось до двух
+ * слов в строке). Колонка количества фиксирована (ширина QuantitySelector md на < lg, где кнопки
+ * 48 px): у заголовков и строк разные сетки, и с `auto` колонки заголовка съезжали относительно
+ * полей.
  */
-const GRID = '@min-[40rem]:grid-cols-[minmax(0,1fr)_7.5rem_7.25rem_7rem_6.5rem]';
+const GRID = '@min-[44rem]:grid-cols-[minmax(0,1fr)_7.5rem_9.25rem_7rem_6.5rem]';
 /** Задержка обновления итогов для скринридера (и на экране — они в одном live-регионе). */
 const TOTALS_DELAY_MS = 600;
 
@@ -206,7 +211,7 @@ export function QuoteForm({
         <div
           aria-hidden
           className={cn(
-            'hidden gap-3 border-b border-line pb-2 text-small font-medium text-ink-muted @min-[40rem]:grid',
+            'hidden gap-3 border-b border-line pb-2 text-caption text-ink-muted @min-[44rem]:grid',
             GRID,
           )}
         >
@@ -233,7 +238,7 @@ export function QuoteForm({
                   line.excluded && 'text-ink-muted',
                 )}
               >
-                <div className="col-span-2 min-w-0 @min-[40rem]:col-span-1">
+                <div className="col-span-2 min-w-0 @min-[44rem]:col-span-1">
                   <p
                     className={cn(
                       'text-small font-medium',
@@ -251,37 +256,37 @@ export function QuoteForm({
                 <div className="flex flex-col gap-1">
                   <label
                     htmlFor={priceId}
-                    className="text-small font-medium text-ink @min-[40rem]:sr-only"
+                    className="text-small font-medium text-ink @min-[44rem]:sr-only"
                   >
                     Цена за шт., ₽<span className="sr-only">: {line.name}</span>
                   </label>
                   <Input
                     id={priceId}
-                    size="sm"
+                    size="md"
                     inputMode="decimal"
                     autoComplete="off"
                     aria-required
                     invalid={ownErrors.length > 0}
                     aria-describedby={ownErrors.length > 0 ? errorId : undefined}
-                    // Высота — как у QuantitySelector sm рядом (32 px), ряд не «прыгает».
-                    className="h-8!"
+                    // Высота — как у QuantitySelector md рядом (48 → 40 px с lg), ряд не «прыгает».
+                    className="max-lg:h-12"
                     value={line.priceText}
                     onChange={(event) => patchLine(line.lineId, { priceText: event.target.value })}
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <span aria-hidden className="text-small font-medium text-ink @min-[40rem]:hidden">
+                  <span aria-hidden className="text-small font-medium text-ink @min-[44rem]:hidden">
                     Кол-во
                   </span>
                   <QuantitySelector
-                    size="sm"
+                    size="md"
                     value={line.quantity}
                     productName={line.name}
                     onChange={(quantity) => patchLine(line.lineId, { quantity })}
                   />
                 </div>
-                <p className="self-center text-small tabular-nums @min-[40rem]:self-start @min-[40rem]:pt-1.5 @min-[40rem]:text-right">
-                  <span className="@min-[40rem]:sr-only">Сумма: </span>
+                <p className="self-center text-small tabular-nums @min-[44rem]:self-start @min-[44rem]:pt-3 @min-[44rem]:text-right lg:@min-[44rem]:pt-2.5">
+                  <span className="@min-[44rem]:sr-only">Сумма: </span>
                   {line.excluded ? 'исключено' : lineSum}
                 </p>
                 <Checkbox
@@ -290,12 +295,14 @@ export function QuoteForm({
                       Исключить<span className="sr-only"> «{line.name}»</span>
                     </>
                   }
+                  comfortable
+                  className="lg:min-h-10 lg:py-2.5"
                   checked={line.excluded}
                   onChange={(event) => patchLine(line.lineId, { excluded: event.target.checked })}
                 />
                 {/* Ошибка строки — на всю ширину строки, а не в узкой колонке цены. */}
                 {ownErrors.length > 0 ? (
-                  <div className="col-span-2 @min-[40rem]:col-span-5">
+                  <div className="col-span-2 @min-[44rem]:col-span-5">
                     <FieldError id={errorId}>
                       {ownErrors.map((error) => error.message).join('. ')}
                     </FieldError>
@@ -319,7 +326,8 @@ export function QuoteForm({
           </label>
           <Select
             id={`${baseId}-add`}
-            size="sm"
+            size="md"
+            className="max-lg:h-11"
             value={addId}
             onChange={(event) => setAddId(event.target.value)}
           >
@@ -339,7 +347,14 @@ export function QuoteForm({
             })}
           </Select>
         </div>
-        <Button variant="secondary" size="sm" icon="plus" disabled={addId === ''} onClick={addLine}>
+        <Button
+          variant="secondary"
+          size="md"
+          icon="plus"
+          className="max-lg:h-11"
+          disabled={addId === ''}
+          onClick={addLine}
+        >
           Добавить
         </Button>
       </div>
@@ -358,7 +373,8 @@ export function QuoteForm({
           }
         >
           <Input
-            size="sm"
+            size="md"
+            className="max-lg:h-11"
             inputMode="decimal"
             autoComplete="off"
             value={discountValue}
@@ -371,7 +387,8 @@ export function QuoteForm({
         </Field>
         <Field label="Основание скидки" optional id={`${baseId}-discount-note`}>
           <Input
-            size="sm"
+            size="md"
+            className="max-lg:h-11"
             value={discountNote}
             onChange={(event) => setDiscountNote(event.target.value)}
           />
@@ -383,7 +400,8 @@ export function QuoteForm({
           hint="0, если доставка не нужна"
         >
           <Input
-            size="sm"
+            size="md"
+            className="max-lg:h-11"
             inputMode="decimal"
             autoComplete="off"
             value={deliveryText}
@@ -395,7 +413,8 @@ export function QuoteForm({
         </Field>
         <Field label="Комментарий к доставке" optional id={`${baseId}-delivery-note`}>
           <Input
-            size="sm"
+            size="md"
+            className="max-lg:h-11"
             placeholder="Например: доставка до Москвы"
             value={deliveryNote}
             onChange={(event) => setDeliveryNote(event.target.value)}
@@ -417,7 +436,7 @@ export function QuoteForm({
         role="status"
         aria-live="polite"
         aria-atomic="true"
-        className="max-w-sm rounded-md border border-line bg-surface-subtle p-4 text-small"
+        className="max-w-sm border-t border-line pt-3 text-small"
       >
         <dl>
           <div className="flex justify-between gap-4 py-1">
@@ -443,7 +462,7 @@ export function QuoteForm({
 
       <div className="flex flex-col gap-2">
         <div>
-          <Button type="submit" variant="primary" size="md">
+          <Button type="submit" variant="primary" size="md" className="max-lg:h-11">
             Выставить к оплате
           </Button>
         </div>

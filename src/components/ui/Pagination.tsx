@@ -2,13 +2,15 @@ import Link from 'next/link';
 
 import { cn } from '@/lib/cn';
 
-import { buttonClasses } from './Button';
 import { Icon } from './Icon';
 import { PaginationFocus } from './PaginationFocus';
 
 /**
- * Пагинация (DESIGN §5.9.21, §4.8): настоящие ссылки с `page` в URL (работают без JS).
+ * Пагинация (DESIGN §5.9.21, §4.8, § R.7): настоящие ссылки с `page` в URL (работают без JS).
  * Не рендерится при одной странице. Номера: первая, последняя, текущая ± 1, пропуски «…».
+ * Вид — спокойный и типографический: «Назад»/«Вперёд» — текст со стрелкой без рамки (на крайней
+ * странице — приглушённый текст, место сохраняется), номера — табличные цифры без рамки, текущая —
+ * заливка `ink` (§ R.2: выбранное — `ink`). Высота 44 px на < lg (цель нажатия, § R.9), 40 px с lg.
  * На < sm вместо номеров — «Страница {n} из {m}». После перехода по ссылке пагинации — фокус и
  * прокрутка к `#{focusTargetId}` (по умолчанию `results` — `h2.sr-only` над выдачей); смена
  * страницы по другой причине (сортировка, подбор, «Назад» браузера) фокус не трогает.
@@ -42,6 +44,10 @@ export function paginationItems(page: number, pageCount: number): (number | 'gap
   return items;
 }
 
+/** Общее у всех элементов: высота, скругление 4 px, табличные цифры. */
+const ITEM =
+  'inline-flex h-11 items-center justify-center rounded-sm text-small tabular-nums transition-colors duration-fast lg:h-10';
+
 export function Pagination({
   page,
   pageCount,
@@ -61,8 +67,13 @@ export function Pagination({
       </>
     );
     const classes = cn(
-      buttonClasses({ variant: 'secondary', size: 'md', disabled: href === null }),
-      'min-w-10',
+      ITEM,
+      'gap-1 font-medium',
+      // Поле со стороны стрелки компенсировано: стрелка стоит по краю колонки выдачи.
+      direction === 'prev' ? '-ml-1.5 pr-3 pl-1.5' : '-mr-1.5 pr-1.5 pl-3',
+      href === null
+        ? 'cursor-default text-ink-disabled'
+        : 'text-ink hover:bg-surface-muted active:bg-line-subtle',
     );
     return href === null ? (
       <a role="link" aria-disabled="true" className={classes}>
@@ -77,11 +88,11 @@ export function Pagination({
   return (
     <nav
       aria-label="Страницы"
-      className={cn('mt-8 flex items-center justify-between gap-2', className)}
+      className={cn('mt-8 flex items-center justify-between gap-2 lg:mt-10', className)}
     >
       <PaginationFocus page={page} targetId={focusTargetId} />
       {edge(prevHref, 'Назад', 'prev')}
-      <p className="text-small text-ink-secondary sm:hidden">
+      <p className="text-small text-ink-secondary tabular-nums sm:hidden">
         Страница {page} из {pageCount}
       </p>
       <ol className="hidden items-center gap-1 sm:flex">
@@ -95,7 +106,11 @@ export function Pagination({
               {item === page ? (
                 <span
                   aria-current="page"
-                  className="inline-flex h-10 min-w-10 items-center justify-center rounded-sm bg-ink px-3 text-small font-medium text-ink-inverse tabular-nums"
+                  className={cn(
+                    ITEM,
+                    'min-w-11 px-2 font-medium lg:min-w-10',
+                    'bg-ink text-ink-inverse',
+                  )}
                 >
                   <span className="sr-only">Страница </span>
                   {item}
@@ -104,7 +119,10 @@ export function Pagination({
                 <Link
                   href={hrefs[item - 1]}
                   scroll={false}
-                  className="inline-flex h-10 min-w-10 items-center justify-center rounded-sm px-3 text-small font-medium text-ink tabular-nums hover:bg-surface-muted"
+                  className={cn(
+                    ITEM,
+                    'min-w-11 px-2 text-ink-secondary hover:bg-surface-muted hover:text-ink lg:min-w-10',
+                  )}
                 >
                   <span className="sr-only">Страница </span>
                   {item}

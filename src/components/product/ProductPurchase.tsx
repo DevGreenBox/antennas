@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
+import { Price } from '@/components/ui/Price';
 import { QuantitySelector } from '@/components/ui/QuantitySelector';
 import { cn } from '@/lib/cn';
 import { formatPieces } from '@/lib/format';
@@ -12,7 +13,7 @@ import { AddToCartButton } from './AddToCartButton';
 import { FavoriteButton } from './FavoriteButton';
 
 /**
- * Покупка на странице товара (DESIGN §2.6 п.7): количество → «В корзину» (прибавляет выбранное
+ * Покупка на странице товара (DESIGN § R.8): количество → «В корзину» (прибавляет выбранное
  * количество к уже лежащему) → закладка; ниже — «В корзине: N шт. · Перейти в корзину».
  * Позиции «по запросу» добавляются так же — цену уточнит менеджер.
  *
@@ -21,25 +22,43 @@ import { FavoriteButton } from './FavoriteButton';
  * объявляют. До чтения корзины из localStorage количество — 0 (как на сервере), гидратация не
  * расходится.
  *
- * На мобильном — одной строкой: количество + «В корзину» на остаток ширины + закладка.
- * Все три — размер lg: 48 px с рамкой на всех ширинах, верх и низ ряда совпадают (§5.9.5, §5.9.6,
- * §5.9.26 — одна шкала 32/40/48).
+ * Все три контрола — размер lg: 48 px с рамкой на всех ширинах, верх и низ ряда совпадают.
+ *
+ * На < lg, когда ряд покупки ушёл вверх за край экрана, снизу появляется липкая панель «цена ·
+ * В корзину» с тем же количеством. Пока ряд виден, панели нет вовсе (`hidden`): на экране и в
+ * дереве доступности одна кнопка «В корзину».
  */
 export function ProductPurchase({
   productId,
   productName,
+  price,
   className,
 }: {
   productId: string;
   productName: string;
+  /** Копейки; null — по запросу. Для липкой панели на < lg. */
+  price: number | null;
   className?: string;
 }) {
   const [quantity, setQuantity] = useState(1);
   const inCart = useCartQuantity(productId);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [rowAbove, setRowAbove] = useState(false);
+
+  useEffect(() => {
+    const row = rowRef.current;
+    if (!row || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(([entry]) => {
+      // Только ушедший вверх: ниже края экрана ряд ещё впереди — панель не нужна.
+      setRowAbove(!entry.isIntersecting && entry.boundingClientRect.bottom < 0);
+    });
+    observer.observe(row);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className={className}>
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+      <div ref={rowRef} className="flex flex-wrap items-center gap-2 sm:gap-3">
         <QuantitySelector
           value={quantity}
           onChange={setQuantity}
@@ -54,7 +73,7 @@ export function ProductPurchase({
           size="lg"
           mode="add-more"
           compactOnMobile
-          className="flex-1 sm:flex-none"
+          className="flex-1 sm:flex-none sm:px-8"
         />
         <FavoriteButton productId={productId} size="lg" variant="secondary" />
       </div>
@@ -72,6 +91,28 @@ export function ProductPurchase({
           </>
         ) : null}
       </p>
+
+      <div
+        hidden={!rowAbove}
+        data-print="hidden"
+        className="fixed inset-x-0 bottom-0 z-sticky bg-surface shadow-sticky lg:hidden"
+      >
+        <div className="page-container flex items-center justify-between gap-4 py-3">
+          <div className="min-w-0">
+            <p className="truncate text-caption text-ink-muted">{productName}</p>
+            <Price amount={price} size="md" requestForm="compact" />
+          </div>
+          <AddToCartButton
+            productId={productId}
+            productName={productName}
+            quantity={quantity}
+            variant="primary"
+            size="lg"
+            mode="add-more"
+            className="shrink-0"
+          />
+        </div>
+      </div>
     </div>
   );
 }

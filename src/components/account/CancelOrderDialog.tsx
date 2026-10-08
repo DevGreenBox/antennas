@@ -47,11 +47,12 @@ export function CancelOrderDialog({
       title={`Отменить заказ ${number}?`}
       footer={
         <>
-          <Button variant="secondary" data-autofocus onClick={close}>
+          <Button variant="secondary" className="max-lg:h-11" data-autofocus onClick={close}>
             Не отменять
           </Button>
           <Button
             variant="danger"
+            className="max-lg:h-11"
             onClick={() => {
               setAttempted(true);
               if (finalReason === '') return;
@@ -80,7 +81,7 @@ export function CancelOrderDialog({
             <Input size="lg" value={other} onChange={(event) => setOther(event.target.value)} />
           </Field>
         ) : null}
-        <p>Отменённый заказ нельзя вернуть в работу.</p>
+        <p className="text-small">Отменённый заказ нельзя вернуть в работу.</p>
       </div>
     </Modal>
   );

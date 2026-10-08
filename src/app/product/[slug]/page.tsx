@@ -5,18 +5,16 @@ import { notFound } from 'next/navigation';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import type { BreadcrumbItem } from '@/components/layout/Breadcrumbs';
 import { ConflictNotice } from '@/components/product/ConflictNotice';
-import { ProductFrequency } from '@/components/product/ProductFrequency';
+import { ProductFrequency, ProductKeySpecs } from '@/components/product/ProductFrequency';
+import { ProductMedia } from '@/components/product/ProductMedia';
 import { ProductNotes } from '@/components/product/ProductNotes';
-import { ProductPhoto } from '@/components/product/ProductPhoto';
 import { ProductPrice } from '@/components/product/ProductPrice';
 import { ProductPurchase } from '@/components/product/ProductPurchase';
 import { ProductRecommendations } from '@/components/product/ProductRecommendations';
-import { SourceList } from '@/components/product/SourceList';
+import { ProductSourceInfo } from '@/components/product/SourceDetails';
+import { TechText } from '@/components/product/SpecLine';
 import { SpecTable } from '@/components/product/SpecTable';
 import { JsonLd } from '@/components/ui/JsonLd';
-import { NoPhoto } from '@/components/ui/NoPhoto';
-import { rootCategoryOf } from '@/lib/catalog';
-import { TechText } from '@/components/product/SpecLine';
 import { cn } from '@/lib/cn';
 import {
   getAllSourceRecords,
@@ -32,14 +30,17 @@ import { pageMetadata } from '@/lib/seo';
 import { productDescription, productJsonLd, productPath } from './product-seo';
 
 /**
- * Товар (DESIGN §2.6). Статическая страница на каждую видимую позицию; неизвестный или скрытый
- * slug → 404. Раскладка 1 : 1,618: слева фото (или заглушка), справа — решение о покупке
- * (частота, цена, «В корзину») и полная картина данных с происхождением; под сеткой —
- * «К этому товару подойдёт».
+ * Товар (DESIGN § R.8). Статическая страница на каждую видимую позицию; неизвестный или скрытый
+ * slug → 404.
  *
- * Фото нет — товар важнее декора: на < lg большой заглушки нет (значок категории 48 px рядом с
- * кодом), на ≥ lg — заглушка 4:3, липкая, чтобы левая колонка не пустела при прокрутке. Фото
- * есть — оно показывается на всех ширинах (на < lg над названием), тоже 4:3 и липкое на ≥ lg.
+ * Первый экран 55 : 45: слева медиа (фото или нейтральная заглушка 4:3, липкая на ≥ lg), справа —
+ * решение о покупке: категория, название, код, ключевые параметры (частота со шкалой), пометка о
+ * расхождении, цена, количество и «В корзину», доставка. Ниже — «Характеристики» (подписи и
+ * значения), пометки из прайса и закрытый блок «Техническая информация об источнике данных»;
+ * затем «К этому товару подойдёт».
+ *
+ * Фото нет — на < lg большой заглушки нет: название и цена на первом экране. Фото есть — оно
+ * показывается на всех ширинах (на < lg над названием).
  */
 
 type Params = Promise<{ slug: string }>;
@@ -68,7 +69,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   });
 }
 
-const DIVIDER = 'my-6 border-t border-line';
+/** Нижние разделы: заголовок в левой колонке, содержимое — справа (≥ lg). */
+const SECTION = 'grid gap-x-16 gap-y-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)]';
 
 export default async function ProductPage({ params }: { params: Params }) {
   const { slug } = await params;
@@ -114,73 +116,83 @@ export default async function ProductPage({ params }: { params: Params }) {
       <Breadcrumbs items={crumbs} />
       <JsonLd data={productJsonLd(product, leaf?.name ?? null)} />
 
-      <div className="grid gap-8 lg:grid-cols-golden xl:gap-12">
+      <div className="grid gap-8 lg:grid-cols-product lg:gap-12 xl:gap-16">
         <div className={cn(photo === null && 'hidden lg:block')} data-testid="product-media">
-          <div className="lg:sticky lg:top-6">
-            {photo === null ? (
-              <NoPhoto categoryId={rootCategoryOf(product)} variant="product" />
-            ) : (
-              <ProductPhoto
-                src={photo}
-                alt={product.name}
-                sizes="(min-width: 80rem) 30rem, (min-width: 64rem) 38vw, 100vw"
-                preload
-              />
-            )}
+          <div className="lg:sticky lg:top-(--sticky-top)">
+            <ProductMedia product={product} variant="product" preload />
           </div>
         </div>
 
         <div className="min-w-0">
-          <h1 className="lg:text-heading">
+          {/* < lg категорию уже показывает ссылка «назад» крошек — здесь не повторяется. */}
+          {leaf ? (
+            <p className="eyebrow hidden lg:block">
+              <Link href={leaf.href} className="hover:text-ink hover:underline">
+                {leaf.name}
+              </Link>
+            </p>
+          ) : null}
+          <h1 className="lg:mt-3 lg:text-heading xl:text-[2.125rem] xl:leading-[2.625rem]">
             {/* Неразрывность единиц и кодов («1 м», «SMA-male», «RG-316») — общий помощник каталога. */}
             <TechText text={product.name} />
           </h1>
-          <div className="mt-3 flex items-center gap-3">
-            {photo === null ? (
-              <NoPhoto categoryId={rootCategoryOf(product)} size={48} className="lg:hidden" />
-            ) : null}
-            <div className="min-w-0">
-              <dl className="flex flex-wrap items-baseline gap-x-2">
-                <dt className="text-small text-ink-muted">Код в каталоге</dt>
-                <dd className="font-mono text-small text-ink" data-testid="product-code">
-                  {product.code}
-                </dd>
-              </dl>
-              <p className="mt-0.5 text-caption text-ink-muted">
-                Внутренний код магазина, не артикул производителя.
-              </p>
-            </div>
+          <dl className="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <dt className="text-small text-ink-muted">Код</dt>
+            <dd className="font-mono text-small text-ink" data-testid="product-code">
+              {product.code}
+            </dd>
+            <dd className="w-full text-caption text-ink-muted sm:w-auto sm:pl-2">
+              Внутренний код магазина, не артикул производителя.
+            </dd>
+          </dl>
+
+          {hasConflict ? <ConflictNotice className="mt-5 lg:mt-6" /> : null}
+
+          <div className="mt-6 flex flex-col gap-5 border-t border-line pt-5 empty:hidden lg:mt-8 lg:gap-6 lg:pt-6">
+            <ProductFrequency product={product} />
+            <ProductKeySpecs product={product} />
           </div>
 
-          {hasConflict ? <ConflictNotice className="mt-6" /> : null}
-          <ProductFrequency product={product} className="mt-6" />
-
-          <div className={DIVIDER} />
-
-          <ProductPrice product={product} />
-          <ProductPurchase productId={product.id} productName={product.name} className="mt-4" />
-          <p className="mt-3 text-small text-ink-secondary">
-            Доставка — рассчитает менеджер.{' '}
-            <Link href="/delivery" className="text-link">
-              Подробнее<span className="sr-only"> о доставке и оплате</span>
-            </Link>
-          </p>
-
-          <div className={DIVIDER} />
-
-          <section aria-labelledby="specs-title">
-            <h2 id="specs-title" className="mb-2">
-              Характеристики
-            </h2>
-            <SpecTable product={product} sourceTexts={sourceTexts} />
-          </section>
-
-          <ProductNotes notes={product.notes} className="mt-10" />
-          <SourceList records={records} productName={product.name} className="mt-10" />
+          <div className="mt-6 border-t border-line pt-5 lg:mt-8 lg:pt-6">
+            <ProductPrice product={product} />
+            <ProductPurchase
+              productId={product.id}
+              productName={product.name}
+              price={product.priceType === 'fixed' ? product.price : null}
+              className="mt-5"
+            />
+            <p className="mt-5 text-small text-ink-secondary">
+              Доставку рассчитывает менеджер при согласовании.{' '}
+              <Link href="/delivery" className="text-link">
+                Подробнее<span className="sr-only"> о доставке и оплате</span>
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
 
-      <ProductRecommendations recommendations={recommendations} className="mt-10 lg:mt-16" />
+      <section aria-labelledby="specs-title" className={cn(SECTION, 'mt-16 lg:mt-24')}>
+        <h2 id="specs-title" className="text-title font-medium lg:text-heading">
+          Характеристики
+        </h2>
+        <div className="min-w-0 max-w-[52rem]">
+          <SpecTable product={product} />
+          <ProductNotes notes={product.notes} className="mt-10" />
+          <ProductSourceInfo
+            product={product}
+            sourceTexts={sourceTexts}
+            records={records}
+            className="mt-10"
+          />
+        </div>
+      </section>
+
+      <ProductRecommendations
+        recommendations={recommendations}
+        className="mt-16 border-t border-line pt-10 lg:mt-24 lg:pt-16"
+      />
+      {/* Место под липкую панель покупки на < lg: она не закрывает конец страницы. */}
+      <div aria-hidden className="h-16 lg:hidden" />
     </>
   );
 }

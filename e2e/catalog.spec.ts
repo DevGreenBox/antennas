@@ -54,9 +54,9 @@ const counter = (page: Page) => page.getByRole('status').filter({ hasText: 'На
 const item = (page: Page, name: string) =>
   page.getByRole('main').getByRole('link', { name, exact: true });
 
-/** Названия товаров в выдаче по порядку. */
+/** Названия товаров в выдаче по порядку (миниатюра — дубль ссылки, aria-hidden — не считается). */
 async function itemNames(page: Page): Promise<string[]> {
-  const links = page.getByRole('main').locator('a[href^="/product/"]:visible');
+  const links = page.getByRole('main').locator('a[href^="/product/"]:not([aria-hidden]):visible');
   return (await links.allTextContents()).map((text) => text.trim());
 }
 

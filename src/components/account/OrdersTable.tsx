@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { ButtonLink } from '@/components/ui/Button';
 import { StatusBadge } from '@/components/ui/Badge';
+import { cn } from '@/lib/cn';
 import { paymentHref } from '@/lib/demo-orders';
 import { formatDateShort } from '@/lib/format';
 import type { DemoOrder } from '@/types/order';
@@ -15,8 +16,9 @@ import { orderAmountText } from './order-display';
  * Новые сверху (порядок задаёт `ordersForEmail`). У «Ожидает оплаты» действие — «Оплатить».
  */
 
+/** Шапка таблицы — подписи как `spec-label` (DESIGN § R.3), без заливки. */
 const TH =
-  'py-2.5 px-3 text-left font-medium text-ink-muted whitespace-nowrap border-b border-line';
+  'pb-2 px-3 text-left text-caption font-normal text-ink-muted whitespace-nowrap border-b border-line';
 
 function orderHref(order: DemoOrder) {
   return `/account/orders/${encodeURIComponent(order.number)}`;
@@ -38,13 +40,19 @@ function OrderAction({
         href={paymentHref(order.number, order.activeVersion)}
         variant="secondary"
         size={size}
+        className="max-lg:h-11"
       >
         Оплатить<span className="sr-only"> заказ {order.number}</span>
       </ButtonLink>
     );
   }
   return (
-    <ButtonLink href={orderHref(order)} variant="ghost" size={size} className={ghostClassName}>
+    <ButtonLink
+      href={orderHref(order)}
+      variant="ghost"
+      size={size}
+      className={cn('max-lg:h-11', ghostClassName)}
+    >
       Открыть<span className="sr-only"> заказ {order.number}</span>
     </ButtonLink>
   );
@@ -77,7 +85,7 @@ export function OrdersTable({ orders }: { orders: readonly DemoOrder[] }) {
         <tbody>
           {orders.map((order) => (
             <tr key={order.number} className="border-b border-line-subtle">
-              <td className="py-3 pr-3 pl-0 align-middle">
+              <td className="py-3.5 pr-3 pl-0 align-middle">
                 <Link
                   href={orderHref(order)}
                   className="font-mono text-body font-medium text-ink hover:underline"
@@ -102,9 +110,9 @@ export function OrdersTable({ orders }: { orders: readonly DemoOrder[] }) {
         </tbody>
       </table>
 
-      <ul className="border-t border-line-subtle md:hidden">
+      <ul className="divide-y divide-line-subtle border-y border-line md:hidden">
         {orders.map((order) => (
-          <li key={order.number} className="flex flex-col gap-2 border-b border-line-subtle py-4">
+          <li key={order.number} className="flex flex-col gap-2 py-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <Link
                 href={orderHref(order)}

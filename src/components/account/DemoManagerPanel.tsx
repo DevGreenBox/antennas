@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/ui/Dialog';
 import { DemoNotice, Notice } from '@/components/ui/Notice';
 import { formatPrice } from '@/lib/catalog';
+import { cn } from '@/lib/cn';
 import { activeQuote, managerMessage, paymentHref } from '@/lib/demo-orders';
 import type { OrderOpResult } from '@/lib/demo-orders';
 import { formatDateFull } from '@/lib/format';
@@ -78,7 +79,7 @@ export function DemoManagerPanel({
       variant="ghost"
       tone="danger"
       size="md"
-      className={edge ? '-ml-4' : undefined}
+      className={cn('max-lg:h-11', edge && '-ml-4')}
       onClick={(event) => guarded(event, () => setCancelOpen(true))}
     >
       Отменить заказ
@@ -93,6 +94,7 @@ export function DemoManagerPanel({
           <Button
             variant="primary"
             size="md"
+            className="max-lg:h-11"
             onClick={(event) =>
               guarded(event, () => handle(demoManager.takeIntoWork(order.number)))
             }
@@ -140,6 +142,7 @@ export function DemoManagerPanel({
             <Button
               variant="secondary"
               size="md"
+              className="max-lg:h-11"
               onClick={(event) => guarded(event, () => setReopenOpen(true))}
             >
               Изменить сумму
@@ -164,6 +167,7 @@ export function DemoManagerPanel({
             <Button
               variant="primary"
               size="md"
+              className="max-lg:h-11"
               onClick={(event) =>
                 guarded(event, () => handle(demoManager.advance(order.number, 'processing')))
               }
@@ -183,6 +187,7 @@ export function DemoManagerPanel({
         <Button
           variant="primary"
           size="md"
+          className="max-lg:h-11"
           onClick={(event) =>
             guarded(event, () => handle(demoManager.advance(order.number, 'shipped')))
           }
@@ -196,6 +201,7 @@ export function DemoManagerPanel({
         <Button
           variant="primary"
           size="md"
+          className="max-lg:h-11"
           onClick={(event) =>
             guarded(event, () => handle(demoManager.advance(order.number, 'completed')))
           }
@@ -263,8 +269,8 @@ export function DemoManagerPanel({
 /** Журнал событий (демо): что в рабочей версии ушло бы покупателю и менеджеру. */
 function EventLog({ order }: { order: DemoOrder }) {
   return (
-    <details className="group border-t border-line-subtle pt-4">
-      <summary className="cursor-pointer text-small font-medium text-ink">
+    <details className="group border-t border-line-subtle pt-1 lg:pt-4">
+      <summary className="cursor-pointer py-3 text-small font-medium text-ink lg:py-0">
         Журнал событий ({order.events.length})
       </summary>
       <ol className="mt-3 flex flex-col gap-3">

@@ -4,8 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import {
-  ProductListItem,
-  ProductTable,
+  ProductList,
   columnsForCategory,
   hasInferredValues,
 } from '@/components/product/ProductRow';
@@ -61,57 +60,12 @@ export interface CatalogViewProps {
   rootCategoryId: string | null;
   /** Адрес страницы без параметров: `/catalog/antennas`, `/search`. */
   basePath: string;
-  /** Подпись выдачи для caption таблицы: «Антенны» → «Антенны: товары, страница 1 из 1». */
+  /** Подпись выдачи — доступное имя списка: «Антенны» → «Антенны: товары, страница 1 из 1». */
   label: string;
 }
 
 /** Цель фокуса после пагинации, удаления последнего чипа и «Сбросить всё» (§4.1, §7). */
 const RESULTS_ID = 'results';
-
-/**
- * Колонки таблицы, чьи значения не переносятся вовсе: числа с единицей и диапазоны («10–12 дБи»),
- * тип кабеля («RG-316 / RG-142»), одиночный разъём («N-female», «N/sma-мама»). Внутри любых
- * значений дефисные коды и диапазоны и так неразрывны (`TechText` в StatusValue); составные
- * колонки (разъёмы порта 1 — порта 2, концы кабеля) и текстовые переносятся по пробелам и «—» —
- * иначе таблица не помещается.
- */
-const UNBROKEN_COLUMNS: ReadonlySet<string> = new Set([
-  'connector',
-  'power_connector',
-  'cable_type',
-  'gain_dbi',
-  'gain_db',
-  'cable_length',
-  'height',
-  'weight',
-  'max_load',
-  'attenuation_range',
-  'max_power',
-  'rejection',
-  'insertion_loss',
-]);
-/**
- * Составные колонки («SMA-female — SMA-female», «SMA-male прямой»): минимальная ширина, при
- * которой строка рвётся по пробелу и «—», а не внутри «SMA-female» на дефисе.
- */
-const COMPOSITE_COLUMNS: ReadonlySet<string> = new Set(['ports', 'end1', 'end2']);
-const COMPOSITE_CELL_CLASSES = [
-  '[&_td:nth-child(2)]:min-w-[7.5rem]',
-  '[&_td:nth-child(3)]:min-w-[7.5rem]',
-  '[&_td:nth-child(4)]:min-w-[7.5rem]',
-  '[&_td:nth-child(5)]:min-w-[7.5rem]',
-  '[&_td:nth-child(6)]:min-w-[7.5rem]',
-  '[&_td:nth-child(7)]:min-w-[7.5rem]',
-] as const;
-/** Классы «не переносить» для ячейки N-й колонки характеристик (td:nth-child(N + 2)). */
-const UNBROKEN_CELL_CLASSES = [
-  '[&_td:nth-child(2)_span]:whitespace-nowrap',
-  '[&_td:nth-child(3)_span]:whitespace-nowrap',
-  '[&_td:nth-child(4)_span]:whitespace-nowrap',
-  '[&_td:nth-child(5)_span]:whitespace-nowrap',
-  '[&_td:nth-child(6)_span]:whitespace-nowrap',
-  '[&_td:nth-child(7)_span]:whitespace-nowrap',
-] as const;
 
 export function CatalogView({
   products,
@@ -209,6 +163,7 @@ export function CatalogView({
 
   const reset = () => commit(resetFilters(result.state));
 
+  // Пустая выдача — на месте списка: та же верхняя линия, что у ProductList, текст по левому краю.
   const empty =
     result.total > 0 ? null : !hasActiveFilters(result.state) && searching ? (
       // Поиск внутри категории (?q= на странице каталога) ничего не нашёл — подбор тут ни при чём.
@@ -216,7 +171,7 @@ export function CatalogView({
         headingLevel="h3"
         title={`По запросу «${current.q.trim()}» ничего не найдено`}
         actions={
-          <ButtonLink href={basePath} variant="primary">
+          <ButtonLink href={basePath} variant="primary" className="min-h-11 lg:min-h-0">
             Показать все позиции
           </ButtonLink>
         }
@@ -228,7 +183,7 @@ export function CatalogView({
         headingLevel="h3"
         title="Нет товаров с такими параметрами"
         actions={
-          <Button variant="primary" onClick={reset}>
+          <Button variant="primary" className="min-h-11 lg:min-h-0" onClick={reset}>
             Сбросить всё
           </Button>
         }
@@ -269,7 +224,8 @@ export function CatalogView({
         {/*
           CatalogMobileBar (§5.9.18), липкая на < lg: «Параметры · Сортировка». Переключатель
           вида на < lg стоит в строке счётчика: при 375–390 px втроём с «Параметрами» сортировка
-          сжималась до «По г…». Без групп подбора и сортировки (мачты) панели нет.
+          сжималась до «По г…». Без групп подбора и сортировки (мачты) панели нет. Кнопка и
+          список — 44 px (цель нажатия, § R.9): панель 61 px укладывается в запас --sticky-offset.
         */}
         {hasPanel || showSort ? (
           <div className="sticky top-0 z-sticky -mx-(--page-gutter) mb-3 flex items-center gap-2 border-b border-line bg-page px-(--page-gutter) py-2 lg:hidden">
@@ -277,7 +233,7 @@ export function CatalogView({
               <Button
                 variant="secondary"
                 icon="sliders-horizontal"
-                className="shrink-0"
+                className="min-h-11 shrink-0"
                 aria-haspopup="dialog"
                 aria-expanded={drawerOpen}
                 aria-label={activeCount > 0 ? `Параметры, выбрано: ${activeCount}` : undefined}
@@ -292,7 +248,7 @@ export function CatalogView({
             ) : null}
             {showSort ? (
               <SortSelect
-                size="md"
+                size="lg"
                 className="min-w-0 flex-1"
                 value={result.state.sort}
                 searching={searching}
@@ -302,19 +258,12 @@ export function CatalogView({
           </div>
         ) : null}
 
-        <ActiveFilters
-          chips={result.activeChips}
-          onRemove={(chip) => commit(removeChip(result.state, chip))}
-          onReset={reset}
-          focusFallbackId={RESULTS_ID}
-        />
-
-        <h2 id={RESULTS_ID} tabIndex={-1} className="sr-only scroll-mt-16">
+        <h2 id={RESULTS_ID} tabIndex={-1} className="sr-only scroll-mt-16 lg:scroll-mt-28">
           Товары
         </h2>
 
-        {/* Toolbar (§5.9.20): счётчик; справа сортировка и вид (≥ lg) или только вид (< lg). */}
-        <div className="flex items-center justify-between gap-3 border-b border-line pb-3 lg:pt-1">
+        {/* Toolbar (§ R.7): счётчик; справа сортировка и вид (≥ lg) или только вид (< lg). */}
+        <div className="flex min-h-10 items-center justify-between gap-3 pb-3">
           <ResultCount total={result.total} />
           <ViewToggle
             iconsOnly
@@ -322,7 +271,7 @@ export function CatalogView({
             value={view}
             onChange={(next) => commit({ ...result.state, view: next })}
           />
-          <div className="hidden items-center gap-4 lg:flex">
+          <div className="hidden items-center gap-3 lg:flex">
             {showSort ? (
               <SortSelect
                 size="sm"
@@ -331,18 +280,24 @@ export function CatalogView({
                 onChange={(sort) => commit({ ...result.state, sort, page: 1 })}
               />
             ) : null}
-            <ViewToggle
-              value={view}
-              tableFrom={hasPanel ? 'wide' : 'lg'}
-              onChange={(next) => commit({ ...result.state, view: next })}
-            />
+            <ViewToggle value={view} onChange={(next) => commit({ ...result.state, view: next })} />
           </div>
         </div>
 
-        {empty ?? (
+        {/* Выбранные параметры — над результатами. */}
+        <ActiveFilters
+          chips={result.activeChips}
+          onRemove={(chip) => commit(removeChip(result.state, chip))}
+          onReset={reset}
+          focusFallbackId={RESULTS_ID}
+        />
+
+        {empty !== null ? (
+          <div className="border-t border-line">{empty}</div>
+        ) : (
           <>
             {view === 'grid' ? (
-              <div className="mt-4 lg:mt-6">
+              <div className="mt-1">
                 <ResultsGrid
                   products={result.items}
                   withPanel={hasPanel}
@@ -350,61 +305,13 @@ export function CatalogView({
                 />
               </div>
             ) : (
-              <>
-                {/*
-                  ResultsTable. Рядом с панелью колонке выдачи 649 px на 1024 и 880–944 px на xl,
-                  а таблица антенн и МШУ по §4.7 в натуральную ширину — 1050+ px. Поэтому с
-                  панелью таблица — с 84rem (контент 80rem + поля 2 × 2rem: колонка выдачи уже
-                  полные 944 px), ниже — список строк. Заголовки колонок могут переноситься,
-                  числовые значения — нет; колонка названия — от 11,5rem, внутренние поля ячеек —
-                  10 px вместо 12: так на 1440 помещаются все категории, включая антенны.
-                  Контейнер с прокруткой — страховка: страница по горизонтали не прокручивается
-                  никогда (§5.4); relative — чтобы sr-only-подписи внутри (position: absolute) не
-                  вылезали из контейнера, px-1 — чтобы кольцо фокуса у краёв не обрезалось.
-                */}
-                <div
-                  className={cn(
-                    'relative -mx-1 overflow-x-auto px-1',
-                    '[&_td:first-child]:min-w-[11.5rem] [&_th]:align-bottom [&_th]:whitespace-normal',
-                    '[&_:is(td,th):not(:first-child,:last-child)]:px-2.5',
-                    ...columns.map((key, index) =>
-                      UNBROKEN_COLUMNS.has(key)
-                        ? UNBROKEN_CELL_CLASSES[index]
-                        : COMPOSITE_COLUMNS.has(key)
-                          ? COMPOSITE_CELL_CLASSES[index]
-                          : null,
-                    ),
-                    hasPanel ? 'hidden min-[84rem]:block' : 'hidden lg:block',
-                  )}
-                >
-                  <ProductTable
-                    products={result.items}
-                    columns={columns}
-                    categoryNames={categoryNames}
-                    rootCategoryId={rootCategoryId}
-                    caption={`${label}: товары, страница ${result.page} из ${result.totalPages}`}
-                  />
-                </div>
-                {/*
-                  ResultsList — строки там, где таблица не помещается (< lg; с панелью — до 84rem,
-                  переключатель вида подписан там «Список»). С md цена и действия — справа в
-                  строке названия (ProductListItem).
-                */}
-                <ul
-                  className={cn(
-                    'divide-y divide-line-subtle border-b border-line-subtle',
-                    hasPanel ? 'min-[84rem]:hidden' : 'lg:hidden',
-                  )}
-                >
-                  {result.items.map((product) => (
-                    <ProductListItem
-                      key={product.id}
-                      product={product}
-                      categoryName={mixed ? categoryNames[product.categoryId] : undefined}
-                    />
-                  ))}
-                </ul>
-              </>
+              <ProductList
+                label={`${label}: товары, страница ${result.page} из ${result.totalPages}`}
+                products={result.items}
+                columns={columns}
+                rootCategoryId={rootCategoryId}
+                categoryNames={mixed ? categoryNames : undefined}
+              />
             )}
             {showFootnote ? (
               <p className="mt-3 text-caption text-ink-muted">{INFERRED_FOOTNOTE}</p>

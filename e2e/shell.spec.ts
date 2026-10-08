@@ -157,13 +157,16 @@ test.describe('Шапка', () => {
         });
       await expect.poll(fits, { message: `ширина ${width}` }).toBe(true);
     }
-    // Полный текст DESIGN §5.9.36 — там, где помещается; на 390 — короткий.
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await expect(page.locator(SEARCH)).toHaveAttribute(
-      'placeholder',
-      'Модель, частота или разъём — например, Тип1',
-    );
-    await page.setViewportSize({ width: 390, height: 844 });
+    // Полный текст DESIGN § R.5 — там, где помещается: на 1440 и на 390 (поле строкой под
+    // шапкой); на 320 — короткий.
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: 900 });
+      await expect(page.locator(SEARCH), `ширина ${width}`).toHaveAttribute(
+        'placeholder',
+        'Модель, частота, разъём или код',
+      );
+    }
+    await page.setViewportSize({ width: 320, height: 844 });
     await expect(page.locator(SEARCH)).toHaveAttribute('placeholder', 'Модель, частота или разъём');
   });
 

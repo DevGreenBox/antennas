@@ -4,16 +4,21 @@ import { cn } from '@/lib/cn';
 import type { ImportReport } from '@/types/catalog';
 
 /**
- * Сводка отчёта импорта (DESIGN §2.20 п.3): `dl` сеткой, ячейка — рамка, `dt` подпись, `dd`
- * число. Все числа — из `ImportReport.counts`, руками не вписываются. Строки «Товарных строк»,
- * «Проблемы» и «Отправлено на проверку» занимают две колонки: в них разбивка, а не одно число.
+ * Сводка отчёта импорта (DESIGN §2.20 п.3): `dl` сеткой, `dt` подпись, `dd` число. Все числа — из
+ * `ImportReport.counts`, руками не вписываются. Строки «Товарных строк», «Проблемы» и «Отправлено
+ * на проверку» занимают две колонки: в них разбивка, а не одно число.
+ *
+ * Вид — DESIGN § R, как указатель категорий главной: одна рамка, ячейки разделены зазором 1 px на
+ * фоне `line` (`gap-px bg-line`), а не отдельными карточками. Сетка всегда заполнена без пустот
+ * (1 / 2 / 4 колонки, широкие ячейки — `grid-flow-dense`), иначе пустая ячейка залилась бы цветом
+ * линии.
  */
 export function ImportSummary({ counts }: { counts: ImportReport['counts'] }) {
   const { productRows, issuesBySeverity } = counts;
   const issuesTotal = issuesBySeverity.conflict + issuesBySeverity.review + issuesBySeverity.info;
   return (
     <div>
-      <dl className="grid grid-flow-dense gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <dl className="grid grid-flow-dense gap-px overflow-hidden rounded-md border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
         <SummaryItem label="Строк прочитано" note="непустых, с заголовками и примечаниями">
           {counts.rowsRead}
         </SummaryItem>
@@ -91,14 +96,9 @@ function SummaryItem({
   children: ReactNode;
 }) {
   return (
-    <div
-      className={cn(
-        'flex flex-col rounded-md border border-line p-4',
-        wide ? 'sm:col-span-2' : null,
-      )}
-    >
+    <div className={cn('flex flex-col bg-surface p-4 lg:p-5', wide ? 'sm:col-span-2' : null)}>
       <dt className="text-small text-ink-secondary">{label}</dt>
-      <dd className="order-first mb-1 text-heading tabular-nums">{children}</dd>
+      <dd className="order-first mb-2 text-heading tabular-nums">{children}</dd>
       {note ? <dd className="mt-1 text-caption text-ink-muted">{note}</dd> : null}
     </div>
   );

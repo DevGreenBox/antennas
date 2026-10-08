@@ -21,6 +21,9 @@ import { CheckoutSummary, CheckoutSummaryDisclosure } from './CheckoutSummary';
  * Оформление заявки (DESIGN §2.10): форма слева, сводка справа (на < lg — свёрнута над формой).
  * Пока идёт отправка, состав «заморожен»: корзина очищается при успехе, и до перехода на
  * страницу успеха не должно мелькать «В заявке нет товаров».
+ *
+ * Две панели рядом (DESIGN § R.4 `golden-reverse`): форма и сводка; сводка на ≥ lg липкая
+ * (`--sticky-top`) — итог виден, пока заполняется форма. Других рамок на странице нет.
  */
 export function CheckoutView({ products }: { products: readonly Product[] }) {
   const cartHydrated = useCartHydrated();
@@ -33,8 +36,8 @@ export function CheckoutView({ products }: { products: readonly Product[] }) {
 
   if (!cartHydrated || !sessionHydrated || !profilesHydrated) {
     return (
-      <div className="grid gap-8 lg:grid-cols-golden-reverse xl:gap-12">
-        <SkeletonGroup className="flex max-w-form flex-col gap-5">
+      <div className="grid gap-8 lg:grid-cols-golden-reverse lg:gap-10 xl:gap-12">
+        <SkeletonGroup className="flex flex-col gap-5">
           <Skeleton className="h-5 w-2/3" />
           <Skeleton className="h-11 w-full" />
           <Skeleton className="h-11 w-full" />
@@ -73,7 +76,7 @@ export function CheckoutView({ products }: { products: readonly Product[] }) {
       {model.unavailableCount > 0 ? (
         <Notice
           tone="warning"
-          className="mb-6 max-w-form"
+          className="mb-6"
           actions={
             <ButtonLink href="/cart" variant="secondary" size="sm">
               Перейти в корзину
@@ -83,7 +86,7 @@ export function CheckoutView({ products }: { products: readonly Product[] }) {
           Уберите недоступные позиции, чтобы оформить заявку
         </Notice>
       ) : null}
-      <div className="grid gap-8 lg:grid-cols-golden-reverse xl:gap-12">
+      <div className="grid gap-8 lg:grid-cols-golden-reverse lg:gap-10 xl:gap-12">
         <div className="min-w-0">
           <CheckoutSummaryDisclosure model={model} editable={editable} className="mb-6 lg:hidden" />
           <CheckoutForm
@@ -92,7 +95,10 @@ export function CheckoutView({ products }: { products: readonly Product[] }) {
             onSubmitFailed={() => setFrozen(null)}
           />
         </div>
-        <aside aria-label="Сумма заявки" className="hidden self-start lg:sticky lg:top-6 lg:block">
+        <aside
+          aria-label="Сумма заявки"
+          className="hidden self-start lg:sticky lg:top-(--sticky-top) lg:block"
+        >
           <CheckoutSummary model={model} editable={editable} />
         </aside>
       </div>

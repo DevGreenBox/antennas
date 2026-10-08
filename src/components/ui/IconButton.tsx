@@ -63,8 +63,8 @@ export function iconButtonClasses({
         ? 'text-ink-inverse border-transparent cursor-pointer hover:bg-ink-secondary'
         : variant === 'secondary'
           ? cn(
-              'bg-surface text-ink cursor-pointer hover:bg-surface-muted active:bg-line-subtle',
-              pressed ? 'border-ink' : 'border-line-strong',
+              'bg-surface text-ink cursor-pointer hover:border-ink-muted active:bg-surface-muted',
+              pressed ? 'border-ink' : 'border-line-emphasis',
             )
           : 'bg-transparent text-ink border-transparent cursor-pointer hover:bg-surface-muted active:bg-line-subtle',
   );

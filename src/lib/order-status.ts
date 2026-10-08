@@ -68,7 +68,8 @@ export const ORDER_STATUS_TONES: Readonly<Record<OrderStatus, BadgeTone>> = {
   processing: 'info',
   shipped: 'info',
   completed: 'neutral',
-  cancelled: 'danger',
+  // Отмена — состояние, а не ошибка: красный только для настоящих ошибок (DESIGN § R.2).
+  cancelled: 'neutral',
 };
 
 /** Допустимые переходы (§3.2). Создание заказа (→ received) — отдельная операция. */

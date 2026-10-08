@@ -124,6 +124,11 @@ export interface SiteConfig {
      */
     searchExamples: readonly string[];
     /**
+     * Быстрые запросы под поиском главной: поисковый запрос или категория. Только такие, что
+     * находят реальные позиции.
+     */
+    quickLinks: readonly NavLink[];
+    /**
      * Спектральная шкала (BandScale): логарифмическая ось частот, МГц.
      * Покрывает подтверждённые диапазоны прайса (минимум 50 МГц у МШУ, максимум 9000 МГц у Тип14).
      */
@@ -133,15 +138,10 @@ export interface SiteConfig {
       ticks: readonly { mhz: number; label: string }[];
     };
   };
-  /**
-   * Короткие подписи категорий для второй строки шапки, если полное название не помещается.
-   * Ключ — id категории из данных. Нет ключа — используется Category.name.
-   */
-  categoryNavLabels: Readonly<Record<string, string>>;
   nav: {
-    /** Шапка (вторая строка, ≥ xl), подвал, мобильное меню. */
+    /** Нижняя строка меню «Каталог» в шапке. */
     service: readonly NavLink[];
-    /** Подвал «Покупателям», мобильное меню. */
+    /** Подвал «Покупателям», мобильное меню (избранное и корзина — значками в шапке). */
     customer: readonly NavLink[];
     /** Подвал «Документы», ссылки из формы заявки. */
     legal: readonly NavLink[];
@@ -242,6 +242,12 @@ export const site: SiteConfig = {
     suggestMinChars: 2,
     suggestDebounceMs: 150,
     searchExamples: ['Тип1', 'M4', '2400', 'N-female', 'МШУ'],
+    quickLinks: [
+      { href: '/search?q=700%E2%80%931100%20%D0%9C%D0%93%D1%86', label: '700–1100 МГц' },
+      { href: '/search?q=N-female', label: 'N-female' },
+      { href: '/search?q=%D0%9C%D0%A8%D0%A3', label: 'МШУ' },
+      { href: '/catalog/cables', label: 'Кабельные сборки' },
+    ],
     bandScale: {
       minMHz: 50,
       maxMHz: 10000,
@@ -252,9 +258,6 @@ export const site: SiteConfig = {
       ],
     },
   },
-  categoryNavLabels: {
-    lna: 'МШУ',
-  },
   nav: {
     service: [
       { href: '/delivery', label: 'Доставка и оплата' },
@@ -264,8 +267,6 @@ export const site: SiteConfig = {
       { href: '/delivery', label: 'Доставка и оплата' },
       { href: '/contacts', label: 'Контакты' },
       { href: '/account', label: 'Личный кабинет' },
-      { href: '/favorites', label: 'Избранное' },
-      { href: '/cart', label: 'Корзина' },
     ],
     legal: [
       { href: '/legal/privacy', label: 'Политика обработки персональных данных' },
@@ -321,11 +322,6 @@ export const site: SiteConfig = {
 /** Название сайта для <title>, шапки, подвала: бренд, а пока его нет — дескриптор. */
 export function siteTitle(): string {
   return site.brandName ?? site.descriptor;
-}
-
-/** Подпись категории в навигации шапки: короткая из конфига или полное название из данных. */
-export function categoryNavLabel(categoryId: string, categoryName: string): string {
-  return site.categoryNavLabels[categoryId] ?? categoryName;
 }
 
 const matchesPrefix = (pathname: string, prefix: string): boolean =>

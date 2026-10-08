@@ -12,6 +12,9 @@ import { FilterPanel } from './FilterPanel';
  * (`result` — выдача по черновику), кнопка «Показать N» применяет его; крестик, Esc и подложка
  * черновик отбрасывают. «Сбросить» чистит черновик, Drawer не закрывается. При закрытии фокус
  * возвращается на кнопку «Параметры» (Drawer возвращает его на триггер).
+ *
+ * Подвал Drawer не прокручивается вместе с группами — «Показать N» всегда под рукой; кнопки 44 px
+ * (цель нажатия, § R.9).
  */
 export function FilterDrawer({
   open,
@@ -40,10 +43,15 @@ export function FilterDrawer({
       title="Подбор по параметрам"
       footer={
         <>
-          <Button variant="secondary" onClick={onReset}>
+          <Button variant="secondary" className="min-h-11" onClick={onReset}>
             Сбросить
           </Button>
-          <Button variant="primary" className="flex-1" disabled={total === 0} onClick={onApply}>
+          <Button
+            variant="primary"
+            className="min-h-11 flex-1"
+            disabled={total === 0}
+            onClick={onApply}
+          >
             {total === 0 ? 'Нет подходящих товаров' : `Показать ${preview}`}
           </Button>
           <p role="status" className="sr-only">

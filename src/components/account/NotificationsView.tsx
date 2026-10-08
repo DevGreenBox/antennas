@@ -12,8 +12,9 @@ import { useAccountGuard } from './useAccountGuard';
 
 /**
  * Уведомления (DESIGN §2.16, тексты — §6.7). В демо письма не отправляются: уведомления
- * хранятся в браузере, у каждого пометка «Email — демо, не отправлено». Переход по ссылке
- * «Заказ {№}» помечает уведомления этого заказа прочитанными.
+ * хранятся в браузере, у каждого пометка «Email — демо, не отправлено» — поэтому общей демо-
+ * плашки над списком нет (DESIGN § R.5). Переход по ссылке «Заказ {№}» помечает уведомления
+ * этого заказа прочитанными.
  */
 export function NotificationsView() {
   const guard = useAccountGuard('/account/notifications');
@@ -22,18 +23,14 @@ export function NotificationsView() {
   if (!guard.ready || guard.email === null) return <AccountSkeleton title="Уведомления" />;
 
   return (
-    <AccountShell
-      title="Уведомления"
-      email={guard.email}
-      demoText="Демо: письма не отправляются, уведомления хранятся в этом браузере."
-    >
+    <AccountShell title="Уведомления" email={guard.email}>
       {notifications.length === 0 ? (
-        <EmptyState title="Уведомлений пока нет" className="py-6">
+        <EmptyState title="Уведомлений пока нет" compact>
           Здесь появятся сообщения о заявках, согласовании и оплате.
         </EmptyState>
       ) : (
         <>
-          <div className="mb-2 flex flex-wrap items-center justify-between gap-3 border-b border-line pb-3">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-3">
             <p className="text-small text-ink-secondary" role="status">
               {unread === 0 ? 'Непрочитанных нет' : countLabel(unread, UNREAD_FORMS)}
             </p>
@@ -41,18 +38,16 @@ export function NotificationsView() {
               variant="ghost"
               size="sm"
               icon="check"
+              className="-mr-3 max-lg:h-11"
               disabled={unread === 0}
               onClick={() => markMyNotificationsRead()}
             >
               Отметить все прочитанными
             </Button>
           </div>
-          <ol>
+          <ol className="divide-y divide-line-subtle border-b border-line">
             {notifications.map((notification) => (
-              <li
-                key={notification.id}
-                className="flex gap-3 border-b border-line-subtle py-4 last:border-b-0"
-              >
+              <li key={notification.id} className="flex gap-3 py-4">
                 <span className="flex w-2 shrink-0 justify-center pt-2">
                   {notification.read ? null : (
                     <>

@@ -6,7 +6,6 @@ import { useProductsById } from '@/components/cart/cart-model';
 import { PageHeader } from '@/components/layout/PageHeader';
 import {
   ProductList,
-  ProductTable,
   columnsForCategory,
   hasInferredValues,
 } from '@/components/product/ProductRow';
@@ -16,14 +15,16 @@ import { ConfirmDialog } from '@/components/ui/Dialog';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { SkeletonRows } from '@/components/ui/Skeleton';
 import { StorageNotice } from '@/components/ui/StorageNotice';
+import { cn } from '@/lib/cn';
 import { PRODUCT_FORMS, countLabel } from '@/lib/format';
 import { useFavorites, useFavoritesHydrated } from '@/lib/store/favorites';
 import type { Product } from '@/types/catalog';
 
 /**
- * Избранное (DESIGN §2.8): табличный вид смешанного варианта (без переключателя вида), сначала
+ * Избранное (DESIGN §2.8, § R.7): список смешанного варианта (без переключателя вида), сначала
  * добавленные последними. Хранится в браузере; после входа объединяется с профилем (§3.11).
- * Позиция, которой больше нет в каталоге, видна строкой «Позиция больше недоступна».
+ * Позиция, которой больше нет в каталоге, видна строкой «Позиция больше недоступна» — в конце
+ * того же списка (те же разделители 1 px, без отдельной рамки).
  *
  * После «Очистить избранное» (и удаления последней позиции) кнопка, на которой был фокус,
  * исчезает — фокус переводится на заголовок пустого состояния.
@@ -71,6 +72,7 @@ export function FavoritesView({
         <StorageNotice className="mb-6" />
         <div ref={emptyRef}>
           <EmptyState
+            compact
             title="В избранном пока пусто"
             actions={
               <ButtonLink href="/catalog" variant="primary" size="md">
@@ -103,7 +105,7 @@ export function FavoritesView({
             variant="ghost"
             size="sm"
             icon="trash-2"
-            className="-ml-3 md:-mr-3 md:ml-0"
+            className="-ml-3 max-lg:h-11 md:-mr-3 md:ml-0"
             onClick={() => setConfirmClear(true)}
           >
             Очистить избранное
@@ -111,31 +113,24 @@ export function FavoritesView({
         }
       />
       <StorageNotice className="mb-6" />
+      <h2 className="sr-only">Позиции в избранном</h2>
       {available.length > 0 ? (
-        <>
-          <ProductTable
-            products={available}
-            columns={columns}
-            categoryNames={categoryNames}
-            caption="Избранное: товары"
-          />
-          <ProductList products={available} columns={columns} categoryNames={categoryNames} />
-          {hasInferredValues(available, columns) ? (
-            <p className="mt-3 text-caption text-ink-muted">{INFERRED_FOOTNOTE}</p>
-          ) : null}
-        </>
+        <ProductList products={available} columns={columns} categoryNames={categoryNames} />
       ) : null}
       {missing.length > 0 ? (
-        <ul className="mt-4 border-y border-line-subtle">
+        <ul
+          className={cn(
+            'divide-y divide-line border-b border-line',
+            available.length === 0 && 'border-t',
+          )}
+        >
           {missing.map((id) => (
-            <li
-              key={id}
-              className="flex items-center justify-between gap-3 border-b border-line-subtle py-3 last:border-b-0"
-            >
-              <span className="text-small text-ink-secondary">Позиция больше недоступна</span>
+            <li key={id} className="flex items-center justify-between gap-4 py-4">
+              <span className="text-body text-ink-secondary">Позиция больше недоступна</span>
               <Button
-                variant="link"
+                variant="secondary"
                 size="sm"
+                className="max-lg:h-11"
                 onClick={() => {
                   if (ids.length === 1) focusEmpty.current = true;
                   remove(id);
@@ -146,6 +141,9 @@ export function FavoritesView({
             </li>
           ))}
         </ul>
+      ) : null}
+      {hasInferredValues(available, columns) ? (
+        <p className="mt-3 text-caption text-ink-muted">{INFERRED_FOOTNOTE}</p>
       ) : null}
 
       <ConfirmDialog

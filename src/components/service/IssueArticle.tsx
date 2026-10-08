@@ -4,14 +4,19 @@ import type { ImportIssue, IssueFieldDiff } from '@/types/catalog';
 
 import { LiteralText } from './LiteralText';
 import { CellChips, MissingProductRef, ProductRefLink } from './ReportLinks';
+import { SERVICE_TABLE } from './ServiceSection';
 import { SEVERITY_SHORT, SEVERITY_TONE } from './labels';
 import type { ProductRef } from './labels';
 
 /**
- * Проблема импорта (DESIGN §2.20 п.5): `article` с рамкой — заголовок, код `font-mono`, пояснение,
- * чипы ячеек (якоря строк в таблице прайса), ссылки на товары. У `sheet-conflict` — построчное
+ * Проблема импорта (DESIGN §2.20 п.5): `article` — заголовок, код `font-mono`, пояснение, чипы
+ * ячеек (якоря строк в таблице прайса), ссылки на товары. У `sheet-conflict` — построчное
  * сравнение листов из `ImportIssue.fields`: расхождение отмечено «≠» и начертанием значений,
  * подсветка строки — только дополнение (DESIGN §7 «не только цвет»).
+ *
+ * Вид — DESIGN § R: не карточка, а строка списка — разделители рисует список (`IssueList` на
+ * странице), таблица сравнения — без рамки, с линиями сверху и снизу. Проблема, открытая по якорю
+ * (`#issue-…` из бейджа строки прайса), подсвечивается `brand-subtle`, как строка прайса.
  */
 
 /** Сколько товаров показывать сразу; длинный список (E57 — 43 товара) сворачивается. */
@@ -31,7 +36,7 @@ export function IssueArticle({ issue, cells, products }: IssueArticleProps) {
     <article
       id={`issue-${issue.id}`}
       aria-labelledby={titleId}
-      className="flex-1 scroll-mt-4 rounded-md border border-line bg-surface p-4 target:border-ink lg:p-5"
+      className="-mx-3 flex-1 scroll-mt-4 rounded-md px-3 py-6 target:bg-brand-subtle lg:py-7"
     >
       <header className="flex flex-wrap items-start gap-x-3 gap-y-1">
         <h3 id={titleId} className="min-w-0 flex-1 basis-64">
@@ -54,7 +59,7 @@ export function IssueArticle({ issue, cells, products }: IssueArticleProps) {
       ) : null}
 
       <dl className="mt-4 grid gap-x-4 gap-y-3 text-small sm:grid-cols-[8rem_minmax(0,1fr)]">
-        <dt className="text-ink-secondary sm:pt-0.5">
+        <dt className="text-ink-muted sm:pt-0.5">
           {cells.length === 1 ? 'Ячейка' : `Ячейки (${cells.length})`}
         </dt>
         <dd>
@@ -62,7 +67,7 @@ export function IssueArticle({ issue, cells, products }: IssueArticleProps) {
         </dd>
         {products.length > 0 ? (
           <>
-            <dt className="text-ink-secondary">
+            <dt className="text-ink-muted">
               {products.length === 1 ? 'Товар' : `Товары (${products.length})`}
             </dt>
             <dd>
@@ -118,25 +123,23 @@ export function ConflictComparison({
   // < sm таблица перестраивается в строки «поле ≠ / Лист 1: … / Лист 2: …» (CSS-сетка у tr):
   // четыре колонки на 320–390 px не помещаются, а прокрутка прятала бы как раз лист 2.
   return (
-    <div className="relative mt-4 overflow-x-auto rounded-sm border border-line">
+    <div className={cn('mt-4', SERVICE_TABLE.frame)}>
       <table className="w-full text-small sm:min-w-[34rem] sm:table-fixed">
         <caption className="sr-only">{caption}</caption>
-        <thead className="bg-surface-subtle text-left text-ink-secondary max-sm:sr-only">
-          <tr className="border-b border-line">
-            <th scope="col" className="w-36 px-3 py-2 font-medium">
+        <thead className={cn(SERVICE_TABLE.head, 'max-sm:sr-only')}>
+          <tr className={SERVICE_TABLE.headRow}>
+            <th scope="col" className={cn(SERVICE_TABLE.th, 'w-36')}>
               Поле
             </th>
-            <th scope="col" className="px-3 py-2 font-medium">
+            <th scope="col" className={SERVICE_TABLE.th}>
               Лист 1{sheet1Cell ? <span className="font-mono"> · {sheet1Cell}</span> : null}
-              <span className="block text-caption font-normal text-ink-muted">в витрине</span>
+              <span className="block font-normal text-ink-muted">в витрине</span>
             </th>
-            <th scope="col" className="px-3 py-2 font-medium">
+            <th scope="col" className={SERVICE_TABLE.th}>
               Лист 2{sheet2Cell ? <span className="font-mono"> · {sheet2Cell}</span> : null}
-              <span className="block text-caption font-normal text-ink-muted">
-                сохранено для сопоставления
-              </span>
+              <span className="block font-normal text-ink-muted">сохранено для сопоставления</span>
             </th>
-            <th scope="col" className="w-12 px-3 py-2 text-center font-medium">
+            <th scope="col" className={cn(SERVICE_TABLE.th, 'w-12 text-center')}>
               <span aria-hidden>≠</span>
               <span className="sr-only">Расходится</span>
             </th>
@@ -148,7 +151,7 @@ export function ConflictComparison({
               key={field.field}
               data-differs={field.differs || undefined}
               className={cn(
-                'border-b border-line-subtle align-top last:border-b-0',
+                SERVICE_TABLE.row,
                 'max-sm:grid max-sm:grid-cols-[minmax(0,1fr)_auto] max-sm:py-1.5',
                 field.differs ? 'bg-warning-subtle' : null,
               )}

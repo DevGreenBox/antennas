@@ -127,9 +127,9 @@ test.describe('Товар', () => {
     );
 
     // Конфликт листов: только пометка, без значений листа 2 («КУ=10 дБ», 12 000).
-    await expect(page.getByText('Данные позиции уточняются')).toBeVisible();
+    await expect(page.getByText('Требуется подтверждение характеристик')).toBeVisible();
     await expandAll(page);
-    await expect(page.locator('#source-rows summary')).toHaveText('Строки прайса (1)');
+    await expect(page.locator('#source-rows-title')).toHaveText('Строки прайса (1)');
     const text = await visibleText(page);
     expect(text).not.toContain('12 000');
     expect(text).not.toContain('12000');
@@ -217,33 +217,37 @@ test.describe('Товар', () => {
     await expect(page.locator('.band-scale')).toHaveCount(0);
   });
 
-  test('происхождение: общая строка прайса — один раз, раскрывается с клавиатуры', async ({
+  test('происхождение: в закрытом блоке под характеристиками, раскрывается с клавиатуры', async ({
     page,
   }) => {
     await open(page, '/product/antenna-tip1');
-    // Все значения Тип1 — из строки B4: под значениями «Источник» не повторяется.
+    // Под значениями служебных раскрытий нет — покупатель видит только характеристики.
     await expect(page.getByTestId('spec-table').locator('summary')).toHaveCount(0);
-    const shared = page.getByTestId('spec-source');
-    const summary = shared.locator('summary');
-    await expect(summary).toHaveText('Источник всех значений: лист 1, B4');
+    const block = page.getByTestId('product-source');
+    const summary = block.locator('summary');
+    await expect(summary).toHaveText('Техническая информация об источнике данных');
+    await expect(block).not.toHaveAttribute('open', '');
     await summary.focus();
     await page.keyboard.press('Enter');
-    await expect(shared).toHaveAttribute('open', '');
+    await expect(block).toHaveAttribute('open', '');
+    // Все значения Тип1 — из строки B4: ячейка один раз, исходный текст и фрагменты.
+    const shared = page.getByTestId('spec-source');
+    await expect(shared).toContainText('Источник всех значений');
+    await expect(shared).toContainText('лист 1, B4');
     await expect(shared).toContainText('Тип1 логопериодическая (700-1100 МГц, КУ=12 дБи, N-мама)');
     await expect(shared).toContainText('КУ: «КУ=12 дБи»');
     await expect(shared).toContainText('Из строки прайса');
 
-    // Значение из заголовка группы — со своим источником под ним, остальные — общим блоком.
+    // Значение из заголовка группы — отдельной записью, остальные — общей строкой.
     await open(page, '/product/mast-carbon-12m');
-    await expect(page.getByTestId('spec-table').locator('summary')).toHaveCount(1);
-    const material = specRow(page, 'Материал').locator('summary');
-    await expect(material).toHaveText('Источник: лист 1, B34');
-    await material.focus();
-    await page.keyboard.press('Enter');
-    await expect(specRow(page, 'Материал').locator('details')).toHaveAttribute('open', '');
-    await expect(page.getByTestId('spec-source').locator('summary')).toHaveText(
-      'Источник остальных значений: лист 1, B35',
-    );
+    await expect(page.getByTestId('spec-table').locator('summary')).toHaveCount(0);
+    await expandAll(page);
+    const mast = page.getByTestId('spec-source');
+    await expect(mast).toContainText('Источник остальных значений');
+    await expect(mast).toContainText('лист 1, B35');
+    await expect(
+      mast.locator('div', { has: page.locator('dt', { hasText: /^Материал$/ }) }),
+    ).toContainText('лист 1, B34');
   });
 
   test('характеристики: подпись и значение на одной базовой линии', async ({ page }) => {
@@ -334,7 +338,7 @@ test.describe('Товар', () => {
     await expect(notes).toContainText('в характеристики не перенесено');
     // Строка-повтор E49 показана как повтор.
     await expandAll(page);
-    await expect(page.locator('#source-rows summary')).toHaveText('Строки прайса (2)');
+    await expect(page.locator('#source-rows-title')).toHaveText('Строки прайса (2)');
     await expect(page.locator('#source-rows')).toContainText('Повтор — объединён с основной');
 
     await open(page, '/product/cable-1m-sma-m-straight-n-m-rg142');
@@ -442,9 +446,7 @@ test.describe('Главная', () => {
     const consoleMessages = collectConsole(page);
     await open(page, '/');
     await waitForHydration(page);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'Каталог антенн и радиооборудования',
-    );
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Антенны и радиооборудование');
     const counts = await page
       .locator('main [data-category-tile]')
       .evaluateAll((tiles) => tiles.map((tile) => Number(tile.getAttribute('data-count'))));
@@ -457,21 +459,21 @@ test.describe('Главная', () => {
     // Процесс — три настоящих шага, без «преимуществ».
     const steps = page.locator('main ol').first().locator(':scope > li');
     await expect(steps).toHaveCount(3);
-    await expect(steps.nth(0)).toContainText('Заявка');
-    await expect(steps.nth(1)).toContainText('Согласование');
-    await expect(steps.nth(2)).toContainText('Оплата');
+    await expect(steps.nth(0)).toContainText('Соберите заявку');
+    await expect(steps.nth(1)).toContainText('Согласуем заказ');
+    await expect(steps.nth(2)).toContainText('Оплатите');
 
     expect(consoleMessages).toEqual([]);
   });
 
-  test('малые плитки категорий: без пустых ячеек, одной высоты, количество на одной линии', async ({
+  test('ячейки категорий без подкатегорий: без пустот, одной высоты, «Смотреть» на одной линии', async ({
     page,
   }, testInfo) => {
     test.skip(testInfo.project.name !== 'desktop', 'ширины задаются вручную');
     for (const width of [1024, 768, 640]) {
       await page.setViewportSize({ width, height: 900 });
       await open(page, '/');
-      const list = page.locator('main ul:has(> li[data-category-tile] > a)');
+      const list = page.locator('main ul[data-category-leaves]');
       const listBox = (await list.boundingBox())!;
       const tiles = await list.locator('> li > a').evaluateAll((links) =>
         links.map((link) => {
@@ -501,15 +503,13 @@ test.describe('Главная', () => {
     }
   });
 
-  test('позиции: по одной из каждой категории', async ({ page }) => {
+  test('позиции: по одной из четырёх самых больших категорий', async ({ page }) => {
     await open(page, '/');
     const names = [
       'Антенна логопериодическая Тип1',
-      'Чехол для антенны Тип2',
-      'Мачта карбоновая 12 м',
       'МШУ 50–1000 МГц, 20 дБ, IP67, XT60',
       'Фильтр полосовой 136–174, N-female — N-female',
-      'Аттенюатор 0–31 дБ, до 5 Вт',
+      'Кабельная сборка 15 см, SMA-male прямой — SMA-male прямой, RG-316 / RG-142',
     ];
     for (const name of names) {
       await expect(
@@ -528,7 +528,7 @@ test.describe('Главная', () => {
 
   test('связь — ссылка на Telegram', async ({ page }) => {
     await open(page, '/');
-    const link = page.locator('main').getByRole('link', { name: /Написать в Telegram/ });
+    const link = page.locator('main').getByRole('link', { name: /Задать вопрос в Telegram/ });
     await expect(link).toHaveAttribute('href', 'https://t.me/svyaz987');
     await expect(link).toHaveAttribute('target', '_blank');
   });

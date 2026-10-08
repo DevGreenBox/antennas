@@ -1,5 +1,8 @@
+import { cn } from '@/lib/cn';
+
 import { LiteralText } from './LiteralText';
 import { CellChip, MissingProductRef, ProductRefLink } from './ReportLinks';
+import { SERVICE_TABLE } from './ServiceSection';
 import type { ProductRef } from './labels';
 
 /**
@@ -23,38 +26,34 @@ export function DuplicatesTable({ pairs }: { pairs: readonly DuplicatePair[] }) 
       role="region"
       aria-labelledby="duplicates-caption"
       tabIndex={0}
-      className="focus-inset relative overflow-x-auto rounded-md border border-line"
+      className={cn('focus-inset', SERVICE_TABLE.frame)}
     >
       <table className="w-full min-w-[40rem] text-small">
         <caption id="duplicates-caption" className="sr-only">
           Повторы строк: повтор, оригинал, исходный текст, цена, товар
         </caption>
-        <thead className="bg-surface-subtle text-left text-ink-secondary">
-          <tr className="border-b border-line">
-            <th scope="col" className="w-28 px-3 py-2.5 font-medium">
+        <thead className={SERVICE_TABLE.head}>
+          <tr className={SERVICE_TABLE.headRow}>
+            <th scope="col" className={cn(SERVICE_TABLE.th, 'w-28')}>
               Повтор
             </th>
-            <th scope="col" className="w-28 px-3 py-2.5 font-medium">
+            <th scope="col" className={cn(SERVICE_TABLE.th, 'w-28')}>
               Оригинал
             </th>
-            <th scope="col" className="px-3 py-2.5 font-medium">
+            <th scope="col" className={SERVICE_TABLE.th}>
               Исходный текст
             </th>
-            <th scope="col" className="w-28 px-3 py-2.5 font-medium">
+            <th scope="col" className={cn(SERVICE_TABLE.th, 'w-28')}>
               Цена в прайсе
             </th>
-            <th scope="col" className="px-3 py-2.5 font-medium">
+            <th scope="col" className={SERVICE_TABLE.th}>
               Товар (два происхождения)
             </th>
           </tr>
         </thead>
         <tbody>
           {pairs.map((pair) => (
-            <tr
-              key={pair.issueId}
-              data-testid="duplicate-pair"
-              className="border-b border-line-subtle align-top last:border-b-0"
-            >
+            <tr key={pair.issueId} data-testid="duplicate-pair" className={SERVICE_TABLE.row}>
               <td className="px-3 py-3">
                 <CellChip cell={pair.duplicateCell} />
               </td>

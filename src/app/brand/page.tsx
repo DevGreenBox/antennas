@@ -6,13 +6,14 @@ import { LogoMark } from '@/components/brand/LogoMark';
 import { LOGO_MARK_COLOR, LOGO_MARK_MONO_COLOR } from '@/components/brand/logo-geometry.generated';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { BrandFigure } from '@/components/service/BrandFigure';
+import { SERVICE_TABLE, ServiceSection } from '@/components/service/ServiceSection';
 import {
   LOGO_COLOR_MEASUREMENT,
   LOGO_PARAM_ROWS,
   LOGO_SCALE_NOTE,
 } from '@/components/service/logo-measurements';
 import { Badge } from '@/components/ui/Badge';
-import { Icon } from '@/components/ui/Icon';
+import { cn } from '@/lib/cn';
 import { pageMetadata } from '@/lib/seo';
 
 /**
@@ -20,6 +21,8 @@ import { pageMetadata } from '@/lib/seo';
  * схема построения с таблицей «измерено → принято», малые размеры и фавиконка, цвет и как он
  * измерен, файлы для скачивания. noindex, вне sitemap и шапки — ссылка в подвале «Служебное».
  * Числа — из docs/logo-measurements.json и параметров генератора (см. logo-measurements.ts).
+ * Вид — DESIGN § R: разделы с линией сверху (`ServiceSection`), образцы знака — в одной белой
+ * панели с внутренними разделителями вместо отдельных карточек, таблица — тонкие линии строк.
  */
 
 export const metadata: Metadata = pageMetadata({
@@ -71,31 +74,34 @@ export default function BrandPage() {
       />
 
       <Section id="sizes" title="Знак в размерах">
-        <div className="flex flex-wrap items-end gap-x-6 gap-y-6 rounded-md border border-line bg-surface p-5 sm:gap-x-10 lg:p-6">
-          <MarkSample caption="16 px, упрощённый">
-            <Image
-              src="/brand/logo-mark-small.svg"
-              width={17}
-              height={16}
-              alt="Упрощённый знак, 16 px"
-              unoptimized
-            />
-          </MarkSample>
-          {MARK_SIZES.map((size) => (
-            <MarkSample key={size} caption={`${size} px`}>
-              <LogoMark size={size} title={`Знак, ${size} px`} />
+        {/* Одна белая панель: ряд размеров, под ним через линию — два тона. */}
+        <div className="overflow-hidden rounded-md border border-line bg-surface">
+          <div className="flex flex-wrap items-end gap-x-6 gap-y-6 p-5 sm:gap-x-10 lg:p-8">
+            <MarkSample caption="16 px, упрощённый">
+              <Image
+                src="/brand/logo-mark-small.svg"
+                width={17}
+                height={16}
+                alt="Упрощённый знак, 16 px"
+                unoptimized
+              />
             </MarkSample>
-          ))}
-        </div>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <ToneSample
-            caption={`brand — ${LOGO_MARK_COLOR}, основной`}
-            mark={<LogoMark size={64} tone="brand" title="Знак в фирменном цвете" />}
-          />
-          <ToneSample
-            caption={`mono — ${LOGO_MARK_MONO_COLOR}, печать и однотонные поверхности`}
-            mark={<LogoMark size={64} tone="mono" title="Однотонный знак" />}
-          />
+            {MARK_SIZES.map((size) => (
+              <MarkSample key={size} caption={`${size} px`}>
+                <LogoMark size={size} title={`Знак, ${size} px`} />
+              </MarkSample>
+            ))}
+          </div>
+          <div className="grid divide-y divide-line border-t border-line sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+            <ToneSample
+              caption={`brand — ${LOGO_MARK_COLOR}, основной`}
+              mark={<LogoMark size={64} tone="brand" title="Знак в фирменном цвете" />}
+            />
+            <ToneSample
+              caption={`mono — ${LOGO_MARK_MONO_COLOR}, печать и однотонные поверхности`}
+              mark={<LogoMark size={64} tone="mono" title="Однотонный знак" />}
+            />
+          </div>
         </div>
       </Section>
 
@@ -146,14 +152,14 @@ export default function BrandPage() {
             sizes="(min-width: 1024px) 60vw, 100vw"
           />
           <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-2 gap-4">
-              <figure className="flex flex-col items-center gap-3 rounded-md border border-line p-5">
+            <div className="grid grid-cols-2 divide-x divide-line overflow-hidden rounded-md border border-line bg-surface">
+              <figure className="flex flex-col items-center gap-3 p-5">
                 <LogoMark size={64} title="Полный знак" />
                 <figcaption className="text-center text-caption text-ink-muted">
                   Полный — от 20 px
                 </figcaption>
               </figure>
-              <figure className="flex flex-col items-center gap-3 rounded-md border border-line p-5">
+              <figure className="flex flex-col items-center gap-3 p-5">
                 <Image
                   src="/brand/logo-mark-small.svg"
                   width={67}
@@ -188,7 +194,7 @@ export default function BrandPage() {
               оттенок того же цвета (токен <code className="font-mono text-ink">brand-text</code>
               ).
             </p>
-            <h3 className="mt-5 text-small font-semibold text-ink">Как измерен</h3>
+            <h3 className="eyebrow mt-6">Как измерен</h3>
             <ul className="mt-2 flex list-disc flex-col gap-1.5 pl-5">
               <li>
                 Растр {LOGO_COLOR_MEASUREMENT.raster} извлечён из PDF без перерисовки; гистограмма
@@ -213,18 +219,13 @@ export default function BrandPage() {
       </Section>
 
       <Section id="files" title="Файлы">
-        <ul className="grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-x-8 border-t border-line-subtle sm:grid-cols-2 lg:grid-cols-3">
           {FILES.map((file) => (
             <li key={file.href} className="border-b border-line-subtle py-3">
-              <a
-                href={file.href}
-                download
-                className="inline-flex items-center gap-2 font-mono text-small text-ink underline decoration-1 underline-offset-[0.2em] hover:decoration-2"
-              >
-                <Icon name="file-text" size={16} className="text-ink-muted" />
+              <a href={file.href} download className="text-link font-mono text-small text-ink">
                 {file.label}
               </a>
-              <p className="mt-0.5 pl-6 text-caption text-ink-muted">{file.note}</p>
+              <p className="mt-0.5 text-caption text-ink-muted">{file.note}</p>
             </li>
           ))}
         </ul>
@@ -239,29 +240,8 @@ export default function BrandPage() {
   );
 }
 
-function Section({
-  id,
-  title,
-  description,
-  children,
-}: {
-  id: string;
-  title: string;
-  description?: string;
-  children: ReactNode;
-}) {
-  return (
-    <section id={id} aria-labelledby={`${id}-title`} className="mt-10 lg:mt-16">
-      <h2 id={`${id}-title`} className={description ? 'mb-2' : 'mb-4 lg:mb-6'}>
-        {title}
-      </h2>
-      {description ? (
-        <p className="mb-4 max-w-text text-small text-ink-secondary lg:mb-6">{description}</p>
-      ) : null}
-      {children}
-    </section>
-  );
-}
+/** Раздел страницы — общий `ServiceSection` служебных страниц (линия сверху, h2, описание). */
+const Section = ServiceSection;
 
 function MarkSample({ caption, children }: { caption: string; children: ReactNode }) {
   return (
@@ -274,7 +254,7 @@ function MarkSample({ caption, children }: { caption: string; children: ReactNod
 
 function ToneSample({ caption, mark }: { caption: string; mark: ReactNode }) {
   return (
-    <figure className="flex items-center gap-5 rounded-md border border-line p-5">
+    <figure className="flex items-center gap-5 p-5 lg:px-8">
       {mark}
       <figcaption className="text-small text-ink-secondary">{caption}</figcaption>
     </figure>
@@ -283,27 +263,27 @@ function ToneSample({ caption, mark }: { caption: string; mark: ReactNode }) {
 
 function ParamsTable() {
   return (
-    <div className="relative min-w-0 overflow-x-auto rounded-md border border-line lg:self-start">
+    <div className={cn('min-w-0 lg:self-start', SERVICE_TABLE.frame)}>
       <table className="w-full text-small">
         <caption className="sr-only">
           Параметры построения знака: измерено по исходнику и принято в новом знаке
         </caption>
-        <thead className="bg-surface-subtle text-left text-ink-secondary">
-          <tr className="border-b border-line">
-            <th scope="col" className="px-3 py-2.5 font-medium">
+        <thead className={SERVICE_TABLE.head}>
+          <tr className={SERVICE_TABLE.headRow}>
+            <th scope="col" className={SERVICE_TABLE.th}>
               Параметр
             </th>
-            <th scope="col" className="px-3 py-2.5 font-medium">
+            <th scope="col" className={SERVICE_TABLE.th}>
               Исходник, измерено
             </th>
-            <th scope="col" className="px-3 py-2.5 font-medium">
+            <th scope="col" className={SERVICE_TABLE.th}>
               Принято
             </th>
           </tr>
         </thead>
         <tbody>
           {LOGO_PARAM_ROWS.map((row) => (
-            <tr key={row.label} className="border-b border-line-subtle align-top last:border-b-0">
+            <tr key={row.label} className={SERVICE_TABLE.row}>
               <th scope="row" className="px-3 py-2.5 text-left font-normal text-ink-secondary">
                 {row.label}
                 {row.symbol ? (

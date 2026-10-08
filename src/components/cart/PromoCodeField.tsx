@@ -6,7 +6,6 @@ import { DemoBadge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
 import { Input } from '@/components/ui/Input';
-import { DemoNotice } from '@/components/ui/Notice';
 import { site } from '@/config/site';
 import { cn } from '@/lib/cn';
 import { useCart } from '@/lib/store/cart';
@@ -17,6 +16,10 @@ import { useCart } from '@/lib/store/cart';
  *
  * Свёрнуто: «Есть промокод?» + демо-подсказка с тестовым кодом. Развёрнуто: поле и «Применить».
  * Применён: «Промокод DEMO10» + «Демо» + «Убрать» и подпись о предварительной скидке.
+ *
+ * Демо-подсказка — одна строка с меткой «Демо» (DESIGN § R.5: демо-пометка только у демо-
+ * действия, без отдельной пунктирной плашки — общее «это демо» уже сказано в демо-полосе).
+ * Поле и «Применить» — 44 px на < lg (цели нажатия), 40 px на десктопе.
  */
 export function PromoCodeField({
   onlyRequestItems,
@@ -68,7 +71,7 @@ export function PromoCodeField({
             <Button
               variant="link"
               size="sm"
-              className="ml-auto"
+              className="ml-auto min-h-11 lg:min-h-0"
               onClick={() => {
                 removePromo();
                 setStatus('Промокод убран');
@@ -95,7 +98,7 @@ export function PromoCodeField({
             size="sm"
             aria-expanded={expanded}
             aria-controls={formId}
-            className="self-start"
+            className="min-h-11 self-start lg:min-h-0"
             onClick={() => {
               setExpanded((open) => !open);
               setError(null);
@@ -117,6 +120,7 @@ export function PromoCodeField({
                   <Input
                     ref={inputRef}
                     size="md"
+                    className="max-lg:h-11"
                     autoComplete="off"
                     autoCapitalize="characters"
                     spellCheck={false}
@@ -129,13 +133,16 @@ export function PromoCodeField({
                     autoFocus
                   />
                 </Field>
-                <Button type="submit" variant="secondary" size="md">
+                <Button type="submit" variant="secondary" size="md" className="max-lg:h-11">
                   Применить
                 </Button>
               </form>
             ) : null}
           </div>
-          <DemoNotice compact>Для демонстрации: промокод {demoCodes}</DemoNotice>
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-caption text-ink-muted">
+            <DemoBadge />
+            <span>Промокод для проверки: {demoCodes}</span>
+          </p>
         </>
       )}
     </div>

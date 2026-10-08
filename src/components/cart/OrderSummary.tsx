@@ -24,6 +24,10 @@ import type { QuoteVersion } from '@/types/order';
  * Подписи значений не переносятся внутри («уточнит / менеджер» при выравнивании вправо читалось
  * плохо): в строке переносится подпись слева, а итог при нехватке места целиком уходит на
  * следующую строку. «Цены в рублях — предварительно» под сводкой не дублируется — она в подвале.
+ *
+ * Панель (DESIGN § R.1, § R.4): белая поверхность, рамка `line`, радиус 6, без тени — это одна из
+ * немногих настоящих панелей потока покупки (рядом — только форма заявки). Внутри панели других
+ * рамок и подложек нет: строки разделяют тонкие линии.
  */
 
 export interface OrderSummaryProps {
@@ -34,9 +38,7 @@ export interface OrderSummaryProps {
 
 export function OrderSummary({ title, className, children }: OrderSummaryProps) {
   return (
-    <section
-      className={cn('rounded-md border border-line bg-surface-subtle p-5 lg:p-6', className)}
-    >
+    <section className={cn('rounded-md border border-line bg-surface p-5 lg:p-6', className)}>
       <h2 className="mb-3">{title}</h2>
       {children}
     </section>
@@ -62,12 +64,14 @@ export function SummaryTotal({
   children: ReactNode;
 }) {
   return (
-    <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t border-line pt-3">
+    // Подпись итога — отдельный dd на всю ширину: иначе длинная подпись («Версия согласования 1
+    // от …») задавала ширину значения, и на узком экране итог уезжал под заголовок.
+    <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t border-line pt-4">
       <dt className="text-body font-semibold">{label}</dt>
-      <dd className="text-right">
-        {children}
-        {caption ? <p className="mt-0.5 text-caption text-ink-muted">{caption}</p> : null}
-      </dd>
+      <dd className="ml-auto text-right">{children}</dd>
+      {caption ? (
+        <dd className="basis-full text-right text-caption text-ink-muted">{caption}</dd>
+      ) : null}
     </div>
   );
 }

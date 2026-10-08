@@ -40,6 +40,12 @@ const PATHS = {
   'chevron-down': <path d="m6 9 6 6 6-6" />,
   'chevron-left': <path d="m15 18-6-6 6-6" />,
   'chevron-right': <path d="m9 18 6-6-6-6" />,
+  'arrow-right': (
+    <>
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    </>
+  ),
   check: <path d="M20 6 9 17l-5-5" />,
   plus: (
     <>
@@ -181,8 +187,8 @@ export type IconName = keyof typeof PATHS;
 
 export const ICON_NAMES = Object.keys(PATHS) as IconName[];
 
-/** 12 — маркеры таймлайна; 32 — значок «Заявка отправлена»; остальное — 16 / 20 / 24 (§5.8). */
-export type IconSize = 12 | 16 | 20 | 24 | 32;
+/** 12 — маркеры таймлайна; 18 — знак в Notice; 32 — значок «Заявка отправлена»; остальное — 16 / 20 / 24 (§5.8). */
+export type IconSize = 12 | 16 | 18 | 20 | 24 | 32;
 
 export interface IconProps {
   name: IconName;

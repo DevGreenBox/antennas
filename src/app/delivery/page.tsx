@@ -1,20 +1,22 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { ContentSection } from '@/components/content/ContentSection';
+import { ContentRows, ContentSection, TEXT_MEASURE } from '@/components/content/ContentSection';
 import { TelegramLink } from '@/components/content/TelegramLink';
 import { ProcessSteps } from '@/components/home/ProcessSteps';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { NeedsReviewBadge } from '@/components/ui/Badge';
 import { site } from '@/config/site';
+import { cn } from '@/lib/cn';
 import { pageMetadata } from '@/lib/seo';
 
 /**
  * Доставка и оплата (DESIGN §2.18). Только то, что известно: покупка идёт через заявку и
  * согласование; доставку считает менеджер — перевозчик не выбран, тарифов нет (antennas.md §11);
  * оплата — после выставления заказа к оплате, провайдер не выбран (§2). Разделы, ждущие данных,
- * помечены «Уточняется».
+ * помечены «Уточняется». Раскладка — DESIGN § R: шаги процесса полосой на всю ширину, ниже
+ * разделы строками редакционной сетки (`ContentRows`), без карточек и иконок.
  */
 
 export const metadata: Metadata = pageMetadata({
@@ -34,14 +36,15 @@ export default function DeliveryPage() {
         description="Покупка идёт через заявку: сначала менеджер согласует состав, цены и доставку, потом заказ можно оплатить."
       />
 
-      <ContentSection id="process" title="Как проходит покупка" wide spacing="none">
-        <ProcessSteps orientation="horizontal" />
+      <ContentSection id="process" title="Как проходит покупка" layout="stack" wide>
+        <ProcessSteps />
       </ContentSection>
 
-      {/* Разделы — каждый шириной max-w-text (§2.18); на ≥ lg по два в ряд, чтобы короткие
-          тексты не растягивали страницу в узкую колонку с пустой правой половиной. */}
-      <div className="mt-10 grid gap-x-12 gap-y-10 lg:mt-16 lg:grid-cols-2 lg:gap-y-14">
-        <ContentSection id="shipping" title="Доставка" status={<NeedsReviewBadge />} spacing="none">
+      {/* Разделы — строками редакционной сетки (DESIGN § R): заголовок и пометка «Уточняется»
+          слева, текст справа шириной ~70 знаков; между строками — тонкие линии. Верхней линии
+          нет: её роль играет нижняя граница полосы шагов. */}
+      <ContentRows rule={false}>
+        <ContentSection id="shipping" title="Доставка" status={<NeedsReviewBadge />}>
           <p>
             Стоимость и способ доставки рассчитывает менеджер при согласовании заказа — по адресу и
             параметрам груза. Сумма доставки появится в согласованном заказе отдельной строкой.
@@ -50,7 +53,7 @@ export default function DeliveryPage() {
           <p className="mt-3">Город или адрес доставки можно указать в комментарии к заявке.</p>
         </ContentSection>
 
-        <ContentSection id="payment" title="Оплата" status={<NeedsReviewBadge />} spacing="none">
+        <ContentSection id="payment" title="Оплата" status={<NeedsReviewBadge />}>
           <p>
             Оплата — после согласования, из{' '}
             <Link href="/account" className="text-link text-ink">
@@ -62,7 +65,7 @@ export default function DeliveryPage() {
           </p>
         </ContentSection>
 
-        <ContentSection id="prices" title="Цены" spacing="none">
+        <ContentSection id="prices" title="Цены">
           <p>
             Цены указаны по прайсу. {site.currency.note} Стоимость позиций «по запросу» называет
             менеджер. Скидки по промокодам предварительные: окончательную сумму фиксирует
@@ -70,26 +73,24 @@ export default function DeliveryPage() {
           </p>
         </ContentSection>
 
-        <ContentSection id="organizations" title="Организациям" spacing="none">
+        <ContentSection id="organizations" title="Организациям">
           <p>
             В заявке выберите «Организация» и, если удобно, укажите название и ИНН — это поможет при
             согласовании.
           </p>
         </ContentSection>
 
-        <ContentSection
-          id="documents"
-          title="Документы"
-          status={<NeedsReviewBadge />}
-          spacing="none"
-        >
+        <ContentSection id="documents" title="Документы" status={<NeedsReviewBadge />}>
           <p>Какие документы прилагаются к заказу, будет указано после подтверждения.</p>
         </ContentSection>
-      </div>
 
-      <p className="mt-10 border-t border-line pt-6 text-body text-ink-secondary lg:mt-16">
-        Вопросы по доставке и оплате — в Telegram <TelegramLink />.
-      </p>
+        {/* Последняя строка без заголовка: текст — в правой колонке, по краю остальных. */}
+        <div className="grid gap-x-16 py-8 lg:grid-cols-catalog lg:py-10 xl:grid-cols-catalog-wide">
+          <p className={cn('text-body text-ink-secondary lg:col-start-2', TEXT_MEASURE)}>
+            Вопросы по доставке и оплате — в Telegram <TelegramLink />.
+          </p>
+        </div>
+      </ContentRows>
     </>
   );
 }

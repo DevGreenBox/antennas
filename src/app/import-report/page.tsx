@@ -7,6 +7,7 @@ import { DuplicatesTable } from '@/components/service/DuplicatesTable';
 import type { DuplicatePair } from '@/components/service/DuplicatesTable';
 import { ImportSummary } from '@/components/service/ImportSummary';
 import { IssueArticle } from '@/components/service/IssueArticle';
+import { ServiceSection } from '@/components/service/ServiceSection';
 import { SourceRecordsTable } from '@/components/service/SourceRecordsTable';
 import type { SourceRow } from '@/components/service/source-filters';
 import { SEVERITY_ORDER, SEVERITY_SECTION, cellRef } from '@/components/service/labels';
@@ -35,6 +36,10 @@ export const metadata: Metadata = pageMetadata({
 });
 
 const HASH_PREVIEW_LENGTH = 12;
+
+/** Строка «Ручных правок»: подпись слева, число справа, тонкая линия снизу. */
+const OVERRIDE_ROW =
+  'grid gap-x-6 gap-y-1 border-b border-line-subtle py-2.5 sm:grid-cols-[minmax(0,1fr)_auto]';
 
 export default async function ImportReportPage() {
   const [report, records, issues, products] = await Promise.all([
@@ -131,17 +136,15 @@ export default async function ImportReportPage() {
         titleAddon={<Badge tone="neutral">Служебная страница</Badge>}
       />
 
-      <dl className="grid gap-x-4 gap-y-1.5 text-small sm:grid-cols-[9rem_minmax(0,1fr)]">
-        <dt className="text-ink-secondary">Файл-источник</dt>
-        <dd className="min-w-0">
+      <dl className="max-w-[60rem] border-t border-line-subtle text-small">
+        <MetaRow label="Файл-источник">
           <code className="font-mono break-all text-ink">{report.sourceFile}</code>
           <span className="text-ink-secondary">
             {' '}
             — выгрузка «список v11.xlsx», адреса ячеек сохранены
           </span>
-        </dd>
-        <dt className="text-ink-secondary">sha256 источника</dt>
-        <dd className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        </MetaRow>
+        <MetaRow label="sha256 источника" ddClassName="flex flex-wrap items-center gap-x-3 gap-y-1">
           <code className="font-mono text-ink" data-testid="source-hash">
             {report.sourceHash.slice(0, HASH_PREVIEW_LENGTH)}…
           </code>
@@ -150,12 +153,11 @@ export default async function ImportReportPage() {
             accessibleLabel="Скопировать sha256 источника полностью"
             successMessage="sha256 источника скопирован"
           />
-        </dd>
-        <dt className="text-ink-secondary">Как получен</dt>
-        <dd className="text-ink-secondary">
+        </MetaRow>
+        <MetaRow label="Как получен" ddClassName="text-ink-secondary">
           Генерируется командой <code className="font-mono text-ink">npm run import:catalog</code>;
           повторный импорт того же файла даёт тот же результат.
-        </dd>
+        </MetaRow>
       </dl>
 
       <Notice tone="info" className="mt-6 max-w-text">
@@ -167,11 +169,16 @@ export default async function ImportReportPage() {
         <ImportSummary counts={report.counts} />
       </ReportSection>
 
-      <nav aria-labelledby="report-toc-title" className="mt-10 lg:mt-12">
-        <h2 id="report-toc-title" className="mb-3 text-body font-semibold">
+      {/* Оглавление — одна строка: подпись eyebrow и ссылки на разделы с количествами, как
+          «Служебное» в подвале. Без своих линий: следующий раздел начинается с линии. */}
+      <nav
+        aria-labelledby="report-toc-title"
+        className="mt-10 flex flex-col gap-x-8 gap-y-3 lg:mt-12 lg:flex-row lg:items-baseline"
+      >
+        <h2 id="report-toc-title" className="eyebrow shrink-0">
           Разделы отчёта
         </h2>
-        <ul className="flex flex-wrap gap-x-6 gap-y-2 text-body">
+        <ul className="flex flex-wrap gap-x-6 gap-y-2 text-small">
           {toc.map((item) => (
             <li key={item.href}>
               <a href={item.href} className="text-link">
@@ -199,7 +206,7 @@ export default async function ImportReportPage() {
         title={`Повторы строк (${duplicatePairs.length})`}
         description="Строка буквально повторяет другую строку того же блока — текстом и ценой. Вторая карточка не создана: у товара два происхождения."
       >
-        <Notice tone="warning" title="Поправка к ТЗ" className="mb-4 max-w-text">
+        <Notice tone="warning" title="Поправка к ТЗ" className="mb-6 max-w-text">
           ТЗ (§4 п.5) называет оригиналами повторов E49–E52 строки E44–E47. По выгрузке пары другие:
           E49 = E44, E50 = E46, E51 = E47, E52 = E48; у E45 (6300–6500 МГц) повтора нет. Диапазоны в
           ТЗ перечислены верно, неточен только диапазон ячеек. Импорт сопоставляет строки по тексту
@@ -242,13 +249,18 @@ export default async function ImportReportPage() {
         <SourceRecordsTable rows={rows} />
       </ReportSection>
 
-      <ReportSection id="overrides" title="Ручные правки">
-        <p className="mb-4 max-w-text text-small text-ink-secondary">
-          Ручной слой — <code className="font-mono text-ink">src/data/overrides.json</code>. Импорт
-          накладывает его поверх разбора и никогда не перезаписывает.
-        </p>
+      <ReportSection
+        id="overrides"
+        title="Ручные правки"
+        description={
+          <>
+            Ручной слой — <code className="font-mono text-ink">src/data/overrides.json</code>.
+            Импорт накладывает его поверх разбора и никогда не перезаписывает.
+          </>
+        }
+      >
         {overrides ? (
-          <dl className="grid max-w-text gap-x-6 gap-y-2 text-small sm:grid-cols-[minmax(0,1fr)_auto]">
+          <dl className="max-w-text border-t border-line-subtle text-small">
             <OverrideRow label="Скрыто из витрины" ids={overrides.hiddenProductIds} />
             <OverrideRow label="Переименовано" ids={overrides.renamedProductIds} />
             <OverrideRow label="Заданы фото" ids={overrides.imagesProductIds} />
@@ -261,23 +273,25 @@ export default async function ImportReportPage() {
               count={overrides.recommendationsApproved}
             />
             <OverrideRow label="Предупреждений" ids={overrides.warnings} plain />
-            <dt className="text-ink-secondary">sha256 overrides.json</dt>
-            <dd className="flex flex-wrap items-center gap-x-3 sm:justify-end">
-              {overrides.hash ? (
-                <>
-                  <code className="font-mono text-ink">
-                    {overrides.hash.slice(0, HASH_PREVIEW_LENGTH)}…
-                  </code>
-                  <CopyButton
-                    value={overrides.hash}
-                    accessibleLabel="Скопировать sha256 overrides.json полностью"
-                    successMessage="sha256 overrides.json скопирован"
-                  />
-                </>
-              ) : (
-                <span className="text-ink-muted">файла нет</span>
-              )}
-            </dd>
+            <div className={OVERRIDE_ROW}>
+              <dt className="text-ink-secondary">sha256 overrides.json</dt>
+              <dd className="flex flex-wrap items-center gap-x-3 sm:justify-end">
+                {overrides.hash ? (
+                  <>
+                    <code className="font-mono text-ink">
+                      {overrides.hash.slice(0, HASH_PREVIEW_LENGTH)}…
+                    </code>
+                    <CopyButton
+                      value={overrides.hash}
+                      accessibleLabel="Скопировать sha256 overrides.json полностью"
+                      successMessage="sha256 overrides.json скопирован"
+                    />
+                  </>
+                ) : (
+                  <span className="text-ink-muted">файла нет</span>
+                )}
+              </dd>
+            </div>
           </dl>
         ) : (
           <p className="text-small text-ink-muted">Сведений о ручном слое в отчёте нет.</p>
@@ -287,27 +301,24 @@ export default async function ImportReportPage() {
   );
 }
 
-function ReportSection({
-  id,
-  title,
-  description,
+/** Раздел отчёта — общий `ServiceSection` служебных страниц (линия сверху, h2, описание). */
+const ReportSection = ServiceSection;
+
+/** Строка «подпись — значение» мета-блока над сводкой; разделители — тонкие линии. */
+function MetaRow({
+  label,
+  ddClassName,
   children,
 }: {
-  id: string;
-  title: string;
-  description?: string;
+  label: string;
+  ddClassName?: string;
   children: ReactNode;
 }) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="mt-10 scroll-mt-4 lg:mt-16">
-      <h2 id={`${id}-title`} className={cn(description ? 'mb-2' : 'mb-4 lg:mb-6')}>
-        {title}
-      </h2>
-      {description ? (
-        <p className="mb-4 max-w-text text-small text-ink-secondary lg:mb-6">{description}</p>
-      ) : null}
-      {children}
-    </section>
+    <div className="grid gap-x-6 gap-y-0.5 border-b border-line-subtle py-2.5 sm:grid-cols-[10rem_minmax(0,1fr)]">
+      <dt className="text-ink-muted">{label}</dt>
+      <dd className={cn('min-w-0', ddClassName)}>{children}</dd>
+    </div>
   );
 }
 
@@ -326,10 +337,17 @@ function IssueList({
   if (issues.length === 0) {
     return <p className="text-small text-ink-muted">Проблем этого уровня нет.</p>;
   }
+  // Строки списка с тонкими разделителями, не карточки (DESIGN § R): в две колонки строки одного
+  // ряда растягиваются до общей высоты, поэтому линии колонок совпадают.
   return (
-    <ul className={cn('grid gap-4', twoColumns ? 'lg:grid-cols-2' : null)}>
+    <ul
+      className={cn(
+        'grid gap-x-12 border-t border-line-subtle',
+        twoColumns ? 'lg:grid-cols-2' : null,
+      )}
+    >
       {issues.map((issue) => (
-        <li key={issue.id} className="flex min-w-0 flex-col">
+        <li key={issue.id} className="flex min-w-0 flex-col border-b border-line-subtle">
           <IssueArticle
             issue={issue}
             cells={cellsOf(issue)}
@@ -355,7 +373,7 @@ function OverrideRow({
 }) {
   const value = count ?? ids?.length ?? 0;
   return (
-    <>
+    <div className={OVERRIDE_ROW}>
       <dt className="text-ink-secondary">{label}</dt>
       <dd className="tabular-nums text-ink sm:text-right">
         {value}
@@ -367,6 +385,6 @@ function OverrideRow({
           </ul>
         ) : null}
       </dd>
-    </>
+    </div>
   );
 }

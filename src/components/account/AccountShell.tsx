@@ -4,9 +4,9 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 
 import { PageHeader } from '@/components/layout/PageHeader';
+import { DemoBadge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/ui/Dialog';
-import { DemoNotice } from '@/components/ui/Notice';
 import { Skeleton, SkeletonGroup, SkeletonRows } from '@/components/ui/Skeleton';
 import { StorageNotice } from '@/components/ui/StorageNotice';
 import { resetDemoData } from '@/lib/store/orders';
@@ -16,9 +16,13 @@ import { toast } from '@/lib/store/toast';
 import { AccountNav } from './AccountNav';
 
 /**
- * Каркас страниц ЛК со списками (DESIGN §2.13, §2.16): заголовок с email, демо-пометка,
- * AccountNav слева и контент. «Выйти» — в навигации на ≥ lg и в заголовке на < lg; после
- * выхода охрана ЛК уводит на вход.
+ * Каркас страниц ЛК со списками (DESIGN §2.13, §2.16): заголовок с email, AccountNav слева и
+ * контент. «Выйти» — в навигации на ≥ lg и в заголовке на < lg; после выхода охрана ЛК уводит на
+ * вход.
+ *
+ * Демо-пометка (DESIGN § R.5) — не плашка над контентом (общее «это демо» уже сказано в демо-
+ * полосе), а одна строка под контентом: метка «Демо», где хранятся данные, и демо-действие
+ * «Сбросить демо-данные». Без `demoText` строки нет (уведомления помечены «демо» каждое).
  */
 export function AccountShell({
   title,
@@ -29,8 +33,9 @@ export function AccountShell({
 }: {
   title: string;
   email: string;
-  demoText: ReactNode;
-  /** «Сбросить демо-данные» в демо-пометке (страница «Личный кабинет»). */
+  /** Текст демо-строки под контентом. */
+  demoText?: ReactNode;
+  /** «Сбросить демо-данные» в демо-строке (страница «Личный кабинет»). */
   withReset?: boolean;
   children: ReactNode;
 }) {
@@ -51,7 +56,7 @@ export function AccountShell({
             variant="ghost"
             size="sm"
             icon="log-out"
-            className="-ml-3 md:-mr-3 md:ml-0 lg:hidden"
+            className="-ml-3 max-lg:h-11 md:-mr-3 md:ml-0 lg:hidden"
             onClick={onLogout}
           >
             Выйти
@@ -59,22 +64,33 @@ export function AccountShell({
         }
       />
       <StorageNotice className="mb-6" />
-      <DemoNotice className="mb-6 lg:mb-8">
-        <p>
-          {demoText}
-          {withReset ? (
-            <>
-              {' '}
-              <Button variant="link" size="sm" tone="danger" onClick={() => setConfirmReset(true)}>
-                Сбросить демо-данные
-              </Button>
-            </>
-          ) : null}
-        </p>
-      </DemoNotice>
-      <div className="grid gap-6 lg:grid-cols-account lg:gap-8">
+      <div className="grid gap-6 lg:grid-cols-account lg:gap-12">
         <AccountNav onLogout={onLogout} />
-        <div className="min-w-0">{children}</div>
+        <div className="min-w-0">
+          {children}
+          {demoText ? (
+            <div
+              data-print="hidden"
+              className="mt-12 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-line-subtle pt-4 text-small text-ink-secondary lg:mt-16"
+            >
+              <p className="flex items-start gap-2">
+                <DemoBadge className="shrink-0" />
+                <span className="pt-0.5">{demoText}</span>
+              </p>
+              {withReset ? (
+                <Button
+                  variant="link"
+                  size="sm"
+                  tone="danger"
+                  className="min-h-11 lg:min-h-0"
+                  onClick={() => setConfirmReset(true)}
+                >
+                  Сбросить демо-данные
+                </Button>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
       </div>
       {withReset ? (
         <ConfirmDialog
@@ -99,7 +115,7 @@ export function AccountSkeleton({ title }: { title: string }) {
   return (
     <>
       <PageHeader title={title} />
-      <div className="grid gap-6 lg:grid-cols-account lg:gap-8">
+      <div className="grid gap-6 lg:grid-cols-account lg:gap-12">
         <SkeletonGroup className="hidden flex-col gap-2 lg:flex">
           <Skeleton className="h-10 w-full" />
           <Skeleton className="h-10 w-full" />

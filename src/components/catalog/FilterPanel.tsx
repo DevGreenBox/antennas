@@ -23,9 +23,12 @@ import {
 } from './FilterControls';
 
 /**
- * Панель «Подбор по параметрам» (DESIGN §4.2, §4.5, §5.9.17). Состав, порядок, подписи и
+ * Панель «Подбор по параметрам» (DESIGN §4.2, §4.5, §5.9.17, § R.7). Состав, порядок, подписи и
  * счётчики — строго `QueryResult.facets` движка; панель только переводит действие в новое
  * состояние помощниками движка (они же сбрасывают страницу на первую) и отдаёт его наружу.
+ *
+ * Вид — рабочий инструмент, а не карточка: без рамки и фона, заголовок `eyebrow`, группы
+ * «параметр → значения» разделены тонкой линией `line-subtle` (FacetGroup).
  *
  * Два места: колонка слева на ≥ lg (`variant="sidebar"`: правки применяются сразу) и Drawer на
  * < lg (`variant="drawer"`: правки идут в черновик, применяет «Показать N»).
@@ -36,7 +39,7 @@ export interface FilterPanelProps {
   variant: 'sidebar' | 'drawer';
   /** Спорные значения частоты в контексте — для подписи под группой «Частота». */
   frequencyReviewValues: readonly string[];
-  /** «Сбросить всё» в шапке панели (только sidebar). */
+  /** «Сбросить» в шапке панели (только sidebar). */
   onReset?: () => void;
   className?: string;
 }
@@ -150,18 +153,22 @@ export function FilterPanel({
       className={cn(
         'relative outline-none',
         variant === 'sidebar' &&
-          'sticky top-6 -my-1 -ml-1 max-h-[calc(100dvh-2.5rem)] scroll-py-2 overflow-y-auto py-1 pr-2 pl-1',
+          'sticky top-(--sticky-top) -my-1 -ml-1 max-h-[calc(100dvh-var(--sticky-top)-1rem)] scroll-py-2 overflow-y-auto py-1 pr-3 pl-1',
         className,
       )}
     >
       {variant === 'sidebar' ? (
-        <div className="flex min-h-8 items-center justify-between gap-3 pb-3">
-          <h2 id={titleId} className="text-body font-semibold">
+        // Шапка — вровень со строкой «Найдено: N» выдачи (та же высота 40 px и отступ 12 px).
+        // Заголовок не переносится: в колонке 260 px на 1024 рядом с «Сбросить всё» он ломался
+        // на две строки; «Сбросить» короче и совпадает с подписью в подвале Drawer, а «Сбросить
+        // всё» остаётся в строке выбранных параметров над выдачей.
+        <div className="flex min-h-10 items-center justify-between gap-3 pb-3">
+          <h2 id={titleId} className="eyebrow whitespace-nowrap text-ink">
             Подбор по параметрам
           </h2>
           {hasActive && onReset ? (
             <Button variant="link" size="sm" onClick={onReset}>
-              Сбросить всё
+              Сбросить
             </Button>
           ) : null}
         </div>

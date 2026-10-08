@@ -5,11 +5,12 @@ import { useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 
 import type { CartModel } from '@/components/cart/cart-model';
+import { DemoBadge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Checkbox, Segmented } from '@/components/ui/Choice';
 import { ErrorSummary, Field, FieldError } from '@/components/ui/Field';
 import { Input, Textarea } from '@/components/ui/Input';
-import { DemoNotice, Notice } from '@/components/ui/Notice';
+import { Notice } from '@/components/ui/Notice';
 import { randomId } from '@/lib/demo-orders';
 import { submitOrder } from '@/lib/store/orders';
 import { logout, useProfile, useSessionEmail } from '@/lib/store/session';
@@ -34,7 +35,15 @@ import type { CheckoutErrors, CheckoutField, CheckoutValues } from './checkout-v
  * Защита от двойной отправки — три слоя: кнопка в состоянии загрузки, синхронный флаг до
  * первого await и ключ идемпотентности (создаётся при монтировании формы): повтор с тем же
  * ключом возвращает уже созданный заказ (`submitOrder` → `createOrder`).
+ *
+ * Подача (DESIGN § R.1, § R.4): форма — белая панель (рамка `line`, радиус 6); разделы
+ * «Покупатель», «Контакты», «Комментарий и согласие» и ряд отправки разделены тонкими линиями,
+ * без вложенных карточек. Поля 44 px, главная кнопка 48 px. Демо-пометка — одна строка у кнопки
+ * отправки (это и есть демо-действие), а не отдельная плашка.
  */
+
+/** Раздел панели формы: со второго — тонкая линия сверху. */
+const SECTION = 'border-t border-line-subtle pt-6';
 
 const BUYER_OPTIONS = [
   { value: 'person', label: 'Частное лицо' },
@@ -158,7 +167,11 @@ export function CheckoutForm({
   );
 
   return (
-    <form noValidate onSubmit={onSubmit} className="flex max-w-form flex-col gap-6">
+    <form
+      noValidate
+      onSubmit={onSubmit}
+      className="flex flex-col gap-6 rounded-md border border-line bg-surface p-4 sm:p-6 xl:p-8"
+    >
       <p className="text-small text-ink-muted">
         Все поля обязательны, кроме отмеченных «необязательно».
       </p>
@@ -206,124 +219,125 @@ export function CheckoutForm({
         ) : null}
       </fieldset>
 
-      <fieldset className="flex min-w-0 flex-col gap-5">
-        <legend className="mb-4 text-title font-semibold">Контакты</legend>
-        <Field label="Имя" id={CHECKOUT_FIELD_IDS.name} error={errors.name}>
-          <Input
-            size="lg"
-            autoComplete="name"
-            value={values.name}
-            onChange={(event) => update('name', event.target.value)}
-            onBlur={() => revalidate('name')}
-          />
-        </Field>
-        <div className="flex flex-col gap-2">
+      {/* Линия — на обёртке: у <fieldset> легенда легла бы прямо на верхнюю границу. */}
+      <div className={SECTION}>
+        <fieldset className="flex min-w-0 flex-col gap-5">
+          <legend className="mb-4 text-title font-semibold">Контакты</legend>
+          <Field label="Имя" id={CHECKOUT_FIELD_IDS.name} error={errors.name}>
+            <Input
+              size="lg"
+              autoComplete="name"
+              value={values.name}
+              onChange={(event) => update('name', event.target.value)}
+              onBlur={() => revalidate('name')}
+            />
+          </Field>
+          <div className="flex flex-col gap-2">
+            <Field
+              label="Email"
+              id={CHECKOUT_FIELD_IDS.email}
+              error={errors.email}
+              hint={
+                sessionEmail
+                  ? `Вы вошли как ${sessionEmail}. Заявка появится в вашем кабинете.`
+                  : 'На этот адрес придёт код для входа в личный кабинет — там будут заявка и её статус.'
+              }
+            >
+              <Input
+                size="lg"
+                type="email"
+                autoComplete="email"
+                placeholder="name@company.ru"
+                readOnly={sessionEmail !== null}
+                value={effective.email}
+                onChange={(event) => update('email', event.target.value)}
+                onBlur={() => revalidate('email')}
+              />
+            </Field>
+            {sessionEmail ? (
+              <Button
+                variant="link"
+                size="sm"
+                className="self-start"
+                onClick={() => {
+                  // Email остаётся в поле — его можно поправить без повторного ввода.
+                  update('email', sessionEmail);
+                  logout();
+                }}
+              >
+                Выйти
+              </Button>
+            ) : null}
+          </div>
           <Field
-            label="Email"
-            id={CHECKOUT_FIELD_IDS.email}
-            error={errors.email}
-            hint={
-              sessionEmail
-                ? `Вы вошли как ${sessionEmail}. Заявка появится в вашем кабинете.`
-                : 'На этот адрес придёт код для входа в личный кабинет — там будут заявка и её статус.'
-            }
+            label="Телефон"
+            optional
+            id={CHECKOUT_FIELD_IDS.phone}
+            hint="Если удобнее согласовать заявку по телефону."
+            error={errors.phone}
           >
             <Input
               size="lg"
-              type="email"
-              autoComplete="email"
-              placeholder="name@company.ru"
-              readOnly={sessionEmail !== null}
-              value={effective.email}
-              onChange={(event) => update('email', event.target.value)}
-              onBlur={() => revalidate('email')}
+              type="tel"
+              autoComplete="tel"
+              value={values.phone}
+              onChange={(event) => update('phone', event.target.value)}
+              onBlur={() => revalidate('phone')}
             />
           </Field>
-          {sessionEmail ? (
-            <Button
-              variant="link"
-              size="sm"
-              className="self-start"
-              onClick={() => {
-                // Email остаётся в поле — его можно поправить без повторного ввода.
-                update('email', sessionEmail);
-                logout();
-              }}
-            >
-              Выйти
-            </Button>
-          ) : null}
-        </div>
-        <Field
-          label="Телефон"
-          optional
-          id={CHECKOUT_FIELD_IDS.phone}
-          hint="Если удобнее согласовать заявку по телефону."
-          error={errors.phone}
-        >
-          <Input
-            size="lg"
-            type="tel"
-            autoComplete="tel"
-            value={values.phone}
-            onChange={(event) => update('phone', event.target.value)}
-            onBlur={() => revalidate('phone')}
-          />
-        </Field>
-      </fieldset>
-
-      <Field
-        label="Комментарий к заявке"
-        optional
-        id={CHECKOUT_FIELD_IDS.comment}
-        hint="Например: город доставки, сроки, вопросы по совместимости."
-        error={errors.comment}
-        counter={{ value: values.comment.length, max: COMMENT_MAX }}
-      >
-        <Textarea
-          maxLength={COMMENT_MAX}
-          rows={4}
-          value={values.comment}
-          onChange={(event) => update('comment', event.target.value)}
-          onBlur={() => revalidate('comment')}
-        />
-      </Field>
-
-      <div className="flex flex-col gap-1">
-        <Checkbox
-          id={CHECKOUT_FIELD_IDS.consent}
-          label="Даю согласие на обработку персональных данных"
-          textSize="body"
-          comfortable
-          className="lg:min-h-8 lg:py-1.5"
-          checked={values.consent}
-          invalid={errors.consent !== undefined}
-          aria-required
-          aria-describedby={errors.consent ? `${CHECKOUT_FIELD_IDS.consent}-error` : undefined}
-          onChange={(event) => update('consent', event.target.checked)}
-          onBlur={() => revalidate('consent')}
-        />
-        {errors.consent ? (
-          <FieldError id={`${CHECKOUT_FIELD_IDS.consent}-error`}>{errors.consent}</FieldError>
-        ) : null}
-        <p className="text-small text-ink-secondary">
-          Подробнее — в документах{' '}
-          <a href="/legal/consent" target="_blank" rel="noopener" className="text-link">
-            «Согласие на обработку персональных данных»
-            <span className="sr-only"> (откроется в новой вкладке)</span>
-          </a>{' '}
-          и{' '}
-          <a href="/legal/privacy" target="_blank" rel="noopener" className="text-link">
-            «Политика обработки персональных данных»
-            <span className="sr-only"> (откроется в новой вкладке)</span>
-          </a>
-          .
-        </p>
+        </fieldset>
       </div>
 
-      <DemoNotice>
-        Демо: заявка сохранится только в этом браузере и не будет отправлена менеджеру.
-      </DemoNotice>
+      <div className={`${SECTION} flex flex-col gap-6`}>
+        <Field
+          label="Комментарий к заявке"
+          optional
+          id={CHECKOUT_FIELD_IDS.comment}
+          hint="Например: город доставки, сроки, вопросы по совместимости."
+          error={errors.comment}
+          counter={{ value: values.comment.length, max: COMMENT_MAX }}
+        >
+          <Textarea
+            maxLength={COMMENT_MAX}
+            rows={4}
+            value={values.comment}
+            onChange={(event) => update('comment', event.target.value)}
+            onBlur={() => revalidate('comment')}
+          />
+        </Field>
+
+        <div className="flex flex-col gap-1">
+          <Checkbox
+            id={CHECKOUT_FIELD_IDS.consent}
+            label="Даю согласие на обработку персональных данных"
+            textSize="body"
+            comfortable
+            className="lg:min-h-8 lg:py-1.5"
+            checked={values.consent}
+            invalid={errors.consent !== undefined}
+            aria-required
+            aria-describedby={errors.consent ? `${CHECKOUT_FIELD_IDS.consent}-error` : undefined}
+            onChange={(event) => update('consent', event.target.checked)}
+            onBlur={() => revalidate('consent')}
+          />
+          {errors.consent ? (
+            <FieldError id={`${CHECKOUT_FIELD_IDS.consent}-error`}>{errors.consent}</FieldError>
+          ) : null}
+          <p className="text-small text-ink-secondary">
+            Подробнее — в документах{' '}
+            <a href="/legal/consent" target="_blank" rel="noopener" className="text-link">
+              «Согласие на обработку персональных данных»
+              <span className="sr-only"> (откроется в новой вкладке)</span>
+            </a>{' '}
+            и{' '}
+            <a href="/legal/privacy" target="_blank" rel="noopener" className="text-link">
+              «Политика обработки персональных данных»
+              <span className="sr-only"> (откроется в новой вкладке)</span>
+            </a>
+            .
+          </p>
+        </div>
+      </div>
 
       {submitError ? (
         <Notice tone="danger" live>
@@ -331,18 +345,25 @@ export function CheckoutForm({
         </Notice>
       ) : null}
 
-      <div>
+      <div className={`${SECTION} flex flex-col gap-3 md:flex-row md:items-center md:gap-5`}>
         <Button
           type="submit"
           variant="primary"
           size="lg"
           fullWidth="mobile"
+          className="md:shrink-0"
           loading={sending}
           loadingText="Отправляем…"
           disabled={blocked}
         >
           Отправить заявку
         </Button>
+        <p className="flex items-start gap-2 text-small text-ink-secondary">
+          <DemoBadge className="shrink-0" />
+          <span className="pt-0.5">
+            Заявка сохранится только в этом браузере и не будет отправлена менеджеру.
+          </span>
+        </p>
       </div>
     </form>
   );

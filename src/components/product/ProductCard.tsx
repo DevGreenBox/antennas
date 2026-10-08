@@ -1,40 +1,32 @@
 import Link from 'next/link';
 
 import { ProductBandScale } from '@/components/ui/BandScale';
-import { NoPhoto } from '@/components/ui/NoPhoto';
 import { Price } from '@/components/ui/Price';
-import { rootCategoryOf } from '@/lib/catalog';
 import { cn } from '@/lib/cn';
 import type { Product } from '@/types/catalog';
 
 import { AddToCartButton } from './AddToCartButton';
 import { FavoriteButton } from './FavoriteButton';
-import { ProductPhoto } from './ProductPhoto';
+import { ProductMedia } from './ProductMedia';
 import { ProductCode } from './ProductRow';
 import { SpecLine, TechText } from './SpecLine';
 
 /**
- * Карточка товара — плитка (DESIGN §5.9.22). Карточка целиком не ссылка: ссылка — название.
- * Сверху вниз: [фото 4:3, если есть] → мета (значок категории NoPhoto `thumb`, если фото нет;
- * код; в смешанном варианте перед ним листовая категория) → название → ключевые характеристики
- * (`getSpecLine`) → BandScale → цена → «В корзину» + закладка.
+ * Карточка товара — плитка (DESIGN § R.7): главная, вид «Плитка» каталога, «К этому товару
+ * подойдёт». Сверху вниз: медиа 4:3 (фото или заглушка) → категория → название → код →
+ * ключевые параметры (`getSpecLine`) и шкала частоты → цена → «В корзину» + закладка.
  *
- * Без фото заглушка — значок 40 px в строке мета, а не плашка 4:3: серый блок занимал ~40 %
- * карточки и отодвигал название, характеристики и цену.
+ * Карточка целиком не ссылка: ссылка — название; медиа — её дубль вне Tab и дерева доступности.
+ * Рамка 1 px и радиус 6 px, без тени; при наведении темнеет рамка.
  *
- * Кнопки на < lg — цель нажатия 44 px (§5.7), на десктопе — sm 32: `max-lg:min-*` не спорит с
- * размером кнопки.
+ *   <ProductCard product={p} />                                   // плитка категории
+ *   <ProductCard product={p} categoryName="Рупорные" />           // смешанный вариант
  *
- *   <ProductCard product={p} />                                   // плитка каталога (view=grid)
- *   <ProductCard product={p} categoryName="Рупорные" />           // смешанный вариант (поиск, весь каталог)
- *   <ProductCard product={p} variant="compact" />                 // рекомендации: без фото и значка
- *
- * Сетки — ResultsGrid (§4.7): `grid gap-4 lg:gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3`.
+ * Кнопки на < lg — цель нажатия 44 px, на десктопе — 40.
  */
 export interface ProductCardProps {
   product: Product;
-  variant?: 'default' | 'compact';
-  /** Листовая категория в мете — смешанный вариант (каталог целиком, поиск). */
+  /** Листовая категория над названием. */
   categoryName?: string;
   headingLevel?: 'h2' | 'h3';
   className?: string;
@@ -42,57 +34,59 @@ export interface ProductCardProps {
 
 export function ProductCard({
   product,
-  variant = 'default',
   categoryName,
   headingLevel = 'h3',
   className,
 }: ProductCardProps) {
   const Heading = headingLevel;
-  const full = variant === 'default';
-  const photo = full ? (product.images[0] ?? null) : null;
+  const href = `/product/${product.slug}`;
   return (
     <article
       className={cn(
-        'relative flex flex-col gap-3 rounded-md border border-line bg-surface p-4 transition-colors duration-fast hover:border-line-strong',
+        'group/card flex flex-col overflow-hidden rounded-md border border-line bg-surface transition-colors duration-fast hover:border-line-emphasis',
         className,
       )}
     >
-      {photo !== null ? (
-        <ProductPhoto
-          src={photo}
-          alt={product.name}
-          sizes="(min-width: 80rem) 25vw, (min-width: 40rem) 50vw, 100vw"
+      <Link href={href} tabIndex={-1} aria-hidden className="block border-b border-line-subtle">
+        <ProductMedia
+          product={product}
+          variant="card"
+          className="transition-opacity duration-fast group-hover/card:opacity-85"
         />
-      ) : null}
-      <div className="flex items-center gap-3">
-        {full && photo === null ? <NoPhoto categoryId={rootCategoryOf(product)} /> : null}
-        <p className="min-w-0 text-caption text-ink-muted">
-          {categoryName ? <>{categoryName} · </> : null}
+      </Link>
+      <div className="flex flex-1 flex-col p-4 lg:p-5">
+        {categoryName ? (
+          <p className="mb-1.5 text-caption text-ink-muted">
+            <TechText text={categoryName} />
+          </p>
+        ) : null}
+        <Heading className="text-body font-semibold">
+          <Link href={href} className="decoration-1 underline-offset-[0.2em] hover:underline">
+            <TechText text={product.name} />
+          </Link>
+        </Heading>
+        <p className="mt-0.5 text-caption text-ink-muted">
           <ProductCode code={product.code} />
         </p>
-      </div>
-      <Heading className="text-body font-semibold">
-        <Link href={`/product/${product.slug}`} className="hover:underline">
-          <TechText text={product.name} />
-        </Link>
-      </Heading>
-      <SpecLine product={product} variant="list" />
-      <ProductBandScale product={product} size="sm" className="max-w-60" />
-      <div className="mt-auto flex flex-col gap-3 pt-1">
-        <Price amount={product.priceType === 'fixed' ? product.price : null} size="lg" />
-        <div className="flex items-center gap-2">
-          <AddToCartButton
-            productId={product.id}
-            productName={product.name}
-            size="sm"
-            className="flex-1 max-lg:min-h-11"
-          />
-          <FavoriteButton
-            productId={product.id}
-            productName={product.name}
-            size="sm"
-            className="max-lg:min-h-11 max-lg:min-w-11"
-          />
+        <SpecLine product={product} variant="list" className="mt-4" />
+        <ProductBandScale product={product} size="sm" className="mt-3 max-w-48" />
+        <div className="mt-auto flex flex-col gap-3 pt-5">
+          <Price amount={product.priceType === 'fixed' ? product.price : null} size="lg" />
+          <div className="flex items-center gap-1.5">
+            <AddToCartButton
+              productId={product.id}
+              productName={product.name}
+              size="md"
+              className="flex-1 max-lg:h-11"
+            />
+            <FavoriteButton
+              productId={product.id}
+              productName={product.name}
+              size="md"
+              variant="secondary"
+              className="max-lg:size-11"
+            />
+          </div>
         </div>
       </div>
     </article>

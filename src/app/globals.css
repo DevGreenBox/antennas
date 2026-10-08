@@ -26,36 +26,42 @@
   --font-serif: initial;
 
   /* ------------------------------------------------------------------------
-     Цвет. Поверхности
+     Цвет. Почти монохромная база (DESIGN.md § R.2): тёплый светло-серый фон
+     страницы, белые поверхности, графитовый текст. Один акцент — оранжевый
+     знака, 10–20 % площади: главная кнопка, счётчик корзины, шкала частот.
      ------------------------------------------------------------------------ */
-  --color-page: #ffffff;
+  --color-page: #f7f7f5;
   --color-surface: #ffffff;
-  /* Подвал, шапка таблиц, сводка заказа. */
-  --color-surface-subtle: #f9fafb;
+  /* Шапка таблиц, сводка заказа, раскрытые служебные панели. */
+  --color-surface-subtle: #f2f2ef;
   /* Наведение на строку, плейсхолдер фото, неактивные поля, Badge neutral. */
-  --color-surface-muted: #f4f5f7;
+  --color-surface-muted: #efefeb;
   /* Toast. Внутри — text-ink-inverse и фокус focus-inverse. */
-  --color-surface-inverse: #15181c;
+  --color-surface-inverse: #161616;
 
-  /* Текст: графит с холодным подтоном — оранжевый знака на нём звучит чище. */
-  --color-ink: #15181c;
-  --color-ink-secondary: #464d57;
-  --color-ink-muted: #5e6670;
+  /* Текст. Контраст на page / surface / surface-muted: ink 16,9 / 18,1 / 15,7;
+     secondary 6,3 / 6,7 / 5,8; muted 5,0 / 5,4 / 4,65 (≥ 4,5 везде). */
+  --color-ink: #161616;
+  --color-ink-secondary: #5c5c57;
+  --color-ink-muted: #6b6b66;
   /* Только для неактивных элементов (WCAG 1.4.3 их не нормирует). */
-  --color-ink-disabled: #9aa0a8;
+  --color-ink-disabled: #a3a39c;
   --color-ink-inverse: #ffffff;
 
-  /* Линии. line и line-subtle — декоративные разделители; line-strong — границы
-     полей ввода, чекбоксов и других контролов (≥ 3:1, WCAG 1.4.11). */
-  --color-line-subtle: #e4e7eb;
-  --color-line: #d5d9de;
-  --color-line-strong: #858c96;
+  /* Линии. line и line-subtle — разделители; line-strong — границы полей ввода,
+     чекбоксов и других контролов (3,5:1 на page, 3,2:1 на muted — WCAG 1.4.11). */
+  --color-line-subtle: #e5e5e0;
+  --color-line: #dfdfda;
+  /* Рамка вторичных кнопок и карточки при наведении: заметнее line, мягче рамки поля.
+     Кнопку опознают по подписи, поэтому порог 3:1 к ней не применяется. */
+  --color-line-emphasis: #c7c7c0;
+  --color-line-strong: #85857e;
 
-  /* Фирменный оранжевый — только фон/заливка, текст на нём — on-brand. */
+  /* Фирменный оранжевый — только фон/заливка, текст на нём — on-brand (8,1:1). */
   --color-brand: #fa9506;
-  --color-brand-hover: #e98a00;
-  --color-brand-active: #d97f00;
-  --color-brand-subtle: #fff5e6;
+  --color-brand-hover: #ec8a00;
+  --color-brand-active: #db7f00;
+  --color-brand-subtle: #fdf1e0;
   /* Оранжево-коричневый для текста на белом и на brand-subtle (≥ 4.5:1). */
   --color-brand-text: #9a5400;
   --color-on-brand: var(--color-ink);
@@ -64,38 +70,40 @@
   --color-focus: var(--color-ink);
   --color-focus-inverse: #ffffff;
 
-  /* Статусы: текст тона на подложке тона. */
+  /* Статусы: текст тона на подложке тона. Красный — только настоящая ошибка;
+     «требует подтверждения» — нейтральная подложка и тёмно-охристый знак. */
   --color-info: #1e4f8f;
-  --color-info-subtle: #ebf2fb;
+  --color-info-subtle: #eaf0f7;
   --color-success: #1d6b3b;
-  --color-success-subtle: #e7f4ec;
-  --color-warning: #765c00;
-  --color-warning-subtle: #fdf6d8;
+  --color-success-subtle: #e6f2ea;
+  --color-warning: #7a5a00;
+  --color-warning-subtle: #f6f0dc;
   --color-danger: #b3261e;
   --color-danger-hover: #96201a;
-  --color-danger-subtle: #fdecea;
+  --color-danger-subtle: #fbeceb;
 
-  /* Демонстрация: фиолетовый тон занят только под «Демо» и нигде больше
-     не используется — по нему демо-элементы узнаются с первого взгляда. */
-  --color-demo: #5b3fa8;
-  --color-demo-subtle: #f3effc;
-  --color-demo-line: #8e7ad0;
+  /* Демонстрация: без отдельного цвета — пунктирная рамка и нейтральный тон.
+     Демо узнаётся по форме (пунктир) и слову «Демо», а не по второму акценту. */
+  --color-demo: #5c5c57;
+  --color-demo-subtle: #efefeb;
+  --color-demo-line: #85857e;
 
   /* Спектральная шкала (BandScale) — фирменный элемент каталога. */
-  --color-band-track: var(--color-line-subtle);
+  --color-band-track: var(--color-line);
   --color-band-fill: var(--color-brand);
 
   --color-selection: #ffe2b3;
   /* Подложка модальных окон и выдвижных панелей (::backdrop). */
-  --color-scrim: rgb(21 24 28 / 0.48);
+  --color-scrim: rgb(22 22 22 / 0.44);
 
   /* ------------------------------------------------------------------------
      Типографика. IBM Plex Sans (интерфейс, текст, цифры — табличные по умолчанию)
-     и IBM Plex Mono (коды, ячейки прайса, демо-код). Подключение — next/font,
-     переменные --font-plex-sans / --font-plex-mono (DESIGN.md § 5.3).
+     и IBM Plex Mono (коды, ячейки прайса, надстрочные подписи). Подключение —
+     next/font, переменные --font-plex-sans / --font-plex-mono.
 
-     Шкала — шаг √φ ≈ 1,272 от 16 px: 16 → 20 → 26 → 33; 14 — полшага вниз,
-     12 — минимальный кегль (подписи). Межстрочные — по сетке 4 px.
+     Шкала (desktop): 12 · 14 · 16 · 18 · 22 · 30 · 40 · 52. Крупные кегли —
+     вес 500 и плотная трекинговая поправка, мелкие заголовки — 600.
+     На < lg h1 и h2 уменьшаются (база ниже), кегли утилит — нет.
      ------------------------------------------------------------------------ */
   --text-caption: 0.75rem;
   --text-caption--line-height: 1rem;
@@ -103,16 +111,23 @@
   --text-small--line-height: 1.25rem;
   --text-body: 1rem;
   --text-body--line-height: 1.5rem;
-  --text-title: 1.25rem;
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.75rem;
+  --text-title: 1.375rem;
   --text-title--line-height: 1.75rem;
-  --text-heading: 1.625rem;
-  --text-heading--line-height: 2rem;
-  --text-heading--letter-spacing: -0.01em;
-  --text-heading--font-weight: 600;
-  --text-display: 2.0625rem;
-  --text-display--line-height: 2.5rem;
-  --text-display--letter-spacing: -0.015em;
-  --text-display--font-weight: 600;
+  --text-title--letter-spacing: -0.005em;
+  --text-heading: 1.875rem;
+  --text-heading--line-height: 2.25rem;
+  --text-heading--letter-spacing: -0.015em;
+  --text-heading--font-weight: 500;
+  --text-display: 2.5rem;
+  --text-display--line-height: 2.875rem;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 500;
+  --text-hero: 3.25rem;
+  --text-hero--line-height: 3.5rem;
+  --text-hero--letter-spacing: -0.025em;
+  --text-hero--font-weight: 500;
 
   /* ------------------------------------------------------------------------
      Сетка. Брейкпоинты — стандартные Tailwind (повторены явно).
@@ -124,33 +139,44 @@
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 96rem;
 
-  /* max-w-page и т. д. Ширина контента без полей (поля — --page-gutter). */
-  --container-page: 80rem;
+  /* max-w-page и т. д. Ширина контента без полей (поля — --page-gutter):
+     84rem = 1344 px, на 1440 с полями 48 px страница занимает экран ровно. */
+  --container-page: 84rem;
   --container-text: 42rem;
   --container-form: 36rem;
   --container-narrow: 35rem;
+  /* Длина строки длинного текста (документы, «Доставка и оплата»): ≈ 70 знаков кириллицы. */
+  --container-measure: 65ch;
 
-  /* grid-cols-*: именованные раскладки (DESIGN.md § 5.4). */
-  --grid-template-columns-catalog: 17rem minmax(0, 1fr);
-  --grid-template-columns-catalog-wide: 19rem minmax(0, 1fr);
-  /* Золотое сечение 1 : 1,618 — карточка товара (плейсхолдер | информация). */
+  /* grid-cols-*: именованные раскладки (DESIGN.md § R.4). */
+  /* Каталог: колонка подбора 260 px (xl — 288 px) | выдача. */
+  --grid-template-columns-catalog: 16.25rem minmax(0, 1fr);
+  --grid-template-columns-catalog-wide: 18rem minmax(0, 1fr);
+  /* Товар: медиа 55 % | решение о покупке 45 %. */
+  --grid-template-columns-product: minmax(0, 11fr) minmax(0, 9fr);
+  /* Золотое сечение 1 : 1,618 — служебные страницы (знак | описание). */
   --grid-template-columns-golden: minmax(0, 1fr) minmax(0, 1.618fr);
   /* 1,618 : 1 — корзина, заявка, заказ (основное | сводка). */
   --grid-template-columns-golden-reverse: minmax(0, 1.618fr) minmax(0, 1fr);
   --grid-template-columns-account: 15rem minmax(0, 1fr);
-  --grid-template-columns-footer: minmax(0, 1.618fr) repeat(3, minmax(0, 1fr));
+  /* Подвал: название | Каталог | Покупателям | Документы. */
+  --grid-template-columns-footer: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
 
   /* ------------------------------------------------------------------------
      Форма. Радиусы маленькие: технический каталог, а не витрина одежды.
+     xs — чекбокс; sm 4 — кнопки, поля, чипы; md 6 — карточки, панели;
+     lg 10 — модальные окна и выпадающие слои. 20–32 px не используются.
      ------------------------------------------------------------------------ */
   --radius-xs: 0.125rem;
   --radius-sm: 0.25rem;
   --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
+  --radius-lg: 0.625rem;
 
-  /* Тени — только у всплывающих слоёв. Карточки и панели — граница 1px. */
-  --shadow-popover: 0 1px 2px rgb(21 24 28 / 0.06), 0 8px 24px -4px rgb(21 24 28 / 0.14);
-  --shadow-overlay: 0 24px 48px -12px rgb(21 24 28 / 0.28);
+  /* Тени — только у всплывающих слоёв (меню каталога, подсказки, модальные окна,
+     липкая панель покупки). Карточки и панели разделяет граница 1px и фон. */
+  --shadow-popover: 0 1px 2px rgb(22 22 22 / 0.05), 0 12px 32px -8px rgb(22 22 22 / 0.16);
+  --shadow-overlay: 0 24px 48px -12px rgb(22 22 22 / 0.28);
+  --shadow-sticky: 0 -1px 0 var(--color-line), 0 -8px 24px -12px rgb(22 22 22 / 0.18);
 
   /* z-index: z-sticky, z-header, z-popover, z-overlay, z-toast, z-skip.
      Модальные <dialog> живут в top layer и в этой шкале не участвуют. */
@@ -227,8 +253,12 @@
 @layer base {
   :root {
     color-scheme: light;
-    /* Боковое поле контейнера: 16 → 24 → 32 px. */
+    /* Боковое поле контейнера: 16 → 24 (md) → 40 (lg) → 48 (xl) px. */
     --page-gutter: 1rem;
+    /* Высота шапки, когда она липкая (≥ lg); на < lg шапка не липкая — 0. */
+    --header-height: 0px;
+    /* Верх липких колонок (подбор, медиа товара, сводка заказа): под шапкой + 24 px. */
+    --sticky-top: 1.5rem;
     /* Запас под липкую панель «Параметры / Сортировка» каталога на < lg. */
     --sticky-offset: 4rem;
     /* Галочка чекбокса; белый = --color-ink-inverse. */
@@ -243,8 +273,17 @@
 
   @media (width >= 64rem) {
     :root {
-      --page-gutter: 2rem;
-      --sticky-offset: 0px;
+      --page-gutter: 2.5rem;
+      --header-height: 4.5rem;
+      --sticky-top: calc(var(--header-height) + 1.5rem);
+      /* Якоря и фокус не уходят под липкую шапку. */
+      --sticky-offset: calc(var(--header-height) + 1rem);
+    }
+  }
+
+  @media (width >= 80rem) {
+    :root {
+      --page-gutter: 3rem;
     }
   }
 
@@ -285,12 +324,14 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Иерархия заголовков по умолчанию (переопределяется классами компонента). */
+  /* Иерархия заголовков по умолчанию (переопределяется классами компонента).
+     h1 страниц: 30 → 40 px; h2 разделов: 22 px (крупные разделы главной и товара
+     берут text-heading явно); h3: 16 px полужирный. */
   h1 {
-    font-size: var(--text-heading);
-    line-height: var(--text-heading--line-height);
-    letter-spacing: var(--text-heading--letter-spacing);
-    font-weight: 600;
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    letter-spacing: -0.015em;
+    font-weight: 500;
   }
 
   @media (width >= 64rem) {
@@ -302,9 +343,17 @@
   }
 
   h2 {
-    font-size: var(--text-title);
-    line-height: var(--text-title--line-height);
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    letter-spacing: var(--text-title--letter-spacing);
     font-weight: 600;
+  }
+
+  @media (width >= 64rem) {
+    h2 {
+      font-size: var(--text-title);
+      line-height: var(--text-title--line-height);
+    }
   }
 
   h3 {
@@ -415,6 +464,25 @@
   }
 }
 
+/* Надстрочная подпись: моноширинный кегль 12, прописные, разрядка. Категория над
+   названием товара, «Радиочастотное оборудование» над h1 главной, номера шагов. */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+/* Подпись параметра над значением (строка каталога, ключевые характеристики). */
+@utility spec-label {
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
+  color: var(--color-ink-muted);
+}
+
 /* Кольцо фокуса внутрь — для элементов в контейнерах с overflow (строки таблиц,
    пункты списков подсказок), где внешний отступ обрезается. */
 @utility focus-inset {
@@ -452,8 +520,12 @@
     border-radius: 9999px;
   }
 
-  .ui-checkbox:hover:not(:disabled),
-  .ui-radio:hover:not(:disabled) {
+  /* Наведение — на сам контрол или на всю строку <label> (кликабельна вся строка, § 5.9.10).
+     У отмеченного рамка остаётся ink, у ошибочного — danger. */
+  .ui-checkbox:hover:not(:disabled, :checked, [aria-invalid='true']),
+  .ui-radio:hover:not(:disabled, :checked, [aria-invalid='true']),
+  label:hover > .ui-checkbox:not(:disabled, :checked, [aria-invalid='true']),
+  label:hover > .ui-radio:not(:disabled, :checked, [aria-invalid='true']) {
     border-color: var(--color-ink-secondary);
   }
 

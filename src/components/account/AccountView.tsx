@@ -37,10 +37,10 @@ export function AccountView() {
       title="Личный кабинет"
       email={guard.email}
       withReset
-      demoText="Демо-кабинет: заказы и уведомления хранятся в этом браузере."
+      demoText="Демо-кабинет: заказы, уведомления и профиль хранятся в этом браузере."
     >
       {awaiting.length > 0 ? (
-        <div className="mb-8 flex flex-col gap-3">
+        <div className="mb-10 flex flex-col gap-3">
           {awaiting.map((order, index) => {
             const quote = activeQuote(order);
             if (quote === null) return null;
@@ -54,6 +54,7 @@ export function AccountView() {
                     href={paymentHref(order.number, quote.version)}
                     variant={index === 0 ? 'primary' : 'secondary'}
                     size="md"
+                    className="max-lg:h-11"
                   >
                     Перейти к оплате
                     <span className="sr-only"> заказа {order.number}</span>
@@ -68,7 +69,7 @@ export function AccountView() {
       ) : null}
 
       <section aria-labelledby="account-orders">
-        <h2 id="account-orders" className="mb-4 lg:mb-6">
+        <h2 id="account-orders" className="mb-4">
           Заявки и заказы
         </h2>
         {orders.length === 0 ? (
@@ -89,11 +90,11 @@ export function AccountView() {
         )}
       </section>
 
-      <section aria-labelledby="account-profile" className="mt-10 lg:mt-16">
-        <h2 id="account-profile" className="mb-4 lg:mb-6">
+      <section aria-labelledby="account-profile" className="mt-12 lg:mt-16">
+        <h2 id="account-profile" className="mb-4">
           Профиль
         </h2>
-        <dl className="grid max-w-text gap-x-6 sm:grid-cols-[10rem_minmax(0,1fr)]">
+        <dl className="grid max-w-text gap-x-6 border-t border-line sm:grid-cols-[10rem_minmax(0,1fr)]">
           <ProfileRow label="Email">{guard.email}</ProfileRow>
           <ProfileRow label="Имя">{profile?.name}</ProfileRow>
           <ProfileRow label="Телефон">
@@ -114,9 +115,9 @@ export function AccountView() {
 function ProfileRow({ label, children }: { label: string; children: ReactNode }) {
   const empty = children === null || children === undefined || children === '';
   return (
-    <div className="grid border-b border-line-subtle py-2.5 sm:col-span-2 sm:grid-cols-subgrid">
-      <dt className="text-small text-ink-secondary">{label}</dt>
-      <dd className="text-body text-ink">
+    <div className="grid border-b border-line-subtle py-3 sm:col-span-2 sm:grid-cols-subgrid sm:items-baseline">
+      <dt className="text-small text-ink-muted">{label}</dt>
+      <dd className="text-body break-words text-ink">
         {empty ? (
           <span className="text-ink-muted">
             <span aria-hidden>—</span>

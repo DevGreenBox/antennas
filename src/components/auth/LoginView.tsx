@@ -3,10 +3,10 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, useSyncExternalStore } from 'react';
 
+import { DemoBadge } from '@/components/ui/Badge';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
 import { Input } from '@/components/ui/Input';
-import { DemoNotice } from '@/components/ui/Notice';
 import { Skeleton, SkeletonGroup } from '@/components/ui/Skeleton';
 import { StorageNotice } from '@/components/ui/StorageNotice';
 import { site } from '@/config/site';
@@ -39,7 +39,15 @@ import type { LoginChallenge } from '@/types/order';
  * «Изменить email» только возвращает к шагу 1 — действующий код не сбрасывается: тот же email
  * снова получает тот же код с оставшимися попытками до конца отсчёта (иначе смена шага обходила
  * бы и отсчёт повторной отправки, и лимит попыток).
+ *
+ * Подача (DESIGN § R.1, § R.4): колонка `max-w-form` по левому краю, как у остальных форм; h1 и
+ * пояснение шага — над формой, сама форма — белая панель (рамка `line`, радиус 6), поля и кнопки
+ * 44–48 px. Демо-код — строка с меткой «Демо» внутри панели (это демо-действие), без отдельной
+ * плашки; подсказки про Telegram и восстановление — под панелью.
  */
+
+/** Панель формы входа. */
+const PANEL = 'rounded-md border border-line bg-surface p-5 sm:p-6';
 
 const subscribeClock = (onChange: () => void) => {
   const timer = window.setInterval(onChange, 1000);
@@ -56,14 +64,16 @@ function LoginIntro() {
   return <h1 className="mb-3">Вход в личный кабинет</h1>;
 }
 
+/** Колонка страницы входа: ширина формы, по левому краю. */
+const COLUMN = 'max-w-form';
+
 export function LoginSkeleton() {
   return (
-    <div className="max-w-narrow">
+    <div className={COLUMN}>
       <LoginIntro />
       <SkeletonGroup className="flex flex-col gap-4">
         <Skeleton className="h-5 w-3/4" />
-        <Skeleton className="h-11 w-full" />
-        <Skeleton className="h-12 w-full" />
+        <Skeleton className="h-44 w-full rounded-md" />
       </SkeletonGroup>
     </div>
   );
@@ -108,7 +118,7 @@ export function LoginView() {
     (emailParam === '' || challenge.email === normalizeEmail(emailParam));
 
   return (
-    <div className="max-w-narrow">
+    <div className={COLUMN}>
       <LoginIntro />
       <StorageNotice className="mb-6" />
       {showCode ? (
@@ -134,7 +144,7 @@ export function LoginView() {
 /** Вошли под одним email, а ссылка (`?email=`) — для другого: выйти и войти под нужным. */
 function SwitchAccount({ current, target }: { current: string; target: string }) {
   return (
-    <div className="max-w-narrow">
+    <div className={COLUMN}>
       <LoginIntro />
       <p className="text-body text-ink-secondary">
         Сейчас вы вошли как <span className="font-medium break-all text-ink">{current}</span>.
@@ -182,7 +192,7 @@ function EmailStep({
       </p>
       <form
         noValidate
-        className="mt-6 flex flex-col gap-5"
+        className={`mt-6 flex flex-col gap-5 ${PANEL}`}
         onSubmit={(event) => {
           event.preventDefault();
           const result = requestLoginCode(email);
@@ -207,7 +217,7 @@ function EmailStep({
           Получить код
         </Button>
       </form>
-      <p className="mt-4 text-small text-ink-secondary">
+      <p className="mt-5 text-small text-ink-secondary">
         Нет доступа к почте? Напишите в Telegram{' '}
         <a href={telegram.url} target="_blank" rel="noopener noreferrer" className="text-link">
           {telegram.handle}
@@ -246,18 +256,11 @@ function CodeStep({
   return (
     <>
       <p className="flex flex-wrap items-baseline gap-x-2 text-body text-ink-secondary">
-        <span>Код отправлен на {challenge.email}.</span>
-        <Button variant="link" size="sm" onClick={onChangeEmail}>
+        <span className="break-all">Код отправлен на {challenge.email}.</span>
+        <Button variant="link" size="sm" className="min-h-11 lg:min-h-0" onClick={onChangeEmail}>
           Изменить email
         </Button>
       </p>
-
-      <DemoNotice className="mt-5">
-        <p>Демо: письмо не отправляется. Код для входа:</p>
-        <p className="mt-1 font-mono text-title tracking-widest text-ink" data-testid="demo-code">
-          {formatLoginCode(challenge.code)}
-        </p>
-      </DemoNotice>
 
       <p role="status" className="sr-only">
         {status}
@@ -265,7 +268,7 @@ function CodeStep({
 
       <form
         noValidate
-        className="mt-6 flex flex-col gap-5"
+        className={`mt-6 flex flex-col gap-5 ${PANEL}`}
         onSubmit={(event) => {
           event.preventDefault();
           const result = verifyLoginCode(code);
@@ -283,6 +286,20 @@ function CodeStep({
           router.replace(next);
         }}
       >
+        {/* Демо: письма нет — код показан здесь. Строка внутри формы, над полем, куда его вводить. */}
+        <div className="border-b border-line-subtle pb-4">
+          <p className="flex items-start gap-2 text-small text-ink-secondary">
+            <DemoBadge className="shrink-0" />
+            <span className="pt-0.5">Письмо не отправляется. Код для входа:</span>
+          </p>
+          <p
+            className="mt-2 font-mono text-title font-medium tracking-widest text-ink"
+            data-testid="demo-code"
+          >
+            {formatLoginCode(challenge.code)}
+          </p>
+        </div>
+
         <Field label="Код из письма" id="login-code" error={error}>
           <Input
             size="lg"
@@ -308,6 +325,7 @@ function CodeStep({
         <Button
           variant="link"
           size="sm"
+          className="min-h-11 lg:min-h-0"
           disabled={resendIn > 0}
           onClick={() => {
             const result = requestLoginCode(challenge.email, { resend: true });

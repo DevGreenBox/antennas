@@ -46,7 +46,8 @@ const ICON_SIZE: Record<ButtonSize, 16 | 20> = { sm: 16, md: 20, lg: 20 };
 
 const VARIANT: Record<Exclude<ButtonVariant, 'link'>, string> = {
   primary: 'bg-brand text-on-brand border-transparent hover:bg-brand-hover active:bg-brand-active',
-  secondary: 'bg-surface text-ink border-line-strong hover:bg-surface-muted active:bg-line-subtle',
+  secondary:
+    'bg-surface text-ink border-line-emphasis hover:border-ink-muted active:bg-surface-muted',
   ghost: 'bg-transparent text-ink border-transparent hover:bg-surface-muted active:bg-line-subtle',
   danger:
     'bg-danger text-ink-inverse border-transparent hover:bg-danger-hover active:bg-danger-hover',

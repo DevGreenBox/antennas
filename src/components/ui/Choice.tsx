@@ -14,7 +14,8 @@ import { cn } from '@/lib/cn';
  *   <Segmented legend="Покупатель" name="buyer" value={type} onChange={setType}
  *     options={[{ value: 'person', label: 'Частное лицо' }, { value: 'company', label: 'Организация' }]} />
  *
- * Вся строка `<label>` кликабельна; высота ≥ 32 px (`comfortable` — 44 px: Drawer, формы < lg).
+ * Вся строка `<label>` кликабельна (и наведение на неё подсвечивает рамку контрола —
+ * `globals.css`); высота ≥ 32 px (`comfortable` — 44 px: Drawer, формы < lg).
  */
 
 interface ChoiceProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
@@ -71,7 +72,14 @@ function ChoiceRow({
         ) : null}
       </span>
       {count !== undefined ? (
-        <span aria-hidden className="ml-auto text-small text-ink-muted tabular-nums">
+        // Счётчик приглушён и табличный; у неактивной опции (0) гаснет вместе с подписью.
+        <span
+          aria-hidden
+          className={cn(
+            'ml-auto pl-2 text-small tabular-nums',
+            disabled ? 'text-ink-disabled' : 'text-ink-muted',
+          )}
+        >
           {count}
         </span>
       ) : null}
@@ -159,7 +167,8 @@ export function Segmented<T extends string>({
               className={cn(
                 'flex items-center justify-center gap-1.5 px-3 rounded-xs text-small font-medium cursor-pointer transition-colors duration-fast',
                 'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-focus has-[:focus-visible]:outline-offset-2',
-                size === 'sm' ? 'h-8' : 'h-10',
+                // md на < lg — 44 px (цель нажатия).
+                size === 'sm' ? 'h-8' : 'h-11 lg:h-10',
                 block && 'flex-1',
                 selected
                   ? 'bg-ink text-ink-inverse'

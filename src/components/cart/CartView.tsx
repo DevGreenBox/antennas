@@ -23,9 +23,11 @@ import { buildCartModel, useProductsById } from './cart-model';
  * объединяется с профилем (§3.11). Итог — только из `preliminaryTotals()`: при позициях
  * «по запросу» ложного полного итога нет.
  *
- * Две колонки (строки | сводка) — с xl: таблица строк занимает ~660 px и в левой колонке на
- * 1024–1279 px не помещалась, уезжая под сводку (кнопки «Удалить» перекрывались). Ниже xl
- * сводка идёт под строками, как на планшете.
+ * Две колонки (строки | сводка, `golden-reverse`) — с lg: строки раскладываются по ширине своей
+ * колонки (container queries в CartLines), поэтому и в узкой левой колонке на 1024 px ничего не
+ * перекрывается. Сводка — единственная панель страницы, на ≥ lg липкая (`--sticky-top`): итог и
+ * «Оформить заявку» видны при любой длине списка. Ниже lg сводка идёт под строками (справа,
+ * шириной с колонку итогов на md).
  *
  * После «Очистить корзину» и удаления последней строки кнопки, на которых был фокус, исчезают —
  * фокус переводится на заголовок пустого состояния, а не теряется в body.
@@ -57,7 +59,7 @@ export function CartView({ products }: { products: readonly Product[] }) {
     return (
       <>
         <PageHeader title="Корзина" />
-        <div className="grid gap-8 xl:grid-cols-golden-reverse xl:gap-12">
+        <div className="grid gap-8 lg:grid-cols-golden-reverse lg:gap-10 xl:gap-12">
           <SkeletonRows rows={3} />
           <SkeletonGroup>
             <Skeleton className="h-64 w-full rounded-md" />
@@ -76,6 +78,7 @@ export function CartView({ products }: { products: readonly Product[] }) {
         <StorageNotice className="mb-6" />
         <div ref={emptyRef}>
           <EmptyState
+            compact
             title="Корзина пуста"
             actions={
               <ButtonLink href="/catalog" variant="primary" size="md">
@@ -101,8 +104,8 @@ export function CartView({ products }: { products: readonly Product[] }) {
         )}`}
       />
       <StorageNotice className="mb-6" />
-      <div className="grid gap-8 xl:grid-cols-golden-reverse xl:gap-12">
-        <div
+      <div className="grid gap-8 lg:grid-cols-golden-reverse lg:gap-10 xl:gap-12">
+        <section
           ref={linesRef}
           tabIndex={-1}
           aria-label="Позиции корзины"
@@ -120,21 +123,17 @@ export function CartView({ products }: { products: readonly Product[] }) {
             variant="ghost"
             size="sm"
             icon="trash-2"
-            className="mt-4 -ml-3"
+            className="mt-3 -ml-3 max-lg:h-11"
             onClick={() => setConfirmClear(true)}
           >
             Очистить корзину
           </Button>
-        </div>
+        </section>
 
-        {/* Ниже xl сводка под строками — справа, шириной с колонку итогов, а не во всю страницу. */}
-        <div className="self-start md:w-full md:max-w-md md:justify-self-end xl:sticky xl:top-6 xl:max-w-none xl:justify-self-auto">
+        {/* Ниже lg сводка под строками — справа, шириной с колонку итогов, а не во всю страницу. */}
+        <div className="self-start md:w-full md:max-w-md md:justify-self-end lg:sticky lg:top-(--sticky-top) lg:max-w-none lg:justify-self-auto">
           <OrderSummary title="Сумма заявки">
             <PreliminaryBreakdown totals={model.totals} />
-            <PromoCodeField
-              onlyRequestItems={model.totals.onlyRequestItems}
-              className="mt-4 border-t border-line pt-4"
-            />
             <div className="mt-5 flex flex-col gap-3">
               {blocked ? (
                 <Notice tone="warning">Уберите недоступные позиции, чтобы оформить заявку</Notice>
@@ -146,6 +145,10 @@ export function CartView({ products }: { products: readonly Product[] }) {
                 Это ещё не оплата. Менеджер свяжется с вами, согласует состав, цену и доставку.
               </p>
             </div>
+            <PromoCodeField
+              onlyRequestItems={model.totals.onlyRequestItems}
+              className="mt-5 border-t border-line-subtle pt-4"
+            />
           </OrderSummary>
         </div>
       </div>

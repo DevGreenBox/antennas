@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 
+import { DemoBadge } from '@/components/ui/Badge';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { DemoNotice, Notice } from '@/components/ui/Notice';
@@ -34,6 +35,11 @@ import { useAccountGuard } from './useAccountGuard';
  * версии — серверным подтверждением); возврат со «страницы провайдера» (`?return=1`) и любой
  * прямой заход ничего не оплачивают; повторное подтверждение не создаёт вторую оплату; ссылка
  * аннулированной версии не принимает оплату.
+ *
+ * Подача (DESIGN § R.1, § R.5): сумма к оплате и кнопка «Оплатить» — одна белая панель; пометка
+ * «Демо · провайдер не выбран, деньги не списываются» — строка внутри неё, у самого действия, а не
+ * отдельная плашка над страницей. Ответ провайдера — пунктирная демо-панель рядом с панелью
+ * оплаты, не внутри неё (без карточки в карточке).
  */
 
 interface ResultMessage {
@@ -90,10 +96,6 @@ export function PaymentView({ number }: { number: string }) {
     <div className="max-w-narrow">
       <h1>Оплата заказа {order.number}</h1>
       <StorageNotice className="mt-4" />
-      <DemoNotice title="Демонстрация оплаты" className="mt-4">
-        Провайдер оплаты ещё не выбран. Деньги не списываются. Кнопки ниже имитируют ответ
-        провайдера.
-      </DemoNotice>
 
       <div ref={focusRef} tabIndex={-1} className="mt-6 flex flex-col gap-4 outline-none">
         {returned ? (
@@ -144,7 +146,7 @@ export function PaymentView({ number }: { number: string }) {
 
 function ToOrder({ basePath }: { basePath: string }) {
   return (
-    <ButtonLink href={basePath} variant="secondary" size="md">
+    <ButtonLink href={basePath} variant="secondary" size="md" className="max-lg:h-11">
       К заказу
     </ButtonLink>
   );
@@ -157,7 +159,12 @@ function CurrentQuoteOffer({ order, quote }: { order: DemoOrder; quote: QuoteVer
         Оплатите актуальную версию {quote.version}: {formatPrice(quote.total)}
       </p>
       <div className="mt-3">
-        <ButtonLink href={paymentHref(order.number, quote.version)} variant="primary" size="md">
+        <ButtonLink
+          href={paymentHref(order.number, quote.version)}
+          variant="primary"
+          size="md"
+          className="max-lg:h-11"
+        >
           Перейти к актуальной оплате
         </ButtonLink>
       </div>
@@ -213,7 +220,7 @@ function PaymentState({
                 <Button
                   variant="secondary"
                   size="md"
-                  className="h-auto! min-h-10 w-full py-2 text-center whitespace-normal! sm:w-auto"
+                  className="h-auto! min-h-11 w-full py-2 text-center whitespace-normal! sm:w-auto lg:min-h-10"
                   onClick={() => onConfirm(confirmed.id)}
                 >
                   Провайдер подтвердил оплату повторно
@@ -279,9 +286,9 @@ function PaymentState({
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-line-subtle py-3 last:border-b-0">
-      <dt className="text-small text-ink-secondary">{label}</dt>
-      <dd className="text-right text-body text-ink">{children}</dd>
+    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-line-subtle py-3 first:pt-0 last:border-b-0 last:pb-0">
+      <dt className="text-small text-ink-muted">{label}</dt>
+      <dd className="ml-auto text-right text-body text-ink">{children}</dd>
     </div>
   );
 }
@@ -300,20 +307,39 @@ function PaymentForm({
   const { quote, pending } = state;
   return (
     <>
-      <dl className="rounded-md border border-line px-5 py-2">
-        <Row label="К оплате">
-          <Price amount={quote.total} size="xl" />
-        </Row>
-        <Row label="Версия согласования">
-          {quote.version} от {formatDateFull(quote.createdAt)}
-        </Row>
-        <Row label="Состав">{countLabel(quote.lines.length, POSITION_FORMS)}</Row>
-      </dl>
-      {pending === null ? (
-        <Button variant="primary" size="lg" fullWidth onClick={() => onPay(quote)}>
-          Оплатить {formatPrice(quote.total)}
-        </Button>
-      ) : (
+      <section
+        aria-label="Сумма к оплате"
+        className="rounded-md border border-line bg-surface p-5 sm:p-6"
+      >
+        <dl>
+          <Row label="К оплате">
+            <Price amount={quote.total} size="xl" />
+          </Row>
+          <Row label="Версия согласования">
+            {quote.version} от {formatDateFull(quote.createdAt)}
+          </Row>
+          <Row label="Состав">{countLabel(quote.lines.length, POSITION_FORMS)}</Row>
+        </dl>
+        {/* Демо-пометка — у кнопки, до оплаты; после нажатия демо-действие — ProviderSimulator. */}
+        {pending === null ? (
+          <>
+            <Button
+              variant="primary"
+              size="lg"
+              fullWidth
+              className="mt-5"
+              onClick={() => onPay(quote)}
+            >
+              Оплатить {formatPrice(quote.total)}
+            </Button>
+            <p className="mt-4 flex items-start gap-2 text-small text-ink-secondary">
+              <DemoBadge className="shrink-0" />
+              <span className="pt-0.5">Провайдер оплаты ещё не выбран: деньги не списываются.</span>
+            </p>
+          </>
+        ) : null}
+      </section>
+      {pending === null ? null : (
         <ProviderSimulator
           onConfirm={() => onConfirm(pending.id)}
           onDecline={() => onDecline(pending.id)}
@@ -342,10 +368,10 @@ function ProviderSimulator({
         серверного подтверждения от провайдера.
       </p>
       <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-        <Button variant="primary" size="md" onClick={onConfirm}>
+        <Button variant="primary" size="md" className="max-lg:h-11" onClick={onConfirm}>
           Провайдер подтвердил оплату
         </Button>
-        <Button variant="ghost" tone="danger" size="md" onClick={onDecline}>
+        <Button variant="ghost" tone="danger" size="md" className="max-lg:h-11" onClick={onDecline}>
           Провайдер отказал
         </Button>
       </div>

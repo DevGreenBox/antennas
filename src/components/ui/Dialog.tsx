@@ -161,10 +161,16 @@ export function ConfirmDialog({
       onClose={onClose}
       footer={
         <>
-          <Button variant="secondary" data-autofocus onClick={onClose}>
+          {/* На < lg — 44 px: кнопки окна тоже цели нажатия (DESIGN § R.9). */}
+          <Button variant="secondary" className="max-lg:h-11" data-autofocus onClick={onClose}>
             {cancelLabel}
           </Button>
-          <Button variant={confirmVariant} disabled={confirmDisabled} onClick={onConfirm}>
+          <Button
+            variant={confirmVariant}
+            className="max-lg:h-11"
+            disabled={confirmDisabled}
+            onClick={onConfirm}
+          >
             {confirmLabel}
           </Button>
         </>

@@ -48,9 +48,9 @@ export function ProductNotes({
       className={className}
       data-testid="product-notes"
     >
-      <h2 id="product-notes-title" className="mb-3">
+      <h3 id="product-notes-title" className="eyebrow mb-3">
         Пометки из прайса
-      </h2>
+      </h3>
       <ul className="flex max-w-text flex-col gap-2 text-small text-ink">
         {notes.map((note) => (
           <li key={`${note.kind}-${note.cell}-${note.text}`}>{noteText(note)}</li>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { CSSProperties } from 'react';
 
 import { NeedsReviewBadge } from '@/components/ui/Badge';
 import { ProductBandScale } from '@/components/ui/BandScale';
@@ -10,31 +11,39 @@ import type { AttrCode, AttrStatus, Product, ProductAttribute } from '@/types/ca
 
 import { AddToCartButton } from './AddToCartButton';
 import { FavoriteButton } from './FavoriteButton';
-import { SpecLine, StatusValue, TechText, specLineHasInferred } from './SpecLine';
+import { ProductMedia } from './ProductMedia';
+import { StatusValue, TechText, specLineHasInferred } from './SpecLine';
 
 /**
- * Табличный вид списка (DESIGN §4.7, §5.9.22): строка таблицы (≥ lg) и строка списка (< lg),
- * колонки — по категории страницы.
+ * Список товаров (DESIGN § R.7) — вид по умолчанию в каталоге, поиске и избранном. Одна строка —
+ * один товар: миниатюра · название и код · характеристики с подписями · цена и действия.
  *
  *   const columns = columnsForCategory(category?.id ?? null);   // null — смешанный вариант
- *   <ProductTable products={items} columns={columns} caption="Антенны: товары, страница 1 из 1"
- *     rootCategoryId="antennas" />                               // <table class="hidden lg:table">
- *   <ProductList products={items} columns={columns} />          // <ul class="lg:hidden">
+ *   <ProductList products={items} columns={columns} rootCategoryId="antennas" label="Антенны" />
  *   {hasInferredValues(items, columns) && <p …>{INFERRED_FOOTNOTE}</p>}
  *
- * Смешанный вариант (каталог целиком, поиск, избранное, главная): «Категория» (листовая) и
- * «Характеристики» (`formatSpecLine(getSpecLine())` с BandScale) — нужен `categoryNames`.
- * Таблица и список рендерятся оба и переключаются CSS; дублирующихся id нет.
+ * Характеристики: на странице категории — колонки категории (`columnsForCategory`, одинаковые у
+ * всех строк — значения стоят друг под другом, как в таблице); в смешанном варианте (весь
+ * каталог, поиск, избранное) — ключевые параметры `getSpecLine` и листовая категория над
+ * названием (нужен `categoryNames`).
+ *
+ * Раскладка зависит от ширины списка, а не экрана (container queries): рядом с панелью подбора
+ * колонка выдачи уже экрана. Узкий список (< 36rem) — карточка: миниатюра рядом с названием,
+ * характеристики в две колонки, цена и кнопки внизу. Широкий — строка: миниатюра слева, цена и
+ * кнопки — правой колонкой; характеристики под названием, в одну линию (с 52rem).
  */
 
-/** Колонка таблицы: код характеристики или составная. */
+/** Колонка характеристик: код характеристики или составная. */
 export type ColumnKey = AttrCode | 'category' | 'specs' | 'ports' | 'end1' | 'end2';
 
 const MIXED: readonly ColumnKey[] = ['category', 'specs'];
 
-/** Колонки категорий страницы (§4.7). */
+/**
+ * Колонки категорий страницы. Конструкцию антенн отдельно не показывают: она уже в названии
+ * («Антенна логопериодическая Тип1») и в подкатегориях над выдачей.
+ */
 const COLUMNS_BY_CATEGORY: Readonly<Record<string, readonly ColumnKey[]>> = {
-  antennas: ['antenna_design', 'frequency', 'gain_dbi', 'connector'],
+  antennas: ['frequency', 'gain_dbi', 'connector'],
   'antennas-log-periodic': ['frequency', 'gain_dbi', 'connector'],
   'antennas-corner': ['frequency', 'gain_dbi', 'connector'],
   'antennas-yagi': ['frequency', 'gain_dbi', 'connector'],
@@ -65,7 +74,7 @@ const COMPOSITE_HEADERS: Partial<Record<ColumnKey, string>> = {
   end2: '2-й конец',
 };
 
-/** Заголовок колонки: подпись движка `attributeLabel(code, root)` или имя составной колонки. */
+/** Подпись колонки: подпись движка `attributeLabel(code, root)` или имя составной колонки. */
 export function columnHeader(key: ColumnKey, rootCategoryId?: string | null): string {
   return COMPOSITE_HEADERS[key] ?? attributeLabel(key as AttrCode, rootCategoryId);
 }
@@ -84,7 +93,7 @@ interface CellValue {
 const findAttr = (product: Product, code: AttrCode): ProductAttribute | undefined =>
   product.attributes.find((attr) => attr.code === code);
 
-/** Значение ячейки (§4.7): текст с заглавной, худший статус составных; null — «не указано». */
+/** Значение колонки: текст с заглавной, худший статус составных; null — «не указано». */
 export function cellValue(product: Product, key: ColumnKey): CellValue | null {
   const parts = (codes: AttrCode[], separator: string): CellValue | null => {
     const found = codes
@@ -115,7 +124,7 @@ export function cellValue(product: Product, key: ColumnKey): CellValue | null {
   }
 }
 
-/** В показанных значениях есть «принято по контексту» — под таблицей нужна сноска (§2.3 п.6). */
+/** В показанных значениях есть «принято по контексту» — под списком нужна сноска. */
 export function hasInferredValues(
   products: readonly Product[],
   columns: readonly ColumnKey[],
@@ -130,17 +139,57 @@ export function hasInferredValues(
 }
 
 /**
- * «Уточняется» у названия — только если спорное значение не видно в колонках строки (например,
- * затухание у фильтров на резонаторах): иначе бейдж стоял бы дважды.
+ * Код позиции в каталоге с подписью для вспомогательных технологий: внутренний ID, а не артикул
+ * производителя (ТЗ §4 п.16) — без подписи «ANT-001» читается как заводской номер.
  */
-function hasHiddenNeedsReview(product: Product, columns: readonly ColumnKey[]): boolean {
-  if (!product.attributes.some((attr) => attr.status === 'needs-review')) return false;
-  const shown = columns.some((key) =>
-    key === 'specs'
-      ? getSpecLine(product).some((item) => item.status === 'needs-review')
-      : cellValue(product, key)?.status === 'needs-review',
+export function ProductCode({ code, className }: { code: string; className?: string }) {
+  return (
+    <span className={cn('font-mono', className)} title="Код в каталоге">
+      <span className="sr-only">Код в каталоге: </span>
+      {code}
+    </span>
   );
-  return !shown;
+}
+
+/** Ячейка характеристики строки: подпись над значением. */
+interface SpecCell {
+  key: string;
+  label: string;
+  value: CellValue | null;
+  /** Частота — под значением шкала диапазона. */
+  frequency: boolean;
+  note?: string;
+}
+
+function specCells(
+  product: Product,
+  columns: readonly ColumnKey[],
+  rootCategoryId: string | null | undefined,
+): SpecCell[] {
+  if (columns.includes('specs')) {
+    return getSpecLine(product).map((item) => ({
+      key: item.key,
+      label: item.label,
+      value: { text: item.text, status: item.status },
+      frequency: item.key === 'frequency',
+      note: item.note,
+    }));
+  }
+  return columns.map((key) => ({
+    key,
+    label: columnHeader(key, rootCategoryId),
+    value: cellValue(product, key),
+    frequency: key === 'frequency',
+  }));
+}
+
+/**
+ * «Уточняется» у названия — только если спорное значение не видно в характеристиках строки
+ * (например, затухание у фильтров на резонаторах): иначе бейдж стоял бы дважды.
+ */
+function hasHiddenNeedsReview(product: Product, cells: readonly SpecCell[]): boolean {
+  if (!product.attributes.some((attr) => attr.status === 'needs-review')) return false;
+  return !cells.some((cell) => cell.value?.status === 'needs-review');
 }
 
 function NotSpecified() {
@@ -152,242 +201,134 @@ function NotSpecified() {
   );
 }
 
-function Cell({
-  product,
-  column,
-  categoryName,
-}: {
+export interface ProductListItemProps {
   product: Product;
-  column: ColumnKey;
+  columns: readonly ColumnKey[];
+  rootCategoryId?: string | null;
+  /** Листовая категория — над названием в смешанном варианте. */
   categoryName?: string;
-}) {
-  if (column === 'category')
-    return categoryName ? <TechText text={categoryName} /> : <NotSpecified />;
-  if (column === 'specs') {
-    return (
-      <div className="flex flex-col gap-1.5">
-        <SpecLine product={product} className="text-ink" />
-        <ProductBandScale product={product} size="sm" className="max-w-40" />
-      </div>
-    );
-  }
-  const value = cellValue(product, column);
-  if (value === null) return <NotSpecified />;
-  if (column === 'frequency') {
-    return (
-      <div className="flex flex-col gap-1.5">
-        <StatusValue text={value.text} status={value.status} className="whitespace-nowrap" />
-        <ProductBandScale product={product} size="sm" className="max-w-40" />
-      </div>
-    );
-  }
-  return <StatusValue text={value.text} status={value.status} />;
 }
 
-const TH =
-  'py-2.5 px-3 text-left font-medium text-ink-muted whitespace-nowrap border-b border-line';
-
-/** Шапка таблицы: «Наименование» · колонки · «Цена» · sr «Действия». */
-export function ProductTableHead({
+export function ProductListItem({
+  product,
   columns,
   rootCategoryId,
-}: {
-  columns: readonly ColumnKey[];
-  /** Корневая категория страницы — для подписей движка (у МШУ «Разъём порта 1» и т. п.). */
-  rootCategoryId?: string | null;
-}) {
+  categoryName,
+}: ProductListItemProps) {
+  const href = `/product/${product.slug}`;
+  const cells = specCells(product, columns, rootCategoryId);
   return (
-    <thead>
-      <tr>
-        <th scope="col" className={cn(TH, 'pl-0')}>
-          Наименование
-        </th>
-        {columns.map((column) => (
-          <th key={column} scope="col" className={TH}>
-            {columnHeader(column, rootCategoryId)}
-          </th>
-        ))}
-        <th scope="col" className={cn(TH, 'text-right')}>
-          Цена
-        </th>
-        <th scope="col" className={cn(TH, 'pr-0 text-right')}>
-          <span className="sr-only">Действия</span>
-        </th>
-      </tr>
-    </thead>
-  );
-}
+    <li className="group/row grid grid-cols-[4rem_minmax(0,1fr)] gap-x-4 gap-y-4 py-5 transition-colors duration-fast @min-[36rem]:grid-cols-[5rem_minmax(0,1fr)_auto] @min-[36rem]:gap-x-6 @min-[36rem]:py-4">
+      {/* Миниатюра — дубль ссылки-названия: вне порядка Tab и дерева доступности. */}
+      <Link href={href} tabIndex={-1} aria-hidden className="block size-16 @min-[36rem]:size-20">
+        <ProductMedia
+          product={product}
+          variant="thumb"
+          className="transition-opacity duration-fast group-hover/row:opacity-80"
+        />
+      </Link>
 
-export interface ProductRowProps {
-  product: Product;
-  columns: readonly ColumnKey[];
-  /** Листовая категория — колонка «Категория» смешанного варианта. */
-  categoryName?: string;
-}
-
-/**
- * Код позиции в каталоге с подписью для вспомогательных технологий: внутренний ID, а не артикул
- * производителя (ТЗ §4 п.16) — без подписи «ANT-001» читается как заводской номер.
- */
-export function ProductCode({ code }: { code: string }) {
-  return (
-    <span className="font-mono" title="Код в каталоге">
-      <span className="sr-only">Код в каталоге: </span>
-      {code}
-    </span>
-  );
-}
-
-/**
- * Строка таблицы (≥ lg). Не кликабельна целиком: ссылка — название.
- *
- * Ячейки выровнены по базовой линии первой строки (`align-baseline`), а не по верху: название и
- * цена (16 px), значения (14 px) и подпись кнопки высотой 32 px стоят на одной линии — при
- * `align-top` подпись кнопки опускалась на ~3 px ниже названия.
- */
-export function ProductRow({ product, columns, categoryName }: ProductRowProps) {
-  return (
-    <tr className="border-b border-line-subtle transition-colors duration-fast hover:bg-surface-muted">
-      <td className="min-w-[16rem] py-3 pr-3 pl-0 align-baseline">
-        <Link
-          href={`/product/${product.slug}`}
-          className="text-body font-medium text-ink hover:underline"
-        >
-          <TechText text={product.name} />
-        </Link>
-        <div className="mt-0.5 flex flex-wrap items-center gap-2 text-caption text-ink-muted">
+      <div className="min-w-0">
+        {categoryName ? (
+          <p className="mb-1 text-caption text-ink-muted">
+            <TechText text={categoryName} />
+          </p>
+        ) : null}
+        <h3 className="text-body font-semibold">
+          <Link
+            href={href}
+            className="text-ink decoration-1 underline-offset-[0.2em] hover:underline"
+          >
+            <TechText text={product.name} />
+          </Link>
+        </h3>
+        <p className="mt-0.5 flex flex-wrap items-center gap-2 text-caption text-ink-muted">
           <ProductCode code={product.code} />
-          {hasHiddenNeedsReview(product, columns) ? <NeedsReviewBadge /> : null}
-        </div>
-      </td>
-      {columns.map((column) => (
-        <td key={column} className="px-3 py-3 align-baseline text-ink">
-          <Cell product={product} column={column} categoryName={categoryName} />
-        </td>
-      ))}
-      <td className="px-3 py-3 text-right align-baseline">
+          {hasHiddenNeedsReview(product, cells) ? <NeedsReviewBadge /> : null}
+        </p>
+        {cells.length > 0 ? (
+          <dl
+            style={{ '--spec-cols': Math.max(cells.length, 3) } as CSSProperties}
+            className="mt-3 grid grid-cols-2 gap-x-6 gap-y-3 @min-[52rem]:grid-cols-[repeat(var(--spec-cols),minmax(0,1fr))]"
+          >
+            {cells.map((cell) => (
+              <div key={cell.key} className="min-w-0">
+                <dt className="spec-label">{cell.label}</dt>
+                <dd className="mt-0.5 text-small text-ink">
+                  {cell.value === null ? (
+                    <NotSpecified />
+                  ) : (
+                    <StatusValue text={cell.value.text} status={cell.value.status} />
+                  )}
+                  {cell.frequency ? (
+                    <ProductBandScale product={product} size="sm" className="mt-1.5 max-w-32" />
+                  ) : null}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
+      </div>
+
+      <div className="col-span-2 flex items-center justify-between gap-4 @min-[36rem]:col-span-1 @min-[36rem]:min-w-[10.5rem] @min-[36rem]:flex-col @min-[36rem]:items-end @min-[36rem]:justify-start">
         <Price
           amount={product.priceType === 'fixed' ? product.price : null}
-          size="md"
+          size="lg"
           requestForm="compact"
         />
-      </td>
-      <td className="py-3 pr-0 pl-3 text-right align-baseline whitespace-nowrap">
-        <div className="inline-flex items-center gap-1">
-          {/* Ширина под «В корзине» — колонки не сдвигаются после гидратации. */}
+        <div className="flex items-center gap-1.5">
+          <FavoriteButton
+            productId={product.id}
+            productName={product.name}
+            size="md"
+            className="max-lg:size-11"
+          />
+          {/* Ширина под «В корзине» — строка не сдвигается после гидратации. */}
           <AddToCartButton
             productId={product.id}
             productName={product.name}
-            size="sm"
-            className="min-w-[7.5rem]"
+            size="md"
+            className="min-w-[8.25rem] max-lg:h-11"
           />
-          <FavoriteButton productId={product.id} productName={product.name} size="sm" />
-        </div>
-      </td>
-    </tr>
-  );
-}
-
-/**
- * Строка списка (ResultsList): там, где таблица не помещается. На < md — столбиком: название →
- * мета → параметры → шкала → цена и действия. С md (в т. ч. 1024–1343 px рядом с панелью) —
- * в одну строку: слева название, мета, параметры и шкала, справа цена и действия на базовой
- * линии названия — строка вдвое ниже, на экране помещается вдвое больше позиций.
- */
-export function ProductListItem({
-  product,
-  categoryName,
-}: {
-  product: Product;
-  categoryName?: string;
-}) {
-  return (
-    <li className="grid gap-2 py-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-baseline md:gap-x-6 md:py-3">
-      <div className="grid min-w-0 gap-1.5">
-        <Link
-          href={`/product/${product.slug}`}
-          className="text-body font-semibold text-ink hover:underline"
-        >
-          <TechText text={product.name} />
-        </Link>
-        <p className="flex flex-wrap items-center gap-x-1 gap-y-1 text-caption text-ink-muted">
-          <ProductCode code={product.code} />
-          {categoryName ? (
-            <span>
-              · <TechText text={categoryName} />
-            </span>
-          ) : null}
-          {hasHiddenNeedsReview(product, ['specs']) ? <NeedsReviewBadge className="ml-1" /> : null}
-        </p>
-        <SpecLine product={product} />
-        <ProductBandScale product={product} size="sm" className="max-w-60" />
-      </div>
-      <div className="flex items-center justify-between gap-3 md:justify-end">
-        <Price
-          amount={product.priceType === 'fixed' ? product.price : null}
-          size="md"
-          requestForm="compact"
-        />
-        <div className="flex items-center gap-2">
-          <FavoriteButton productId={product.id} productName={product.name} size="md" />
-          <AddToCartButton productId={product.id} productName={product.name} size="md" />
         </div>
       </div>
     </li>
   );
 }
 
-export interface ProductCollectionProps {
+export interface ProductListProps {
   products: readonly Product[];
   columns: readonly ColumnKey[];
-  /** id категории → название (смешанный вариант: колонка «Категория», мета списка). */
+  /** Корневая категория страницы — подписи движка («Разъём порта 1» у МШУ). */
+  rootCategoryId?: string | null;
+  /** id категории → название (смешанный вариант: категория над названием). */
   categoryNames?: Readonly<Record<string, string>>;
+  /** Доступное имя списка: «Антенны: товары, страница 1 из 1». */
+  label?: string;
   className?: string;
 }
 
-/** Таблица ≥ lg (ResultsTable): `caption` — «{Категория}: товары, страница {n} из {m}». */
-export function ProductTable({
-  products,
-  columns,
-  categoryNames,
-  caption,
-  rootCategoryId,
-  className,
-}: ProductCollectionProps & { caption: string; rootCategoryId?: string | null }) {
-  return (
-    <table className={cn('hidden w-full text-small lg:table', className)}>
-      <caption className="sr-only">{caption}</caption>
-      <ProductTableHead columns={columns} rootCategoryId={rootCategoryId} />
-      <tbody>
-        {products.map((product) => (
-          <ProductRow
-            key={product.id}
-            product={product}
-            columns={columns}
-            categoryName={categoryNames?.[product.categoryId]}
-          />
-        ))}
-      </tbody>
-    </table>
-  );
-}
-
-/** Список < lg (ResultsList). */
+/** Список строк. `@container` — раскладка строки по ширине списка. */
 export function ProductList({
   products,
   columns,
+  rootCategoryId,
   categoryNames,
+  label,
   className,
-}: ProductCollectionProps) {
+}: ProductListProps) {
   const mixed = columns.includes('category');
   return (
     <ul
-      className={cn('divide-y divide-line-subtle border-y border-line-subtle lg:hidden', className)}
+      aria-label={label}
+      className={cn('@container divide-y divide-line border-y border-line', className)}
     >
       {products.map((product) => (
         <ProductListItem
           key={product.id}
           product={product}
+          columns={columns}
+          rootCategoryId={rootCategoryId}
           categoryName={mixed ? categoryNames?.[product.categoryId] : undefined}
         />
       ))}

@@ -6,8 +6,8 @@ import { cn } from '@/lib/cn';
  *
  *   <CategoryGlyph categoryId={product.categoryPath[0]} size={48} />
  *
- * Размеры: 72 (заглушка фото товара на ≥ lg), 40 (плитка категории), 32 (значок товара на < lg
- * в боксе 48), 24 (значок карточки и строки корзины в боксе 40). Цвет — наследуется
+ * Размер — любой (заглушка фото, указатель категорий); толщина линии постоянная, 1,5 px на любом
+ * размере (`vector-effect: non-scaling-stroke`) — как у значков интерфейса. Цвет — наследуется
  * (`text-ink-muted` у контейнера).
  */
 
@@ -55,14 +55,15 @@ export function CategoryGlyph({ categoryId, size = 48, className }: CategoryGlyp
       height={size}
       fill="none"
       stroke="currentColor"
-      strokeWidth={2}
+      strokeWidth={1.5}
       strokeLinecap="round"
       strokeLinejoin="round"
+      vectorEffect="non-scaling-stroke"
       aria-hidden
       focusable={false}
       className={cn('shrink-0', className)}
     >
-      <path d={GLYPHS[glyphForCategory(categoryId)]} />
+      <path d={GLYPHS[glyphForCategory(categoryId)]} vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }

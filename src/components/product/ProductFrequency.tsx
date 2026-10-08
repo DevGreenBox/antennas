@@ -1,13 +1,14 @@
 import { NeedsReviewBadge } from '@/components/ui/Badge';
 import { ProductBandScale } from '@/components/ui/BandScale';
-import { attributeLabel, formatAttrValue } from '@/lib/catalog';
+import { attributeLabel, formatAttrValue, getSpecLine } from '@/lib/catalog';
+import { cn } from '@/lib/cn';
 import type { Product } from '@/types/catalog';
 
-import { INFERRED_FOOTNOTE } from './SpecLine';
+import { INFERRED_FOOTNOTE, StatusValue } from './SpecLine';
 
 /**
- * Частотный диапазон над ценой (DESIGN §2.6 п.4, §4.10, §5.10): главный параметр подбора —
- * крупно и со спектральной шкалой `lg`.
+ * Частотный диапазон на первом экране товара (DESIGN § R.8): главный параметр подбора — крупно и
+ * со спектральной шкалой `lg`.
  *
  * - confirmed — значение и шкала;
  * - inferred — «*», шкала штриховкой и сноска под ней (единица принята по контексту);
@@ -24,7 +25,7 @@ export function ProductFrequency({ product, className }: { product: Product; cla
 
   return (
     <dl className={className} data-testid="product-frequency">
-      <dt className="text-small text-ink-secondary">{attributeLabel('frequency')}</dt>
+      <dt className="spec-label">{attributeLabel('frequency')}</dt>
       <dd className="mt-1">
         {attr.status === 'needs-review' ? (
           <>
@@ -52,6 +53,27 @@ export function ProductFrequency({ product, className }: { product: Product; cla
           </>
         )}
       </dd>
+    </dl>
+  );
+}
+
+/**
+ * Остальные ключевые параметры первого экрана (`getSpecLine` без частоты): подпись над значением,
+ * в две–три колонки. Полный список — в «Характеристиках» ниже.
+ */
+export function ProductKeySpecs({ product, className }: { product: Product; className?: string }) {
+  const items = getSpecLine(product).filter((item) => item.key !== 'frequency');
+  if (items.length === 0) return null;
+  return (
+    <dl className={cn('grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3', className)}>
+      {items.map((item) => (
+        <div key={item.key} className="min-w-0">
+          <dt className="spec-label">{item.label}</dt>
+          <dd className="mt-1 text-body font-medium text-ink">
+            <StatusValue text={item.text} status={item.status} />
+          </dd>
+        </div>
+      ))}
     </dl>
   );
 }

@@ -12,14 +12,14 @@ import { useFavoritesCount } from '@/lib/store/favorites';
 import { useSessionEmail } from '@/lib/store/session';
 
 /**
- * Действия справа в шапке (DESIGN §5.9.1): Избранное, Корзина, Войти/Кабинет. Подписи видны
- * с xl, до этого — иконки 44×44 (lg — 40). Счётчики — число позиций; до гидратации и при 0 не
- * рендерятся (без мигания «0»); не live — обновляются вместе с Toast.
+ * Действия справа в шапке (DESIGN § R.5): Избранное и Корзина — компактно, значок + счётчик
+ * (подпись — только для скринридера); «Войти»/«Кабинет» — значок и подпись с xl. На < lg — цели
+ * 44×44, счётчик над значком. Счётчики — число позиций; до гидратации и при 0 не рендерятся
+ * (без мигания «0»); не live — обновляются вместе с Toast.
  *
- * Ширина шапки не зависит от счётчиков: на < xl бейдж лежит поверх иконки (absolute), а с xl,
- * где он стоит в строке после подписи, под него всегда зарезервировано место шириной в две цифры
- * (`COUNT_SLOT`) — и до гидратации, и при 0. Иначе появление «1» сдвигало поле поиска (522 → 470 px
- * на 1440). «99+» шире слота на 8 px и выходит в правый отступ ссылки — ширина всё равно та же.
+ * Ширина шапки не зависит от счётчиков: на < lg бейдж лежит поверх значка (absolute), а с lg, где
+ * он стоит в строке после значка, под него всегда зарезервировано место шириной в две цифры
+ * (`COUNT_SLOT`) — и до гидратации, и при 0. Иначе появление «1» сдвигало бы поле поиска.
  */
 export function HeaderActions({ className }: { className?: string }) {
   const favorites = useFavoritesCount();
@@ -30,16 +30,16 @@ export function HeaderActions({ className }: { className?: string }) {
       <HeaderAction href="/favorites" icon="bookmark" label="Избранное" count={favorites} />
       <HeaderAction href="/cart" icon="shopping-cart" label="Корзина" count={cart} />
       {email ? (
-        <HeaderAction href="/account" icon="user" label="Кабинет" match="/account" />
+        <HeaderAction href="/account" icon="user" label="Кабинет" match="/account" showLabel />
       ) : (
-        <HeaderAction href="/login" icon="user" label="Войти" />
+        <HeaderAction href="/login" icon="user" label="Войти" showLabel />
       )}
     </div>
   );
 }
 
-/** Место под счётчик с xl: ширина бейджа с двумя цифрами (22 px). */
-const COUNT_SLOT = 'contents xl:flex xl:w-[1.375rem] xl:shrink-0';
+/** Место под счётчик с lg: ширина бейджа с двумя цифрами (22 px). */
+const COUNT_SLOT = 'contents lg:flex lg:w-[1.375rem] lg:shrink-0';
 
 function HeaderAction({
   href,
@@ -47,6 +47,7 @@ function HeaderAction({
   label,
   count,
   match,
+  showLabel = false,
 }: {
   href: string;
   icon: IconName;
@@ -55,6 +56,8 @@ function HeaderAction({
   count?: number;
   /** Префикс пути, при котором пункт текущий (по умолчанию — точный href). */
   match?: string;
+  /** Подпись видна с xl («Войти»); у счётчиков — только для скринридера. */
+  showLabel?: boolean;
 }) {
   const pathname = usePathname();
   const current = match ? pathname.startsWith(match) : pathname === href;
@@ -64,18 +67,18 @@ function HeaderAction({
       href={href}
       aria-label={count ? `${label}, ${countLabel(count, POSITION_FORMS)}` : label}
       aria-current={current ? 'page' : undefined}
-      className="relative inline-flex h-11 min-w-11 items-center justify-center gap-2 rounded-sm px-2 text-small font-medium text-ink transition-colors duration-fast hover:bg-surface-muted lg:h-10 lg:min-w-10"
+      className="relative inline-flex h-11 min-w-11 items-center justify-center gap-1.5 rounded-sm px-2 text-small font-medium text-ink transition-colors duration-fast hover:bg-surface-muted aria-[current=page]:bg-surface-muted lg:px-2.5"
     >
       <Icon name={icon} size={20} />
-      <span className="sr-only xl:not-sr-only">{label}</span>
+      <span className={showLabel ? 'sr-only xl:not-sr-only' : 'sr-only'}>{label}</span>
       {counted ? (
-        // Слот: на < xl не создаёт блока (contents) — бейдж позиционируется от ссылки; с xl —
+        // Слот: на < lg не создаёт блока (contents) — бейдж позиционируется от ссылки; с lg —
         // постоянная ширина, есть бейдж или нет.
         <span className={COUNT_SLOT}>
           {count > 0 ? (
             <span
               aria-hidden
-              className="absolute -top-0.5 -right-0.5 h-[1.125rem] min-w-[1.125rem] shrink-0 rounded-full bg-brand px-1 text-center text-caption leading-[1.125rem] font-semibold text-on-brand tabular-nums xl:static"
+              className="absolute -top-0.5 -right-0.5 h-[1.125rem] min-w-[1.125rem] shrink-0 rounded-full bg-brand px-1 text-center text-caption leading-[1.125rem] font-semibold text-on-brand tabular-nums lg:static"
             >
               {formatBadgeCount(count)}
             </span>

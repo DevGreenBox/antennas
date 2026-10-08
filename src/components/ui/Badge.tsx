@@ -9,7 +9,7 @@ import type { OrderStatus } from '@/types/order';
  *
  *   <Badge tone="warning">Уточняется</Badge>      // значение needs-review
  *   <Badge tone="neutral">По запросу</Badge>
- *   <DemoBadge />                                  // «Демо» — фиолетовый тон только здесь
+ *   <DemoBadge />                                  // «Демо» — нейтральный тон и пунктирная рамка (§ R.2)
  *   <StatusBadge status={order.status} />          // статус заказа с точкой (§3.1)
  */
 

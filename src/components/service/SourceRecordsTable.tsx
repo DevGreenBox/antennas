@@ -12,6 +12,7 @@ import { cn } from '@/lib/cn';
 
 import { LiteralText } from './LiteralText';
 import { MissingProductRef, ProductRefLink } from './ReportLinks';
+import { SERVICE_TABLE } from './ServiceSection';
 import {
   BLOCK_ORDER,
   BLOCK_SHEET,
@@ -242,7 +243,7 @@ export function SourceRecordsTable({ rows }: { rows: readonly SourceRow[] }) {
         role="region"
         aria-labelledby="source-records-caption"
         tabIndex={0}
-        className="focus-inset relative mt-3 overflow-x-auto rounded-md border border-line"
+        className={cn('focus-inset mt-3', SERVICE_TABLE.frame)}
       >
         <table
           id="source-records"
@@ -252,8 +253,8 @@ export function SourceRecordsTable({ rows }: { rows: readonly SourceRow[] }) {
           <caption id="source-records-caption" className="sr-only">
             Все строки прайса: лист, ячейка, исходный текст и цена буквально, решение импорта
           </caption>
-          <thead className="bg-surface-subtle text-left text-ink-secondary">
-            <tr className="border-b border-line">
+          <thead className={SERVICE_TABLE.head}>
+            <tr className={SERVICE_TABLE.headRow}>
               <Th className="w-14">Лист</Th>
               <Th className="w-20">Ячейка</Th>
               <Th className="w-36">Тип строки</Th>
@@ -283,10 +284,7 @@ export function SourceRecordsTable({ rows }: { rows: readonly SourceRow[] }) {
 
 function Th({ className, children }: { className?: string; children: ReactNode }) {
   return (
-    <th
-      scope="col"
-      className={cn('px-3 py-2.5 align-bottom font-medium whitespace-nowrap', className)}
-    >
+    <th scope="col" className={cn(SERVICE_TABLE.th, 'whitespace-nowrap', className)}>
       {children}
     </th>
   );
@@ -300,7 +298,8 @@ function SourceRowView({ row }: { row: SourceRow }) {
       data-kind={row.kind}
       data-sheet={row.sheet}
       className={cn(
-        'scroll-mt-4 border-b border-line-subtle align-top last:border-b-0 target:bg-brand-subtle',
+        'scroll-mt-4 target:bg-brand-subtle',
+        SERVICE_TABLE.row,
         isHeader ? 'bg-surface-subtle' : 'hover:bg-surface-muted',
       )}
     >

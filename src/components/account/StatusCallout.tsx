@@ -16,10 +16,15 @@ function lowerFirst(text: string): string {
 /**
  * Сообщение под заголовком заказа (DESIGN §3.8 «StatusCallout»). Кнопка «Перейти к оплате» —
  * только в статусе «Ожидает оплаты» и только на действующую версию.
+ *
+ * Тон (DESIGN § R.2 — почти монохромная база): обычный ход заказа — нейтральная подложка; цвет
+ * только там, где он что-то значит: «Ожидает оплаты» — фирменная подложка (нужно действие
+ * покупателя), «Оплачен» — успех. Отмена — состояние заказа, а не ошибка интерфейса, поэтому
+ * тоже нейтральная (красный — только настоящая ошибка); статус «Отменён» и так в бейдже у h1.
  */
 export function StatusCallout({ order, className }: { order: DemoOrder; className?: string }) {
   const active = activeQuote(order);
-  let tone: NoticeTone = 'info';
+  let tone: NoticeTone = 'neutral';
   let text = '';
   let action = null;
 
@@ -38,7 +43,12 @@ export function StatusCallout({ order, className }: { order: DemoOrder; classNam
       text = `Заказ согласован. К оплате: ${active ? formatPrice(active.total) : '—'}.`;
       if (active) {
         action = (
-          <ButtonLink href={paymentHref(order.number, active.version)} variant="primary" size="md">
+          <ButtonLink
+            href={paymentHref(order.number, active.version)}
+            variant="primary"
+            size="md"
+            className="max-lg:h-11"
+          >
             Перейти к оплате
           </ButtonLink>
         );
@@ -57,11 +67,9 @@ export function StatusCallout({ order, className }: { order: DemoOrder; classNam
       text = `Заказ отправлен.${active?.deliveryNote ? ` ${active.deliveryNote}` : ''}`;
       break;
     case 'completed':
-      tone = 'neutral';
       text = 'Заказ выполнен.';
       break;
     case 'cancelled':
-      tone = 'danger';
       text = `Заказ отменён: ${lowerFirst(order.cancelReason ?? 'причина не указана')}.`;
       break;
   }

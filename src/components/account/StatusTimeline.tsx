@@ -5,13 +5,16 @@ import { cn } from '@/lib/cn';
 import { statusTimeline } from '@/lib/demo-orders';
 import type { TimelineStepState } from '@/lib/demo-orders';
 import { formatDateFull } from '@/lib/format';
-import { ORDER_STATUS_DESCRIPTIONS, ORDER_STATUS_LABELS } from '@/lib/order-status';
+import { ORDER_STATUS_LABELS } from '@/lib/order-status';
 import type { DemoOrder } from '@/types/order';
 
 /**
  * Таймлайн статусов (DESIGN §5.9.32): путь §3.1, время — последний вход в статус
  * (`statusTimeline()` ядра). При отмене — пройденные шаги и «Отменён» с причиной.
  * Состояние шага передаётся формой маркера и sr-текстом, не только цветом.
+ *
+ * Описание текущего статуса здесь не повторяется: его уже говорит StatusCallout под заголовком
+ * заказа (DESIGN § R.1 — без дублей); таймлайн — компактная история: статус и время.
  */
 
 const SR_STATE: Record<TimelineStepState, string> = {
@@ -53,7 +56,7 @@ export function StatusTimeline({ order }: { order: DemoOrder }) {
           <li
             key={step.status}
             aria-current={active ? 'step' : undefined}
-            className="relative flex gap-3 pb-6 last:pb-0"
+            className="relative flex gap-3 pb-5 last:pb-0"
           >
             {last ? null : (
               <span
@@ -80,11 +83,6 @@ export function StatusTimeline({ order }: { order: DemoOrder }) {
               {step.at !== null ? (
                 <p className="text-caption text-ink-muted">
                   <time dateTime={step.at}>{formatDateFull(step.at)}</time>
-                </p>
-              ) : null}
-              {step.state === 'current' ? (
-                <p className="mt-1 text-small text-ink-secondary">
-                  {ORDER_STATUS_DESCRIPTIONS[step.status]}
                 </p>
               ) : null}
               {step.state === 'cancelled' && order.cancelReason ? (
